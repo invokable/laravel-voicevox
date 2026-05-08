@@ -33,6 +33,10 @@ https://github.com/voicevox-client
 
 開発環境での手動動作テスト用コマンドは`workbench/routes/console.php`に実装。
 
+## コーディングガイドライン
+
+- VOICEVOXエンジンのAPIと一対一の対応ではなくLaravelらしいクラス名やメソッド名を使う。
+
 ## VOICEVOX クライアント
 
 想定している使い方は、
