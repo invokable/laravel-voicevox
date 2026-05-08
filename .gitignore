@@ -1,0 +1,8 @@
+/vendor/
+/composer.lock
+.env
+/.idea
+/.vscode
+.ai/mcp/mcp.json
+/build
+.phpunit.result.cache

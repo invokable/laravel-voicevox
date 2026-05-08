@@ -1,0 +1,14 @@
+<?php
+
+namespace Revolution\Voicevox\Client;
+
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Facades\Http;
+
+trait WithHttp
+{
+    public function http(): PendingRequest
+    {
+        return Http::baseUrl(config('voicevox.url', 'http://127.0.0.1:50021'));
+    }
+}
