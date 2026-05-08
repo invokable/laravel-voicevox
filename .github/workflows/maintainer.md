@@ -6,15 +6,15 @@ on:
   workflow_dispatch:
 
 steps:
-    - name: Set up PHP
-      uses: shivammathur/setup-php@2.37.0
-      with:
-          php-version: 8.4
-          extensions: mbstring
-          coverage: xdebug
+  - name: Set up PHP
+    uses: shivammathur/setup-php@2.37.0
+    with:
+      php-version: 8.5
+      extensions: mbstring, dom
+      coverage: xdebug
 
-    - name: Install Composer dependencies
-      run: composer install --no-interaction --prefer-dist --optimize-autoloader
+  - name: Install Composer dependencies
+    run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
 permissions:
   contents: read
@@ -49,6 +49,7 @@ safe-outputs:
       - config/**
       - workbench/**
       - composer.json
+      - README.md
   add-comment:
     discussions: true
     max: 1
