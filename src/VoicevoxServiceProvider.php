@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Voicevox;
 
 use Illuminate\Support\ServiceProvider;

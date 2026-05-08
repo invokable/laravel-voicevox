@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Revolution\Voicevox\Client;
 
 use Illuminate\Http\Client\ConnectionException;
