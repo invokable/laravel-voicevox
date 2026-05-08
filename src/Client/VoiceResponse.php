@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Voicevox\Client;
 
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
+use Illuminate\Support\Facades\Storage;
 
 class VoiceResponse
 {
@@ -25,7 +24,7 @@ class VoiceResponse
             [$path, $name] = ['', $path];
         }
 
-        $result = Container::getInstance()->make(FilesystemFactory::class)->disk($disk)->put(
+        $result = Storage::disk($disk)->put(
             $path = trim($path.'/'.$name, '/'), $this->content(), $options,
         );
 
