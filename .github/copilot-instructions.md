@@ -73,7 +73,7 @@ $voice->storeAs('voice.wav');
 VoiceAudioQueryに`Tappable`トレイトを追加して途中での調整を可能にする。
 ```php
 use Revolution\Voicevox\Voicevox;
-use Revolution\Voicevox\VoiceAudioQuery;
+use Revolution\Voicevox\Client\VoiceAudioQuery;
 
 $voice = Voicevox::voice('タップで調整できるのだ')
     ->tap(function(VoiceAudioQuery $voice) {
