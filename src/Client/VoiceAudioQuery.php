@@ -24,16 +24,16 @@ class VoiceAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int $speaker = 1, bool $upspeak = true, ?int $core_version = null): VoiceResponse
+    public function generate(int|string $id = 1, bool $upspeak = true, ?int $core_version = null): VoiceResponse
     {
         $response = $this->http()
             ->accept('audio/wav')
             ->withBody(collect($this->audio_query)->toPrettyJson(JSON_UNESCAPED_SLASHES))
-            ->withQueryParameters([
-                'speaker' => $speaker,
+            ->withQueryParameters(array_filter([
+                'speaker' => $id,
                 'enable_interrogative_upspeak' => $upspeak,
                 'core_version' => $core_version,
-            ])
+            ], fn ($v) => ! is_null($v)))
             ->post('/synthesis')
             ->throw();
 
