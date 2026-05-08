@@ -31,11 +31,15 @@ https://github.com/voicevox-client
 - `composer run test` - Run pest tests.
 - `composer run lint` - Run pint code formatter.
 
+Agentic Workflows環境でも一般的な拡張込みでPHPはインストールされてるはずだけど拡張不足で動かなくても後で通常のGitHub Actionsでtestとlintが実行される。
+
 開発環境での手動動作テスト用コマンドは`workbench/routes/console.php`に実装。
 
 ## コーディングガイドライン
 
-- VOICEVOXエンジンのAPIと一対一の対応ではなくLaravelらしいクラス名やメソッド名を使う。
+- VOICEVOXエンジンのAPIと一対一の対応ではなくLaravelスタイルのクラス名やメソッド名を使う。
+- POSTメソッドでもクエリーパラメーターで渡す値と、リクエストボディで渡すJSONが混在しているので実装時には注意する。
+- VOICEVOXは歴史的経緯によりSpeakerId(UUID) と StyleId(整数)が混同している。後発のLaravel版では気にしなくていいので将来的に変更されてもいいように引数では`int|string $id`とする。
 
 ## VOICEVOX クライアント
 
@@ -52,8 +56,8 @@ docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
 
 名前空間：`Revolution\Voicevox`
 
-- src/Client/VoicevoxClient.php: メインのクライアントクラス。`voice($text): VoiceAudioQuery`で`audio_query`を実行。
-- src/Client/VoiceAudioQuery.php: VoiceのAudioQueryクラス。`audio_query`の結果のjsonを保持して、`synthesis`を実行。`generate($speaker = 1): VoiceResponse`
+- src/Client/VoicevoxClient.php: メインのクライアントクラス。`voice($text, $id): VoiceAudioQuery`で`audio_query`を実行。
+- src/Client/VoiceAudioQuery.php: VoiceのAudioQueryクラス。`audio_query`の結果のjsonを保持して、`synthesis`を実行。`generate($id = 1): VoiceResponse`
 - src/Client/VoiceResponse.php: `synthesis`の結果の音声の生データを保持するレスポンス。
 - src/Voicevox.php: Facade。interfaceなしで直接VoicevoxClientを指定。最近のLaravel公式に多い書き方。
 - src/Ai/: [Laravel AI SDK](https://github.com/laravel/ai) 連携。AI SDKのAudioを使った音声合成を実装。`Audio::of('I love coding with Laravel.')->generate();`。そもそもAI SDKに近い使い方で作る。
@@ -64,10 +68,10 @@ docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
 ```php
 use Revolution\Voicevox\Voicevox;
 
-$voice = Voicevox::voice('ララベルが好きなのだ')->generate();
+$response = Voicevox::voice('ララベルが好きなのだ')->generate();
 
-Storage::put('voice.wav', $voice->content());
-$voice->storeAs('voice.wav');
+Storage::put('voice.wav', $response->content());
+$response->storeAs('voice.wav');
 ```
 
 VoiceAudioQueryに`Tappable`トレイトを追加して途中での調整を可能にする。
@@ -75,13 +79,13 @@ VoiceAudioQueryに`Tappable`トレイトを追加して途中での調整を可�
 use Revolution\Voicevox\Voicevox;
 use Revolution\Voicevox\Client\VoiceAudioQuery;
 
-$voice = Voicevox::voice('タップで調整できるのだ')
+$response = Voicevox::voice('タップで調整できるのだ')
     ->tap(function(VoiceAudioQuery $voice) {
         $voice->audio_query['speedScale'] = 1.2;
     })
     ->generate();
 
-$voice->storeAs('voice.wav');
+$response->storeAs('voice.wav');
 ```
 
 あくまでも初期のシンプルな使い方前提なので他の機能を追加していったらクラス名、メソッド名が変わる可能性はある。
@@ -89,14 +93,14 @@ $voice->storeAs('voice.wav');
 音声生成まではAIなしでも手動でさっと実装できたのでクライアントは難しくない。
 基本的な設計は決まったので後はGitHub Agentic Workflowsで継続。
 
-歌声はこんなコード。
+歌声はこんなコード。notes部分はjsonにnotes以外のキーがなさそうなので直接指定。
 ```php
-$sing = Voicevox::sing(['notes' => []], speaker: 6000)->generate(speaker: 3001);
+$response = Voicevox::sing(notes: [], id: 6000)->generate(id: 3001);
 ```
 
 ## speaker id
 
-`$speakers = Voicevox::speakers()`で得られるスピーカーリストのスタイル内にあるidを指定する。id=1はずんだもんのあまあま。
+`$speakers = Voicevox::speakers()`で得られるスピーカーリストのスタイル内にあるidを指定する。id=1はずんだもんのあまあま。本来はStyleIdだけどエンジンAPIではspeakerにStyleIdを渡している。
 
 ```json
   {
