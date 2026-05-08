@@ -29,6 +29,11 @@
       "repo": "github/gh-aw-actions/setup",
       "version": "v0.71.5",
       "sha": "b8068426813005612b960b5ab0b8bd2c27142323"
+    },
+    "shivammathur/setup-php@2.37.0": {
+      "repo": "shivammathur/setup-php",
+      "version": "2.37.0",
+      "sha": "accd6127cb78bee3e8082180cb391013d204ef9f"
     }
   }
 }

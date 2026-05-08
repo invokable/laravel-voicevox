@@ -2,8 +2,20 @@
 name: VOICEVOX Maintainer
 description: Implement next VOICEVOX client features from README/OpenAPI and log progress to Discussion #1.
 on:
-  schedule: daily on weekdays
+  schedule: daily around 5:00 utc+9
   workflow_dispatch:
+
+steps:
+    - name: Set up PHP
+      uses: shivammathur/setup-php@2.37.0
+      with:
+          php-version: 8.4
+          extensions: mbstring
+          coverage: xdebug
+
+    - name: Install Composer dependencies
+      run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
 permissions:
   contents: read
   pull-requests: read
@@ -38,6 +50,7 @@ safe-outputs:
       - workbench/**
       - composer.json
   add-comment:
+    discussions: true
     max: 1
     target-repo: invokable/laravel-voicevox
 ---
