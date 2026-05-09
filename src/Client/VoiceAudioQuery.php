@@ -34,7 +34,7 @@ class VoiceAudioQuery
                 'enable_interrogative_upspeak' => $upspeak,
                 'core_version' => $core_version,
             ], fn ($v) => ! is_null($v)))
-            ->post('/synthesis')
+            ->post('synthesis')
             ->throw();
 
         return new VoiceResponse($response->body());
