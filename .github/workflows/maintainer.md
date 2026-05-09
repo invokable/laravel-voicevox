@@ -26,29 +26,21 @@ timeout-minutes: 30
 network:
     allowed:
         - defaults
+        - threat-detection
         - php
         - github
 tools:
     github:
         mode: gh-proxy
         toolsets: [ default ]
-    bash: [ "*" ]
+    bash: true
     edit:
 safe-outputs:
-    mentions: false
-    allowed-github-references: [ ]
     create-pull-request:
         labels: [ copilot ]
         reviewers: [ kawax ]
         draft: true
         if-no-changes: warn
-        allowed-files:
-            - src/**
-            - tests/**
-            - config/**
-            - workbench/**
-            - composer.json
-            - README.md
     add-comment:
         discussions: true
         max: 1

@@ -32,7 +32,7 @@ https://github.com/voicevox-client
 - `composer run test` - Run pest tests.
 - `composer run lint` - Run pint code formatter.
 
-Agentic Workflows環境でも一般的な拡張込みでPHPはインストールされてるはずだけど拡張不足で動かなくても後で通常のGitHub Actionsでtestとlintが実行される。
+Agentic Workflows環境でも`setup-php`でPHPはインストールされてるはずだけど動かなくても後で通常のGitHub Actionsでtestとlintが実行される。
 
 開発環境での手動動作テスト用コマンドは`workbench/routes/console.php`に実装。
 
