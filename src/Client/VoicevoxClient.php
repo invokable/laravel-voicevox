@@ -161,4 +161,57 @@ class VoicevoxClient
     {
         $this->http()->delete("/user_dict_word/{$word_uuid}")->throw();
     }
+
+    /**
+     * Import User Dictionary.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function importUserDict(array $words, bool $override = false): void
+    {
+        $this->http()->withQueryParameters(['override' => $override])
+            ->post('/import_user_dict', $words)->throw();
+    }
+
+    /**
+     * Create Audio Query from Preset.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function voiceFromPreset(string $text, int $preset_id, bool $katakana_english = true, ?int $core_version = null): VoiceAudioQuery
+    {
+        $response = $this->http()->withQueryParameters(array_filter([
+            'text' => $text,
+            'preset_id' => $preset_id,
+            'enable_katakana_english' => $katakana_english,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))->post('/audio_query_from_preset')
+            ->throw();
+
+        return new VoiceAudioQuery($response->json());
+    }
+
+    /**
+     * Get Singers (singing voice speakers).
+     */
+    public function singers(?int $core_version = null): array
+    {
+        return $this->http()->get('/singers', array_filter([
+            'core_version' => $core_version,
+        ]))->json();
+    }
+
+    /**
+     * Singer Info.
+     */
+    public function singer(string $uuid, string $format = 'base64', ?int $core_version = null): array
+    {
+        return $this->http()->get('/singer_info', array_filter([
+            'speaker_uuid' => $uuid,
+            'resource_format' => $format,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))->json();
+    }
 }
