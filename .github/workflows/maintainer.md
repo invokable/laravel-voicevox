@@ -2,62 +2,57 @@
 name: VOICEVOX Maintainer
 description: Implement next VOICEVOX client features from README/OpenAPI and log progress to Discussion #1.
 on:
-  schedule: daily around 17:00 utc+9
-  workflow_dispatch:
+    schedule: daily around 17:00 utc+9
+    workflow_dispatch:
 
-jobs:
-    setup-php:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
-            - name: Set up PHP
-              uses: shivammathur/setup-php@2.37.0
-              with:
-                  php-version: 8.5
-                  extensions: mbstring, dom
-                  coverage: xdebug
-            - name: Install Composer dependencies
-              run: composer install --no-interaction --prefer-dist --optimize-autoloader
+steps:
+    -   name: Set up PHP
+        uses: shivammathur/setup-php@2.37.0
+        with:
+            php-version: 8.5
+            extensions: mbstring, dom
+            coverage: xdebug
+    -   name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
 permissions:
-  contents: read
-  pull-requests: read
-  issues: read
-  discussions: read
-  actions: read
+    contents: read
+    pull-requests: read
+    issues: read
+    discussions: read
+    actions: read
 strict: true
 timeout-minutes: 30
 network:
-  allowed:
-    - defaults
-    - php
-    - github
+    allowed:
+        - defaults
+        - php
+        - github
 tools:
-  github:
-    mode: gh-proxy
-    toolsets: [default]
-  bash: ["*"]
-  edit:
+    github:
+        mode: gh-proxy
+        toolsets: [ default ]
+    bash: [ "*" ]
+    edit:
 safe-outputs:
-  mentions: false
-  allowed-github-references: []
-  create-pull-request:
-    labels: [copilot]
-    reviewers: [kawax]
-    draft: true
-    if-no-changes: warn
-    allowed-files:
-      - src/**
-      - tests/**
-      - config/**
-      - workbench/**
-      - composer.json
-      - README.md
-  add-comment:
-    discussions: true
-    max: 1
-    target-repo: invokable/laravel-voicevox
+    mentions: false
+    allowed-github-references: [ ]
+    create-pull-request:
+        labels: [ copilot ]
+        reviewers: [ kawax ]
+        draft: true
+        if-no-changes: warn
+        allowed-files:
+            - src/**
+            - tests/**
+            - config/**
+            - workbench/**
+            - composer.json
+            - README.md
+    add-comment:
+        discussions: true
+        max: 1
+        target-repo: invokable/laravel-voicevox
 ---
 
 # VOICEVOX Package Maintainer
