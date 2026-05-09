@@ -2,7 +2,7 @@
 name: VOICEVOX Maintainer
 description: Implement next VOICEVOX client features from README/OpenAPI and log progress to Discussion #1.
 on:
-  schedule: daily around 5:00 utc+9
+  schedule: daily around 17:00 utc+9
   workflow_dispatch:
 
 steps:
