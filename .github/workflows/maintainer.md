@@ -39,8 +39,8 @@ safe-outputs:
   mentions: false
   allowed-github-references: []
   create-pull-request:
-    title-prefix: "[maintainer] "
-    labels: [enhancement, voicevox]
+    labels: [copilot]
+    reviewers: [kawax]
     draft: true
     if-no-changes: warn
     allowed-files:
