@@ -14,6 +14,7 @@ GitHub Agentic Workflowsを使って少しずつ実装を進める。
 
 VOICEVOXエンジンのAPIを呼び出すサードパーティ製のクライアントパッケージ。
 https://github.com/voicevox-client
+
 このプロジェクトでまず作るのはこれと同じVOICEVOXクライアントのLaravel版。
 
 ### OpenAPI
@@ -40,6 +41,7 @@ Agentic Workflows環境でも一般的な拡張込みでPHPはインストール
 - VOICEVOXエンジンのAPIと一対一の対応ではなくLaravelスタイルのクラス名やメソッド名を使う。
 - POSTメソッドでもクエリーパラメーターで渡す値と、リクエストボディで渡すJSONが混在しているので実装時には注意する。
 - VOICEVOXは歴史的経緯によりSpeakerId(UUID) と StyleId(整数)が混同している。後発のLaravel版では気にしなくていいので将来的に変更されてもいいように引数では`int|string $id`とする。
+- VOICEVOXエンジンやコア内部の命名は、テキスト音声合成は`talk`や`tts`、歌声音声合成は`song`が使われている模様。公開APIは変更しにくいけど内部は変更できるので後からでも変わっている。
 
 ## VOICEVOX クライアント
 
@@ -93,9 +95,21 @@ $response->storeAs('voice.wav');
 音声生成まではAIなしでも手動でさっと実装できたのでクライアントは難しくない。
 基本的な設計は決まったので後はGitHub Agentic Workflowsで継続。
 
-歌声はこんなコード。notes部分はjsonにnotes以外のキーがなさそうなので直接指定。
+歌声はこんなコード。
 ```php
-$response = Voicevox::sing(notes: [], id: 6000)->generate(id: 3001);
+$response = Voicevox::song(score: ['notes' => []], id: 6000)->generate(id: 3001);
+```
+歌声機能のコアへの追加は最近のようなので調査が必要。`score`を配列で渡すか`Score`や`Note`のクラスを作るかどうか。現実的には両方対応。
+```php
+$score = new Score(notes: [
+    new Note(),
+    new Note(),
+]);
+```
+```php
+song(Score|array $score, int|string $id) {
+    $score = $score instanceOf Arrayable ? $score->toArray(): $score;
+}
 ```
 
 ## speaker id
@@ -131,5 +145,6 @@ $response = Voicevox::sing(notes: [], id: 6000)->generate(id: 3001);
 - VOICEVOXコア：RubyやGoなどの各言語版のFFIラッパーが作られているのでPHPのFFIでも同じように実装は可能なはず。実装はできてもPHPの場合は動かす環境に課題がある。PHPではFFIは無効にされていることが多い。何よりLaravel Cloudで無効なので実装しても簡単に使える環境を用意できない。homebrew/MacやWSL/WindowsのPHPならFFIが有効なので「ローカル限定」なら可能かもしれない。
 - VOICEVOXエンジン：コアの移植さえできればエンジンは簡単。別に作る必要もなくパッケージ内からルートを提供できる。
 - VOICEVOXアプリ：ローカル限定でもいいのでエディターも実装。
+- 他言語版のFFIラッパーを見てもローカルに動的ライブラリをインストール、もしくはコンパイルするアプリを想定している。
 - [NativePHP](https://github.com/nativephp) でデスクトップアプリを作る場合は内部で [static-php-cli](https://github.com/crazywhalecc/static-php-cli) が使われているので動的ライブラリをFFIで使う方法で実装可能。
 - [ext-php-rs](https://github.com/extphprs/ext-php-rs) でRustからPHP拡張を作ればstatic-php-cliに拡張を動的リンクしてビルド可能かもしれない。OSごとに異なる。この辺りは要調査。
