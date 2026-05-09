@@ -24,7 +24,8 @@ class VoicevoxClient
             'speaker' => $id,
             'enable_katakana_english' => $katakana_english,
             'core_version' => $core_version,
-        ], fn ($v) => ! is_null($v)))->post('/audio_query')
+        ], fn ($v) => ! is_null($v)))
+            ->post('audio_query')
             ->throw();
 
         return new VoiceAudioQuery($response->json());
@@ -35,7 +36,7 @@ class VoicevoxClient
      */
     public function speakers(?int $core_version = null): array
     {
-        return $this->http()->get('/speakers', array_filter([
+        return $this->http()->get('speakers', array_filter([
             'core_version' => $core_version,
         ]))->json();
     }
@@ -45,7 +46,7 @@ class VoicevoxClient
      */
     public function speaker(string $uuid, string $format = 'base64', ?int $core_version = null): array
     {
-        return $this->http()->get('/speaker_info', array_filter([
+        return $this->http()->get('speaker_info', array_filter([
             'speaker_uuid' => $uuid,
             'resource_format' => $format,
             'core_version' => $core_version,
@@ -57,7 +58,7 @@ class VoicevoxClient
      */
     public function version(): string
     {
-        return $this->http()->get('/version')->body();
+        return $this->http()->get('version')->body();
     }
 
     /**
@@ -65,7 +66,7 @@ class VoicevoxClient
      */
     public function manifest(): array
     {
-        return $this->http()->get('/engine_manifest')->json();
+        return $this->http()->get('engine_manifest')->json();
     }
 
     /**
@@ -73,7 +74,7 @@ class VoicevoxClient
      */
     public function presets(): array
     {
-        return $this->http()->get('/presets')->json();
+        return $this->http()->get('presets')->json();
     }
 
     /**
@@ -84,7 +85,7 @@ class VoicevoxClient
      */
     public function addPreset(array $preset): int
     {
-        return $this->http()->post('/add_preset', $preset)->throw()->json();
+        return $this->http()->post('add_preset', $preset)->throw()->json();
     }
 
     /**
@@ -95,7 +96,7 @@ class VoicevoxClient
      */
     public function updatePreset(array $preset): int
     {
-        return $this->http()->post('/update_preset', $preset)->throw()->json();
+        return $this->http()->post('update_preset', $preset)->throw()->json();
     }
 
     /**
@@ -106,7 +107,7 @@ class VoicevoxClient
      */
     public function deletePreset(int $id): void
     {
-        $this->http()->withQueryParameters(['id' => $id])->post('/delete_preset')->throw();
+        $this->http()->withQueryParameters(['id' => $id])->post('delete_preset')->throw();
     }
 
     /**
@@ -114,7 +115,7 @@ class VoicevoxClient
      */
     public function userDict(): array
     {
-        return $this->http()->get('/user_dict')->json();
+        return $this->http()->get('user_dict')->json();
     }
 
     /**
@@ -131,7 +132,10 @@ class VoicevoxClient
             'accent_type' => $accent_type,
             'word_type' => $word_type,
             'priority' => $priority,
-        ], fn ($v) => ! is_null($v)))->post('/user_dict_word')->throw()->json();
+        ], fn ($v) => ! is_null($v)))
+            ->post('user_dict_word')
+            ->throw()
+            ->json();
     }
 
     /**
@@ -148,7 +152,9 @@ class VoicevoxClient
             'accent_type' => $accent_type,
             'word_type' => $word_type,
             'priority' => $priority,
-        ], fn ($v) => ! is_null($v)))->put("/user_dict_word/{$word_uuid}")->throw();
+        ], fn ($v) => ! is_null($v)))
+            ->put("user_dict_word/{$word_uuid}")
+            ->throw();
     }
 
     /**
@@ -159,7 +165,7 @@ class VoicevoxClient
      */
     public function deleteWord(string $word_uuid): void
     {
-        $this->http()->delete("/user_dict_word/{$word_uuid}")->throw();
+        $this->http()->delete("user_dict_word/{$word_uuid}")->throw();
     }
 
     /**
@@ -171,7 +177,7 @@ class VoicevoxClient
     public function importUserDict(array $words, bool $override = false): void
     {
         $this->http()->withQueryParameters(['override' => $override])
-            ->post('/import_user_dict', $words)->throw();
+            ->post('import_user_dict', $words)->throw();
     }
 
     /**
@@ -187,7 +193,8 @@ class VoicevoxClient
             'preset_id' => $preset_id,
             'enable_katakana_english' => $katakana_english,
             'core_version' => $core_version,
-        ], fn ($v) => ! is_null($v)))->post('/audio_query_from_preset')
+        ], fn ($v) => ! is_null($v)))
+            ->post('audio_query_from_preset')
             ->throw();
 
         return new VoiceAudioQuery($response->json());
@@ -198,7 +205,7 @@ class VoicevoxClient
      */
     public function singers(?int $core_version = null): array
     {
-        return $this->http()->get('/singers', array_filter([
+        return $this->http()->get('singers', array_filter([
             'core_version' => $core_version,
         ]))->json();
     }
@@ -208,7 +215,7 @@ class VoicevoxClient
      */
     public function singer(string $uuid, string $format = 'base64', ?int $core_version = null): array
     {
-        return $this->http()->get('/singer_info', array_filter([
+        return $this->http()->get('singer_info', array_filter([
             'speaker_uuid' => $uuid,
             'resource_format' => $format,
             'core_version' => $core_version,
