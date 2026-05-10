@@ -65,7 +65,7 @@ docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
 - src/Client/VoiceAudioQuery.php: VoiceのAudioQueryクラス。`audio_query`の結果のjsonを保持して、`synthesis`を実行。`generate($id = 1): VoiceResponse`
 - src/Client/VoiceResponse.php: `synthesis`の結果の音声の生データを保持するレスポンス。
 - src/Voicevox.php: Facade。interfaceなしで直接VoicevoxClientを指定。最近のLaravel公式に多い書き方。
-- src/Ai/: [Laravel AI SDK](https://github.com/laravel/ai) 連携。AI SDKのAudioを使った音声合成を実装。`Audio::of('I love coding with Laravel.')->generate();`。そもそもAI SDKに近い使い方で作る。
+- src/Ai/: [Laravel AI SDK](https://github.com/laravel/ai) 連携。AI SDKのAudioを使った音声合成を実装。`Audio::of('I love coding with Laravel.')->generate();`。`VoicevoxProvider.php`と`VoicevoxGateway.php`を作成。AI SDKカスタムプロバイダーは他でも作ってるので間違っても修正できる。
 - src/VoicevoxServiceProvider.php: `$this->app->scoped(VoicevoxClient::class`でVoicevoxClientを初期化。
 - config/voicevox.php: `'url' => env('VOICEVOX_URL','http://127.0.0.1:50021'),`
 
@@ -102,7 +102,9 @@ $response->storeAs('voice.wav');
 ```php
 $response = Voicevox::song(score: ['notes' => []], id: 6000)->generate(id: 3001);
 ```
-歌声機能のコアへの追加は最近のようなので調査が必要。`score`を配列で渡すか`Score`や`Note`のクラスを作るかどうか。現実的には両方対応。
+歌声機能のコアへの追加は最近のようなので調査が必要。  
+`Score`や`Note`は公式ではコアのPython APIで定義。https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core_python_api/python/voicevox_core/_python/__init__.py
+Arrayableやvalidate()でLaravelの機能を使いたいのでvoicevox-core-phpではなくLaravel版で実装。クライアント限定ではなく他でも使いそうだけど仮でsrc/Client/Score.phpに作成。
 ```php
 $score = new Score(notes: [
     new Note(),
@@ -115,7 +117,7 @@ song(Score|array $score, int|string $id) {
 }
 ```
 
-## speaker id
+### speaker id
 
 `$speakers = Voicevox::speakers()`で得られるスピーカーリストのスタイル内にあるidを指定する。id=1はずんだもんのあまあま。本来はStyleIdだけどエンジンAPIではspeakerにStyleIdを渡している。
 
