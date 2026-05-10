@@ -102,7 +102,7 @@ $response->storeAs('voice.wav');
 ```php
 $response = Voicevox::song(score: ['notes' => []], id: 6000)->generate(id: 3001);
 ```
-歌声機能のコアへの追加は最近のようなので調査が必要。  
+歌声機能のコアへの追加は最近。  
 `Score`や`Note`は公式ではコアのPython APIで定義。https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core_python_api/python/voicevox_core/_python/__init__.py
 Arrayableやvalidate()でLaravelの機能を使いたいのでvoicevox-core-phpではなくLaravel版で実装。クライアント限定ではなく他でも使いそうだけど仮でsrc/Client/Score.phpに作成。
 ```php
