@@ -153,7 +153,12 @@ Laravel版エンジンが完成したら変更するかもしれないけどHttp
 
 公式互換のWeb APIを作る。Laravelなら当然簡単。このパッケージ内からルートを提供。
 
+Agentic Workflows環境ではコアの動的ライブラリをインストールして実際に動作させることは難しそうなので実装だけして、ローカルで人間が手動で動作確認を行う。`workbench/routes/console.php`にテスト用コマンドを作成。
+
 名前空間：`Revolution\Voicevox\Engine`
+
+- routes/voicevox.php: ルート
+- Engine/Http/: Controllerクラスを配置。一応分かりやすくControllerの名前を付けるけど何も継承しない。`__invoke()`だけのシングルアクションコントローラー、APIリソース、APIシングルトンリソースなどで作成。Controllerファイルは増えてもいいのでAPIごとに分割。
 
 ### 音声モデルファイル(.vvm)とスタイルIDの対応表
 
