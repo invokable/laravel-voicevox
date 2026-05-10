@@ -221,4 +221,94 @@ class VoicevoxClient
             'core_version' => $core_version,
         ], fn ($v) => ! is_null($v)))->json();
     }
+
+    /**
+     * List available core versions.
+     */
+    public function coreVersions(): array
+    {
+        return $this->http()->get('core_versions')->json();
+    }
+
+    /**
+     * Supported devices info.
+     */
+    public function supportedDevices(?string $core_version = null): array
+    {
+        return $this->http()->get('supported_devices', array_filter([
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))->json();
+    }
+
+    /**
+     * Downloadable voice libraries.
+     */
+    public function downloadableLibraries(): array
+    {
+        return $this->http()->get('downloadable_libraries')->json();
+    }
+
+    /**
+     * Installed voice libraries.
+     */
+    public function installedLibraries(): array
+    {
+        return $this->http()->get('installed_libraries')->json();
+    }
+
+    /**
+     * Connect multiple base64-encoded WAV data into one WAV file.
+     *
+     * @param  array<string>  $waves  Base64-encoded WAV strings
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function connectWaves(array $waves): VoiceResponse
+    {
+        $body = $this->http()->post('connect_waves', $waves)->throw()->body();
+
+        return new VoiceResponse($body);
+    }
+
+    /**
+     * Check which styles can be morphing targets for the given base style IDs.
+     *
+     * @param  array<int>  $style_ids
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function morphableTargets(array $style_ids, ?string $core_version = null): array
+    {
+        return $this->http()->withQueryParameters(array_filter([
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('morphable_targets', $style_ids)
+            ->throw()
+            ->json();
+    }
+
+    /**
+     * Synthesize morphed audio between two speaker styles.
+     *
+     * @param  float  $morph_rate  0.0 = base speaker, 1.0 = target speaker
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function morphing(array $audio_query, int|string $base_speaker, int|string $target_speaker, float $morph_rate, ?string $core_version = null): VoiceResponse
+    {
+        $body = $this->http()->withQueryParameters(array_filter([
+            'base_speaker' => $base_speaker,
+            'target_speaker' => $target_speaker,
+            'morph_rate' => $morph_rate,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('synthesis_morphing', $audio_query)
+            ->throw()
+            ->body();
+
+        return new VoiceResponse($body);
+    }
 }
