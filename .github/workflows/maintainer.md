@@ -10,7 +10,7 @@ steps:
         uses: shivammathur/setup-php@2.37.0
         with:
             php-version: 8.5
-            extensions: mbstring, dom
+            extensions: mbstring, dom, phar
             coverage: xdebug
     -   name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
