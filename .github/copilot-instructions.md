@@ -155,6 +155,11 @@ Laravel版エンジンが完成したら変更するかもしれないけどHttp
 
 名前空間：`Revolution\Voicevox\Engine`
 
+### 音声モデルファイル(.vvm)とスタイルIDの対応表
+
+コアではvvmを読み込んでからスタイルIDを指定して使う。エンジンAPIではスタイルIDだけなのでどこかでスタイルIDからvvmを取得してるのかも。  
+https://github.com/VOICEVOX/voicevox_vvm
+
 ## 将来的な計画
 
 今の所計画はなく環境が変わったらの話。
