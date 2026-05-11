@@ -107,11 +107,12 @@ $response = Voicevox::song(score: ['notes' => []], id: 6000)->generate(id: 3001)
 ```
 歌声機能のコアへの追加は最近。  
 `Score`や`Note`は公式ではコアのPython APIで定義。https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core_python_api/python/voicevox_core/_python/__init__.py
-Arrayableやvalidate()でLaravelの機能を使いたいのでvoicevox-core-phpではなくLaravel版で実装。クライアント限定ではなく他でも使いそうだけど仮でsrc/Song/Score.phpに作成。
+Arrayableやvalidate()でLaravelの機能を使いたいのでvoicevox-core-phpではなくLaravel版で実装。クライアント限定ではなく他でも使いそうなのでsrc/Song/Score.phpとNote.phpに作成済み。
 ```php
 $score = new Score(notes: [
-    new Note(),
-    new Note(),
+    new Note(length: 15, lyric: ''),
+    new Note(length: 45, lyric: 'ド', key: 60),
+    new Note(length: 45, lyric: 'レ', key: 62),
 ]);
 ```
 ```php
