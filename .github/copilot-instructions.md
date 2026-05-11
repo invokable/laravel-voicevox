@@ -165,7 +165,7 @@ Agentic Workflows環境ではコアの動的ライブラリをインストール
 名前空間：`Revolution\Voicevox\Engine`
 
 - routes/voicevox.php: ルート
-- Engine/Http/Controllers/: Controllerクラスを配置。一応分かりやすくControllerの名前を付けるけど何も継承しない。`__invoke()`だけのシングルアクションコントローラー、APIリソース、APIシングルトンリソースなどで作成。Controllerファイルは増えてもいいのでAPIごとに分割。
+- src/Engine/Http/Controllers/: Controllerクラスを配置。一応分かりやすくControllerの名前を付けるけど何も継承しない。`__invoke()`だけのシングルアクションコントローラー、APIリソース、APIシングルトンリソースなどで作成。Controllerファイルは増えてもいいのでAPIごとに分割。
 
 ### 音声モデルファイル(.vvm)とスタイルIDの対応表
 
@@ -177,7 +177,7 @@ https://github.com/VOICEVOX/voicevox_vvm
 クライアントとは違うPHP版コアを使う場合の使い方案。最近の公式に合わせてトークとソングを2大機能のように扱う。
 
 - src/Talk/Talk.php: `Talk::make(text:)->generate()`。`Talk::fake()`でテスト用にモック。
-- src/Song/Song.php: `Song::make(score:)->generete()`
+- src/Song/Song.php: `Song::make(score:)->generate()`
 - functions.php: `talk()`, `song()`。Talk、Songクラスは実際には関数から使う。Laravel AI SDKの`agnet()`と同じ実装パターン。
 
 ```php
