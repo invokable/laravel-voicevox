@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Revolution\Voicevox\Client\TalkResponse;
 use Revolution\Voicevox\Voicevox;
 
 test('initializeSpeaker can be called', function () {
@@ -29,10 +30,10 @@ test('validateKana returns bool', function () {
 });
 
 test('multiSynthesis returns TalkResponse', function () {
-    $mock = Mockery::mock(\Revolution\Voicevox\Client\TalkResponse::class);
+    $mock = Mockery::mock(TalkResponse::class);
     Voicevox::expects('multiSynthesis')->andReturn($mock);
 
     $result = Voicevox::multiSynthesis([[], []], 1);
 
-    expect($result)->toBeInstanceOf(\Revolution\Voicevox\Client\TalkResponse::class);
+    expect($result)->toBeInstanceOf(TalkResponse::class);
 });
