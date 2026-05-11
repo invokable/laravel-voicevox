@@ -2,10 +2,17 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Http;
 use Revolution\Voicevox\Voicevox;
 
+beforeEach(function () {
+    Http::preventStrayRequests();
+});
+
 test('presets returns array', function () {
-    Voicevox::expects('presets')->andReturn([['id' => 1, 'name' => 'test']]);
+    Http::fake([
+        'http://127.0.0.1:50021/presets' => Http::response([['id' => 1, 'name' => 'test']]),
+    ]);
 
     $presets = Voicevox::presets();
 
@@ -13,7 +20,9 @@ test('presets returns array', function () {
 });
 
 test('add preset returns id', function () {
-    Voicevox::expects('addPreset')->andReturn(2);
+    Http::fake([
+        'http://127.0.0.1:50021/add_preset' => Http::response(2),
+    ]);
 
     $id = Voicevox::addPreset(['id' => 0, 'name' => 'new']);
 
@@ -21,7 +30,9 @@ test('add preset returns id', function () {
 });
 
 test('update preset returns id', function () {
-    Voicevox::expects('updatePreset')->andReturn(1);
+    Http::fake([
+        'http://127.0.0.1:50021/update_preset' => Http::response(1),
+    ]);
 
     $id = Voicevox::updatePreset(['id' => 1, 'name' => 'updated']);
 
@@ -29,7 +40,11 @@ test('update preset returns id', function () {
 });
 
 test('delete preset', function () {
-    Voicevox::expects('deletePreset')->with(1);
+    Http::fake([
+        'http://127.0.0.1:50021/delete_preset*' => Http::response(),
+    ]);
 
     Voicevox::deletePreset(1);
+
+    Http::assertSentCount(1);
 });
