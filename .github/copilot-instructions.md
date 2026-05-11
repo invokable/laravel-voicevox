@@ -37,6 +37,8 @@ https://github.com/voicevox-client
 
 Agentic Workflows環境でも`setup-php`でPHPはインストールされてるはずだけど動かなくても後で通常のGitHub Actionsでtestとlintが実行される。
 
+動的ライブラリ込みのテストはGitHub Actions専用に`test:integration`と`.github/workflows/integration-tests.yml`を用意する。voicevox-core-phpと同じ。
+
 開発環境での手動動作テスト用コマンドは`workbench/routes/console.php`に実装。
 
 ## コーディングガイドライン
