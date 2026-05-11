@@ -2,11 +2,18 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Http;
 use Revolution\Voicevox\Client\TalkResponse;
 use Revolution\Voicevox\Voicevox;
 
+beforeEach(function () {
+    Http::preventStrayRequests();
+});
+
 test('morphableTargets returns array', function () {
-    Voicevox::expects('morphableTargets')->andReturn([['1' => ['is_morphable' => true]]]);
+    Http::fake([
+        'http://127.0.0.1:50021/morphable_targets*' => Http::response([['1' => ['is_morphable' => true]]]),
+    ]);
 
     $targets = Voicevox::morphableTargets([1]);
 
@@ -14,7 +21,9 @@ test('morphableTargets returns array', function () {
 });
 
 test('morphing returns VoiceResponse', function () {
-    Voicevox::expects('morphing')->andReturn(new TalkResponse('wav-data'));
+    Http::fake([
+        'http://127.0.0.1:50021/synthesis_morphing*' => Http::response('wav-data'),
+    ]);
 
     $response = Voicevox::morphing(audio_query: [], base_speaker: 1, target_speaker: 3, morph_rate: 0.5);
 
@@ -23,7 +32,9 @@ test('morphing returns VoiceResponse', function () {
 });
 
 test('connectWaves returns VoiceResponse', function () {
-    Voicevox::expects('connectWaves')->andReturn(new TalkResponse('combined-wav'));
+    Http::fake([
+        'http://127.0.0.1:50021/connect_waves' => Http::response('combined-wav'),
+    ]);
 
     $response = Voicevox::connectWaves(['base64wav1', 'base64wav2']);
 

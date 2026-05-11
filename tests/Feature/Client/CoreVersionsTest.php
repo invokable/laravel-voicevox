@@ -2,10 +2,17 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Http;
 use Revolution\Voicevox\Voicevox;
 
+beforeEach(function () {
+    Http::preventStrayRequests();
+});
+
 test('coreVersions returns array of version strings', function () {
-    Voicevox::expects('coreVersions')->andReturn(['0.14.0', '0.15.0']);
+    Http::fake([
+        'http://127.0.0.1:50021/core_versions' => Http::response(['0.14.0', '0.15.0']),
+    ]);
 
     $versions = Voicevox::coreVersions();
 
@@ -13,7 +20,9 @@ test('coreVersions returns array of version strings', function () {
 });
 
 test('supportedDevices returns device info array', function () {
-    Voicevox::expects('supportedDevices')->andReturn(['cpu' => true, 'cuda' => false]);
+    Http::fake([
+        'http://127.0.0.1:50021/supported_devices*' => Http::response(['cpu' => true, 'cuda' => false]),
+    ]);
 
     $devices = Voicevox::supportedDevices();
 

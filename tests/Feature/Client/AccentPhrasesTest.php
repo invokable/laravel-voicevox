@@ -2,11 +2,19 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Http;
 use Revolution\Voicevox\Voicevox;
+
+beforeEach(function () {
+    Http::preventStrayRequests();
+});
 
 test('accentPhrases returns array', function () {
     $phrases = [['moras' => [], 'accent' => 1]];
-    Voicevox::expects('accentPhrases')->andReturn($phrases);
+
+    Http::fake([
+        'http://127.0.0.1:50021/accent_phrases*' => Http::response($phrases),
+    ]);
 
     $result = Voicevox::accentPhrases('こんにちは', 1);
 
@@ -15,7 +23,10 @@ test('accentPhrases returns array', function () {
 
 test('moraData returns array', function () {
     $phrases = [['moras' => [], 'accent' => 1]];
-    Voicevox::expects('moraData')->andReturn($phrases);
+
+    Http::fake([
+        'http://127.0.0.1:50021/mora_data*' => Http::response($phrases),
+    ]);
 
     $result = Voicevox::moraData($phrases, 1);
 
@@ -24,7 +35,10 @@ test('moraData returns array', function () {
 
 test('moraLength returns array', function () {
     $phrases = [['moras' => [], 'accent' => 1]];
-    Voicevox::expects('moraLength')->andReturn($phrases);
+
+    Http::fake([
+        'http://127.0.0.1:50021/mora_length*' => Http::response($phrases),
+    ]);
 
     $result = Voicevox::moraLength($phrases, 1);
 
@@ -33,7 +47,10 @@ test('moraLength returns array', function () {
 
 test('moraPitch returns array', function () {
     $phrases = [['moras' => [], 'accent' => 1]];
-    Voicevox::expects('moraPitch')->andReturn($phrases);
+
+    Http::fake([
+        'http://127.0.0.1:50021/mora_pitch*' => Http::response($phrases),
+    ]);
 
     $result = Voicevox::moraPitch($phrases, 1);
 
