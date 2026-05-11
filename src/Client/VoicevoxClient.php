@@ -311,4 +311,139 @@ class VoicevoxClient
 
         return new TalkResponse($body);
     }
+
+    /**
+     * Get accent phrases from text.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function accentPhrases(string $text, int|string $id, bool $is_kana = false, bool $katakana_english = true, ?int $core_version = null): array
+    {
+        return $this->http()->withQueryParameters(array_filter([
+            'text' => $text,
+            'speaker' => $id,
+            'is_kana' => $is_kana,
+            'enable_katakana_english' => $katakana_english,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('accent_phrases')
+            ->throw()
+            ->json();
+    }
+
+    /**
+     * Get mora phoneme length and pitch from accent phrases.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function moraData(array $accent_phrases, int|string $id, ?int $core_version = null): array
+    {
+        return $this->http()->withQueryParameters(array_filter([
+            'speaker' => $id,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('mora_data', $accent_phrases)
+            ->throw()
+            ->json();
+    }
+
+    /**
+     * Get mora phoneme lengths from accent phrases.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function moraLength(array $accent_phrases, int|string $id, ?int $core_version = null): array
+    {
+        return $this->http()->withQueryParameters(array_filter([
+            'speaker' => $id,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('mora_length', $accent_phrases)
+            ->throw()
+            ->json();
+    }
+
+    /**
+     * Get mora pitches from accent phrases.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function moraPitch(array $accent_phrases, int|string $id, ?int $core_version = null): array
+    {
+        return $this->http()->withQueryParameters(array_filter([
+            'speaker' => $id,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('mora_pitch', $accent_phrases)
+            ->throw()
+            ->json();
+    }
+
+    /**
+     * Synthesize multiple audio queries in batch.
+     *
+     * @param  array<array>  $audio_queries
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function multiSynthesis(array $audio_queries, int|string $id, bool $interrogative_upspeak = false, ?int $core_version = null): TalkResponse
+    {
+        $body = $this->http()->withQueryParameters(array_filter([
+            'speaker' => $id,
+            'enable_interrogative_upspeak' => $interrogative_upspeak,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('multi_synthesis', $audio_queries)
+            ->throw()
+            ->body();
+
+        return new TalkResponse($body);
+    }
+
+    /**
+     * Validate text against AquesTalk notation.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function validateKana(string $text): bool
+    {
+        return $this->http()->withQueryParameters(['text' => $text])
+            ->post('validate_kana')
+            ->throw()
+            ->json();
+    }
+
+    /**
+     * Initialize a speaker (load voice model into memory).
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function initializeSpeaker(int|string $id, bool $skip_reinit = false, ?int $core_version = null): void
+    {
+        $this->http()->withQueryParameters(array_filter([
+            'speaker' => $id,
+            'skip_reinit' => $skip_reinit,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('initialize_speaker')
+            ->throw();
+    }
+
+    /**
+     * Check if a speaker has been initialized.
+     */
+    public function isInitializedSpeaker(int|string $id, ?int $core_version = null): bool
+    {
+        return $this->http()->get('is_initialized_speaker', array_filter([
+            'speaker' => $id,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))->json();
+    }
 }
