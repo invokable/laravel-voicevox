@@ -107,7 +107,7 @@ $response = Voicevox::song(score: ['notes' => []], id: 6000)->generate(id: 3001)
 ```
 歌声機能のコアへの追加は最近。  
 `Score`や`Note`は公式ではコアのPython APIで定義。https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core_python_api/python/voicevox_core/_python/__init__.py
-Arrayableやvalidate()でLaravelの機能を使いたいのでvoicevox-core-phpではなくLaravel版で実装。クライアント限定ではなく他でも使いそうだけど仮でsrc/Client/Score.phpに作成。
+Arrayableやvalidate()でLaravelの機能を使いたいのでvoicevox-core-phpではなくLaravel版で実装。クライアント限定ではなく他でも使いそうだけど仮でsrc/Song/Score.phpに作成。
 ```php
 $score = new Score(notes: [
     new Note(),
@@ -174,10 +174,10 @@ https://github.com/VOICEVOX/voicevox_vvm
 
 ## ネイティブ版
 
-クライアントとは違うPHP版コアを使う場合の使い方案。
+クライアントとは違うPHP版コアを使う場合の使い方案。最近の公式に合わせてトークとソングを2大機能のように扱う。
 
-- src/Talk.php: `Talk::make(text:)->generate()`。`Talk::fake()`でテスト用にモック。
-- src/Song.php: `Song::make(score:)->generete()`
+- src/Talk/Talk.php: `Talk::make(text:)->generate()`。`Talk::fake()`でテスト用にモック。
+- src/Song/Song.php: `Song::make(score:)->generete()`
 - functions.php: `talk()`, `song()`。Talk、Songクラスは実際には関数から使う。Laravel AI SDKの`agnet()`と同じ実装パターン。
 
 ```php
