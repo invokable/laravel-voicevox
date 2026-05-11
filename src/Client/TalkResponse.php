@@ -6,7 +6,7 @@ namespace Revolution\Voicevox\Client;
 
 use Illuminate\Support\Facades\Storage;
 
-class VoiceResponse
+class TalkResponse
 {
     public function __construct(protected string $body)
     {

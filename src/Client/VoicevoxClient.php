@@ -17,7 +17,7 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function voice(string $text, int|string $id = 1, bool $katakana_english = true, ?int $core_version = null): VoiceAudioQuery
+    public function talk(string $text, int|string $id = 1, bool $katakana_english = true, ?int $core_version = null): TalkAudioQuery
     {
         $response = $this->http()->withQueryParameters(array_filter([
             'text' => $text,
@@ -28,7 +28,7 @@ class VoicevoxClient
             ->post('audio_query')
             ->throw();
 
-        return new VoiceAudioQuery($response->json());
+        return new TalkAudioQuery($response->json());
     }
 
     /**
@@ -186,7 +186,7 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function voiceFromPreset(string $text, int $preset_id, bool $katakana_english = true, ?int $core_version = null): VoiceAudioQuery
+    public function talkFromPreset(string $text, int $preset_id, bool $katakana_english = true, ?int $core_version = null): TalkAudioQuery
     {
         $response = $this->http()->withQueryParameters(array_filter([
             'text' => $text,
@@ -197,7 +197,7 @@ class VoicevoxClient
             ->post('audio_query_from_preset')
             ->throw();
 
-        return new VoiceAudioQuery($response->json());
+        return new TalkAudioQuery($response->json());
     }
 
     /**
@@ -264,11 +264,11 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function connectWaves(array $waves): VoiceResponse
+    public function connectWaves(array $waves): TalkResponse
     {
         $body = $this->http()->post('connect_waves', $waves)->throw()->body();
 
-        return new VoiceResponse($body);
+        return new TalkResponse($body);
     }
 
     /**
@@ -297,7 +297,7 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function morphing(array $audio_query, int|string $base_speaker, int|string $target_speaker, float $morph_rate, ?string $core_version = null): VoiceResponse
+    public function morphing(array $audio_query, int|string $base_speaker, int|string $target_speaker, float $morph_rate, ?string $core_version = null): TalkResponse
     {
         $body = $this->http()->withQueryParameters(array_filter([
             'base_speaker' => $base_speaker,
@@ -309,6 +309,6 @@ class VoicevoxClient
             ->throw()
             ->body();
 
-        return new VoiceResponse($body);
+        return new TalkResponse($body);
     }
 }

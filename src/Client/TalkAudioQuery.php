@@ -8,7 +8,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Traits\Tappable;
 
-class VoiceAudioQuery
+class TalkAudioQuery
 {
     use Tappable;
     use WithHttp;
@@ -24,7 +24,7 @@ class VoiceAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string $id = 1, bool $upspeak = true, ?int $core_version = null): VoiceResponse
+    public function generate(int|string $id = 1, bool $upspeak = true, ?int $core_version = null): TalkResponse
     {
         $response = $this->http()
             ->accept('audio/wav')
@@ -37,6 +37,6 @@ class VoiceAudioQuery
             ->post('synthesis')
             ->throw();
 
-        return new VoiceResponse($response->body());
+        return new TalkResponse($response->body());
     }
 }

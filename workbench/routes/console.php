@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use Revolution\Voicevox\Client\VoiceAudioQuery;
+use Revolution\Voicevox\Client\TalkAudioQuery;
 use Revolution\Voicevox\Voicevox;
 
 // Artisan::command('inspire', function () {
@@ -27,13 +27,13 @@ Artisan::command('voicevox:speakers', function () {
     dd($speaker);
 })->purpose('Display Voicevox speakers');
 
-// vendor/bin/testbench voicevox:voice
-Artisan::command('voicevox:voice', function () {
-    $response = Voicevox::voice('ララベルが好きなのだ')
-        ->tap(function (VoiceAudioQuery $voice) {
-            $voice->audio_query['speedScale'] = 1.2;
+// vendor/bin/testbench voicevox:talk
+Artisan::command('voicevox:talk', function () {
+    $response = Voicevox::talk('ララベルが好きなのだ')
+        ->tap(function (TalkAudioQuery $talk) {
+            $talk->audio_query['speedScale'] = 1.2;
         })->generate();
 
-    $path = $response->storeAs('voices', 'voice.wav');
+    $path = $response->storeAs('talks', 'talk.wav');
     $this->info(Storage::path($path));
-})->purpose('Generate voice');
+})->purpose('Generate talk with client');

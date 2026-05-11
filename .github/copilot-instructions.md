@@ -61,9 +61,9 @@ docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
 
 名前空間：`Revolution\Voicevox`
 
-- src/Client/VoicevoxClient.php: メインのクライアントクラス。`voice($text, $id): VoiceAudioQuery`で`audio_query`を実行。
-- src/Client/VoiceAudioQuery.php: VoiceのAudioQueryクラス。`audio_query`の結果のjsonを保持して、`synthesis`を実行。`generate($id = 1): VoiceResponse`
-- src/Client/VoiceResponse.php: `synthesis`の結果の音声の生データを保持するレスポンス。
+- src/Client/VoicevoxClient.php: メインのクライアントクラス。`talk($text, $id): TalkAudioQuery`で`audio_query`を実行。
+- src/Client/TalkAudioQuery.php: TalkのAudioQueryクラス。`audio_query`の結果のjsonを保持して、`synthesis`を実行。`generate($id = 1): VoiceResponse`
+- src/Client/TalkResponse.php: `synthesis`の結果の音声の生データを保持するレスポンス。
 - src/Voicevox.php: Facade。interfaceなしで直接VoicevoxClientを指定。最近のLaravel公式に多い書き方。
 - src/Ai/: [Laravel AI SDK](https://github.com/laravel/ai) 連携。AI SDKのAudioを使った音声合成を実装。`Audio::of('I love coding with Laravel.')->generate();`。`VoicevoxProvider.php`と`VoicevoxGateway.php`を作成。AI SDKカスタムプロバイダーは他でも作ってるので間違っても修正できる。
 - src/VoicevoxServiceProvider.php: `$this->app->scoped(VoicevoxClient::class`でVoicevoxClientを初期化。
@@ -73,24 +73,25 @@ docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
 ```php
 use Revolution\Voicevox\Voicevox;
 
-$response = Voicevox::voice('ララベルが好きなのだ')->generate();
+$response = Voicevox::talk('ララベルが好きなのだ')->generate();
 
-Storage::put('voice.wav', $response->content());
-$response->storeAs('voice.wav');
+Storage::put('talk.wav', $response->content());
+$response->storeAs('talk.wav');
 ```
 
-VoiceAudioQueryに`Tappable`トレイトを追加して途中での調整を可能にする。
+TalkAudioQueryに`Tappable`トレイトを追加して途中での調整を可能にする。
+
 ```php
 use Revolution\Voicevox\Voicevox;
-use Revolution\Voicevox\Client\VoiceAudioQuery;
+use Revolution\Voicevox\Client\TalkAudioQuery;
 
-$response = Voicevox::voice('タップで調整できるのだ')
-    ->tap(function(VoiceAudioQuery $voice) {
-        $voice->audio_query['speedScale'] = 1.2;
+$response = Voicevox::talk('タップで調整できるのだ')
+    ->tap(function(TalkAudioQuery $talk) {
+        $talk->audio_query['speedScale'] = 1.2;
     })
     ->generate();
 
-$response->storeAs('voice.wav');
+$response->storeAs('talk.wav');
 ```
 
 あくまでも初期のシンプルな使い方前提なので他の機能を追加していったらクラス名、メソッド名が変わる可能性はある。
@@ -151,6 +152,8 @@ https://github.com/invokable/voicevox-core-php
 クライアント機能は今のまま公式VOICEVOXエンジンを使う想定で開発を継続。  
 Laravel版エンジンが完成したら変更するかもしれないけどHttpを経由するのが非効率だったら別の実装方法にするかもしれない。
 
+公式エンジンを別で動かせばLaravel版クライアントはFFIなしで使えるメリットがあるので残す理由があった。
+
 ## VOICEVOX エンジン
 
 公式互換のWeb APIを作る。Laravelなら当然簡単。このパッケージ内からルートを提供。
@@ -160,12 +163,29 @@ Agentic Workflows環境ではコアの動的ライブラリをインストール
 名前空間：`Revolution\Voicevox\Engine`
 
 - routes/voicevox.php: ルート
-- Engine/Http/: Controllerクラスを配置。一応分かりやすくControllerの名前を付けるけど何も継承しない。`__invoke()`だけのシングルアクションコントローラー、APIリソース、APIシングルトンリソースなどで作成。Controllerファイルは増えてもいいのでAPIごとに分割。
+- Engine/Http/Controllers/: Controllerクラスを配置。一応分かりやすくControllerの名前を付けるけど何も継承しない。`__invoke()`だけのシングルアクションコントローラー、APIリソース、APIシングルトンリソースなどで作成。Controllerファイルは増えてもいいのでAPIごとに分割。
 
 ### 音声モデルファイル(.vvm)とスタイルIDの対応表
 
 コアではvvmを読み込んでからスタイルIDを指定して使う。エンジンAPIではスタイルIDだけなのでどこかでスタイルIDからvvmを取得してるのかも。  
 https://github.com/VOICEVOX/voicevox_vvm
+
+## ネイティブ版
+
+クライアントとは違うPHP版コアを使う場合の使い方案。
+
+- src/Talk.php: `Talk::text()->generate()`。`Talk::fake()`でテスト用にモック。
+- src/Song.php: `Song::score()->generete()`
+- functions.php: `talk()`, `song()`。Talk、Songクラスは実際には関数から使う。Laravel AI SDKの`agnet()`と同じ実装パターン。
+
+```php
+use function Revolution\Voicevox\{talk, song};
+
+$response = talk(text: 'ララベルが好きなのだ', id: 1)->generate();
+$response->storeAs('talk.wav');
+```
+
+クライアントの`Voicevox::talk()`から`Voicevox::`を消せば移行できるようにしておく。
 
 ## 将来的な計画
 
