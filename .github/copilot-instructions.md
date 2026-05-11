@@ -174,8 +174,8 @@ https://github.com/VOICEVOX/voicevox_vvm
 
 クライアントとは違うPHP版コアを使う場合の使い方案。
 
-- src/Talk.php: `Talk::text()->generate()`。`Talk::fake()`でテスト用にモック。
-- src/Song.php: `Song::score()->generete()`
+- src/Talk.php: `Talk::make(text:)->generate()`。`Talk::fake()`でテスト用にモック。
+- src/Song.php: `Song::make(score:)->generete()`
 - functions.php: `talk()`, `song()`。Talk、Songクラスは実際には関数から使う。Laravel AI SDKの`agnet()`と同じ実装パターン。
 
 ```php
