@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Voicevox\Client;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 
@@ -494,9 +495,9 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function singFrameAudioQuery(array|\Illuminate\Contracts\Support\Arrayable $score, int|string $id, ?string $core_version = null): array
+    public function singFrameAudioQuery(array|Arrayable $score, int|string $id, ?string $core_version = null): array
     {
-        $score = $score instanceof \Illuminate\Contracts\Support\Arrayable ? $score->toArray() : $score;
+        $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
         return $this->http()->withQueryParameters(array_filter([
             'speaker' => $id,
@@ -513,9 +514,9 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function singFrameF0(array|\Illuminate\Contracts\Support\Arrayable $score, array $frame_audio_query, int|string $id, ?string $core_version = null): array
+    public function singFrameF0(array|Arrayable $score, array $frame_audio_query, int|string $id, ?string $core_version = null): array
     {
-        $score = $score instanceof \Illuminate\Contracts\Support\Arrayable ? $score->toArray() : $score;
+        $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
         return $this->http()->withQueryParameters(array_filter([
             'speaker' => $id,
@@ -532,9 +533,9 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function singFrameVolume(array|\Illuminate\Contracts\Support\Arrayable $score, array $frame_audio_query, int|string $id, ?string $core_version = null): array
+    public function singFrameVolume(array|Arrayable $score, array $frame_audio_query, int|string $id, ?string $core_version = null): array
     {
-        $score = $score instanceof \Illuminate\Contracts\Support\Arrayable ? $score->toArray() : $score;
+        $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
         return $this->http()->withQueryParameters(array_filter([
             'speaker' => $id,
