@@ -14,8 +14,11 @@ class SongAudioQuery
     use Tappable;
     use WithHttp;
 
-    public function __construct(public array $score, public array $frame_audio_query)
-    {
+    public function __construct(
+        public array $frame_audio_query,
+        public array $score,
+        public int|string $id,
+    ) {
         //
     }
 
@@ -25,9 +28,9 @@ class SongAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string $id, ?string $core_version = null): SongResponse
+    public function generate(int|string|null $id = null, ?string $core_version = null): SongResponse
     {
-        $body = Voicevox::frameSynthesis($this->frame_audio_query, $id, $core_version);
+        $body = Voicevox::frameSynthesis($this->frame_audio_query, $id ?? $this->id, $core_version);
 
         return new SongResponse($body);
     }

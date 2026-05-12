@@ -14,8 +14,10 @@ class TalkAudioQuery
     use Tappable;
     use WithHttp;
 
-    public function __construct(public array $audio_query)
-    {
+    public function __construct(
+        public array $audio_query,
+        public int|string $id,
+    ) {
         //
     }
 
@@ -25,9 +27,9 @@ class TalkAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string $id = 1, bool $upspeak = true, ?int $core_version = null): TalkResponse
+    public function generate(int|string|null $id = null, bool $upspeak = true, ?int $core_version = null): TalkResponse
     {
-        $body = Voicevox::synthesis($this->audio_query, $id, $upspeak, $core_version);
+        $body = Voicevox::synthesis($this->audio_query, $id ?? $this->id, $upspeak, $core_version);
 
         return new TalkResponse($body);
     }

@@ -23,7 +23,7 @@ class VoicevoxClient
     {
         $audio_query = $this->audioQuery($text, $id, $katakana_english, $core_version);
 
-        return new TalkAudioQuery($audio_query);
+        return new TalkAudioQuery(audio_query: $audio_query, id: $id);
     }
 
     /**
@@ -537,7 +537,7 @@ class VoicevoxClient
 
         $frame_audio_query = $this->singFrameAudioQuery($score, $id, $core_version);
 
-        return new SongAudioQuery($score, $frame_audio_query);
+        return new SongAudioQuery(frame_audio_query: $frame_audio_query, score: $score, id: $id);
     }
 
     /**

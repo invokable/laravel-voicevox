@@ -131,9 +131,10 @@ use Revolution\Voicevox\Client\SongAudioQuery;
 $response = Voicevox::song($score, id: 6000)
             ->tap(function(SongAudioQuery $song) {
                 // sing_frame_audio_queryとframe_synthesisは分かりやすいけど、sing_frame_f0やsing_frame_volumeとの関係が不明。
-                // 調整のための機能ならSongAudioQueryに持たせる。
-                $arr = Voicevox::singFrameF0($song->score, $song->frame_audio_query);
-                $arr = Voicevox::singFrameVolume($song->score, $song->frame_audio_query);
+                $f0 = Voicevox::singFrameF0($song->score, $song->frame_audio_query);
+                $song->frame_audio_query['f0'] = $f0;
+                $vol = Voicevox::singFrameVolume($song->score, $song->frame_audio_query);
+                $song->frame_audio_query['volume'] = $vol;
             })
             ->generate(id: 3001);
 
