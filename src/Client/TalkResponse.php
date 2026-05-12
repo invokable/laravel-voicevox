@@ -31,6 +31,11 @@ class TalkResponse
         return $result ? $path : false;
     }
 
+    public function toBase64(): string
+    {
+        return base64_encode($this->content());
+    }
+
     public function __toString(): string
     {
         return $this->content();
