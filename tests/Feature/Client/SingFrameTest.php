@@ -58,8 +58,8 @@ test('frameSynthesis returns TalkResponse', function () {
         'http://127.0.0.1:50021/frame_synthesis*' => Http::response('binary-audio-data'),
     ]);
 
-    $songAudioQuery = new SongAudioQuery(['notes' => []], []);
-    $response = $songAudioQuery->generate(['f0' => [], 'volume' => [], 'phonemes' => []], 3001);
+    $songAudioQuery = new SongAudioQuery(['notes' => []], ['f0' => [], 'volume' => [], 'phonemes' => []]);
+    $response = $songAudioQuery->generate(id: 3001);
 
     expect($response)->toBeInstanceOf(SongResponse::class);
     expect($response->content())->toBe('binary-audio-data');

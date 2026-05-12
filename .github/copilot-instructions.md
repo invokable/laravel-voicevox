@@ -121,7 +121,9 @@ song(Score|array $score, int|string $id) {
 }
 ```
 
-エンジンAPIと一対一なsingFrameAudioQueryで作られたけどtalkと同じ使い方になるようsongに変更。
+エンジンAPIと一対一なsingFrameAudioQueryで作られたけどtalkと同じ使い方になるようsongに変更。  
+singFrameAudioQueryも残してaudioQueryも追加して、talkとsongはメソッドチェーンの開始地点になるようにした。
+
 ```php
 use Revolution\Voicevox\Voicevox;
 use Revolution\Voicevox\Client\SongAudioQuery;

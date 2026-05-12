@@ -14,12 +14,25 @@ class VoicevoxClient
     use WithHttp;
 
     /**
-     * Create Audio Query.
+     * Create a talk.
      *
      * @throws RequestException
      * @throws ConnectionException
      */
     public function talk(string $text, int|string $id = 1, bool $katakana_english = true, ?int $core_version = null): TalkAudioQuery
+    {
+        $audio_query = $this->audioQuery($text, $id, $katakana_english, $core_version);
+
+        return new TalkAudioQuery($audio_query);
+    }
+
+    /**
+     * Create Audio Query.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function audioQuery(string $text, int|string $id = 1, bool $katakana_english = true, ?int $core_version = null): array
     {
         $response = $this->http()->withQueryParameters(array_filter([
             'text' => $text,
@@ -30,7 +43,7 @@ class VoicevoxClient
             ->post('audio_query')
             ->throw();
 
-        return new TalkAudioQuery($response->json());
+        return $response->json();
     }
 
     /**
@@ -513,12 +526,27 @@ class VoicevoxClient
     }
 
     /**
-     * Create a FrameAudioQuery for singing synthesis from a Score.
+     * Create a song.
      *
      * @throws RequestException
      * @throws ConnectionException
      */
     public function song(array|Arrayable $score, int|string $id, ?string $core_version = null): SongAudioQuery
+    {
+        $score = $score instanceof Arrayable ? $score->toArray() : $score;
+
+        $frame_audio_query = $this->singFrameAudioQuery($score, $id, $core_version);
+
+        return new SongAudioQuery($score, $frame_audio_query);
+    }
+
+    /**
+     * Create a FrameAudioQuery for singing synthesis from a Score.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function singFrameAudioQuery(array|Arrayable $score, int|string $id, ?string $core_version = null): array
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
@@ -529,7 +557,7 @@ class VoicevoxClient
             ->post('sing_frame_audio_query', $score)
             ->throw();
 
-        return new SongAudioQuery($score, $response->json());
+        return $response->json();
     }
 
     /**
