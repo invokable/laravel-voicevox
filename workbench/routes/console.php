@@ -43,11 +43,11 @@ Artisan::command('voicevox:client:talk', function () {
 // vendor/bin/testbench voicevox:client:song
 Artisan::command('voicevox:client:song', function () {
     $score = Score::make([
-        Note::make(length: 15),
+        Note::make(length: 15), // 1音目は必ず休符
         Note::make(length: Note::len(480, 120), lyric: 'ド', key: 60),
         Note::make(length: Note::len(480, 120), lyric: 'レ', key: 62),
         Note::make(length: Note::len(960, 120), lyric: 'ミ', key: 64),
-        Note::make(length: 2),
+        Note::make(length: 2), // 最後も短く無音を入れるとよい
     ]);
 
     $response = Voicevox::song($score, id: 6000)
