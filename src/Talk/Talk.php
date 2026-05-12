@@ -8,13 +8,6 @@ use Revolution\Voicevox\Core\Synthesizer;
 
 class Talk
 {
-    protected Synthesizer $synthesizer;
-
-    public function __construct()
-    {
-        $this->synthesizer = app(Synthesizer::class);
-    }
-
     public static function make(string $text, int|string $id = 1): TalkAudioQuery
     {
         return (new self)->talk($text, $id);
@@ -22,8 +15,8 @@ class Talk
 
     public function talk(string $text, int|string $id = 1): TalkAudioQuery
     {
-        $audio_query = json_decode($this->synthesizer->createAudioQuery($text, $id), true);
+        $audio_query = json_decode(app(Synthesizer::class)->createAudioQuery($text, $id), true);
 
-        return new TalkAudioQuery($this->synthesizer, $audio_query, $id);
+        return new TalkAudioQuery($audio_query, $id);
     }
 }
