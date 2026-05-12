@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
-use Revolution\Voicevox\Client\TalkResponse;
+use Revolution\Voicevox\Client\SongAudioQuery;
+use Revolution\Voicevox\Client\SongResponse;
 use Revolution\Voicevox\Song\Score;
 use Revolution\Voicevox\Voicevox;
 
@@ -16,9 +17,9 @@ test('singFrameAudioQuery returns array', function () {
         'http://127.0.0.1:50021/sing_frame_audio_query*' => Http::response(['f0' => [440.0], 'volume' => [1.0], 'phonemes' => []]),
     ]);
 
-    $query = Voicevox::singFrameAudioQuery(['notes' => []], 3001);
+    $query = Voicevox::song(['notes' => []], 3001);
 
-    expect($query)->toBeArray()->toHaveKey('f0');
+    expect($query->frame_audio_query)->toBeArray()->toHaveKey('f0');
 });
 
 test('singFrameAudioQuery accepts Arrayable Score', function () {
@@ -27,9 +28,9 @@ test('singFrameAudioQuery accepts Arrayable Score', function () {
     ]);
 
     $score = new Score(notes: []);
-    $query = Voicevox::singFrameAudioQuery($score, 3001);
+    $query = Voicevox::song($score, 3001);
 
-    expect($query)->toBeArray();
+    expect($query)->toBeInstanceOf(SongAudioQuery::class);
 });
 
 test('singFrameF0 returns array of floats', function () {
@@ -57,8 +58,9 @@ test('frameSynthesis returns TalkResponse', function () {
         'http://127.0.0.1:50021/frame_synthesis*' => Http::response('binary-audio-data'),
     ]);
 
-    $response = Voicevox::frameSynthesis(['f0' => [], 'volume' => [], 'phonemes' => []], 3001);
+    $songAudioQuery = new SongAudioQuery(['notes' => []], []);
+    $response = $songAudioQuery->generate(['f0' => [], 'volume' => [], 'phonemes' => []], 3001);
 
-    expect($response)->toBeInstanceOf(TalkResponse::class);
+    expect($response)->toBeInstanceOf(SongResponse::class);
     expect($response->content())->toBe('binary-audio-data');
 });

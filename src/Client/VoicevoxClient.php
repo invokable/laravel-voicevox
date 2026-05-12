@@ -7,6 +7,7 @@ namespace Revolution\Voicevox\Client;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
+use Revolution\Voicevox\Song\Score;
 
 class VoicevoxClient
 {
@@ -495,17 +496,18 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function singFrameAudioQuery(array|Arrayable $score, int|string $id, ?string $core_version = null): array
+    public function song(array|Arrayable $score, int|string $id, ?string $core_version = null): SongAudioQuery
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
-        return $this->http()->withQueryParameters(array_filter([
+        $response = $this->http()->withQueryParameters(array_filter([
             'speaker' => $id,
             'core_version' => $core_version,
         ], fn ($v) => ! is_null($v)))
             ->post('sing_frame_audio_query', $score)
-            ->throw()
-            ->json();
+            ->throw();
+
+        return new SongAudioQuery($score, $response->json());
     }
 
     /**
@@ -544,24 +546,5 @@ class VoicevoxClient
             ->post('sing_frame_volume', ['score' => $score, 'frame_audio_query' => $frame_audio_query])
             ->throw()
             ->json();
-    }
-
-    /**
-     * Synthesize singing audio from a FrameAudioQuery.
-     *
-     * @throws RequestException
-     * @throws ConnectionException
-     */
-    public function frameSynthesis(array $frame_audio_query, int|string $id, ?string $core_version = null): TalkResponse
-    {
-        $body = $this->http()->withQueryParameters(array_filter([
-            'speaker' => $id,
-            'core_version' => $core_version,
-        ], fn ($v) => ! is_null($v)))
-            ->post('frame_synthesis', $frame_audio_query)
-            ->throw()
-            ->body();
-
-        return new TalkResponse($body);
     }
 }

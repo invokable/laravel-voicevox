@@ -121,6 +121,25 @@ song(Score|array $score, int|string $id) {
 }
 ```
 
+エンジンAPIと一対一なsingFrameAudioQueryで作られたけどtalkと同じ使い方になるようsongに変更。
+```php
+use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\Client\SongAudioQuery;
+
+$response = Voicevox::song($score, id: 6000)
+            ->tap(function(SongAudioQuery $song) {
+                // sing_frame_audio_queryとframe_synthesisは分かりやすいけど、sing_frame_f0やsing_frame_volumeとの関係が不明。
+                // 調整のための機能ならSongAudioQueryに持たせる。
+                $arr = Voicevox::singFrameF0($song->score, $song->frame_audio_query);
+                $arr = Voicevox::singFrameVolume($song->score, $song->frame_audio_query);
+            })
+            ->generate(id: 3001);
+
+$response->storeAs('song.wav');
+```
+
+SongResponseは今はTalkResponseと同じでも別クラスにしておく。
+
 ### speaker id
 
 `$speakers = Voicevox::speakers()`で得られるスピーカーリストのスタイル内にあるidを指定する。id=1はずんだもんのあまあま。本来はStyleIdだけどエンジンAPIではspeakerにStyleIdを渡している。
@@ -155,7 +174,7 @@ https://github.com/invokable/voicevox-core-php
 クライアント機能は今のまま公式VOICEVOXエンジンを使う想定で開発を継続。  
 Laravel版エンジンが完成したら変更するかもしれないけどHttpを経由するのが非効率だったら別の実装方法にするかもしれない。
 
-公式エンジンを別で動かせばLaravel版クライアントはFFIなしで使えるメリットがあるので残す理由があった。
+公式エンジンを別で動かせばLaravel版クライアントはFFIなしで使えるメリットがあるので残す理由があった。無FFI環境用にクライアントは後で別パッケージに分離する。この`laravel-voicevox`は全部入り。
 
 ## VOICEVOX エンジン
 
