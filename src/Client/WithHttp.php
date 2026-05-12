@@ -11,6 +11,6 @@ trait WithHttp
 {
     protected function http(): PendingRequest
     {
-        return Http::baseUrl(config('voicevox.url', 'http://127.0.0.1:50021'));
+        return Http::baseUrl(config('voicevox.client.url', 'http://127.0.0.1:50021'));
     }
 }
