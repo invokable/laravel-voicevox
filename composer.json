@@ -25,7 +25,10 @@
     "autoload": {
         "psr-4": {
             "Revolution\\Voicevox\\": "src/"
-        }
+        },
+        "files": [
+            "functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Storage;
 use Revolution\Voicevox\Client\TalkAudioQuery;
 use Revolution\Voicevox\Song\Note;
 use Revolution\Voicevox\Song\Score;
+use Revolution\Voicevox\Talk\TalkAudioQuery as NativeTalkAudioQuery;
 use Revolution\Voicevox\Voicevox;
+
+use function Revolution\Voicevox\talk;
 
 // Artisan::command('inspire', function () {
 //     $this->comment(Inspiring::quote());
@@ -70,3 +73,14 @@ Artisan::command('voicevox:client:wave', function () {
     $path = $response->storeAs('client', 'wave.wav');
     $this->info(Storage::path($path));
 })->purpose('Connect two waves');
+
+// vendor/bin/testbench voicevox:native:talk
+Artisan::command('voicevox:native:talk', function () {
+    $response = talk('ネイティブ版なのだ')
+        ->tap(function (NativeTalkAudioQuery $talk) {
+            $talk->audio_query['speedScale'] = 1.2;
+        })->generate();
+
+    $path = $response->storeAs('native', 'talk.wav');
+    $this->info(Storage::path($path));
+})->purpose('Generate talk with native');
