@@ -446,4 +446,121 @@ class VoicevoxClient
             'core_version' => $core_version,
         ], fn ($v) => ! is_null($v)))->json();
     }
+
+    /**
+     * Install a voice library by UUID.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function installLibrary(string $library_uuid): void
+    {
+        $this->http()->post("install_library/{$library_uuid}")->throw();
+    }
+
+    /**
+     * Uninstall a voice library by UUID.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function uninstallLibrary(string $library_uuid): void
+    {
+        $this->http()->post("uninstall_library/{$library_uuid}")->throw();
+    }
+
+    /**
+     * Get engine settings.
+     */
+    public function setting(): array
+    {
+        return $this->http()->get('setting')->json();
+    }
+
+    /**
+     * Update engine settings.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function updateSetting(array $settings): void
+    {
+        $this->http()->asForm()->post('setting', $settings)->throw();
+    }
+
+    /**
+     * Create a FrameAudioQuery for singing synthesis from a Score.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function singFrameAudioQuery(array|\Illuminate\Contracts\Support\Arrayable $score, int|string $id, ?string $core_version = null): array
+    {
+        $score = $score instanceof \Illuminate\Contracts\Support\Arrayable ? $score->toArray() : $score;
+
+        return $this->http()->withQueryParameters(array_filter([
+            'speaker' => $id,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('sing_frame_audio_query', $score)
+            ->throw()
+            ->json();
+    }
+
+    /**
+     * Get frame-by-frame fundamental frequency (F0) from a Score and FrameAudioQuery.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function singFrameF0(array|\Illuminate\Contracts\Support\Arrayable $score, array $frame_audio_query, int|string $id, ?string $core_version = null): array
+    {
+        $score = $score instanceof \Illuminate\Contracts\Support\Arrayable ? $score->toArray() : $score;
+
+        return $this->http()->withQueryParameters(array_filter([
+            'speaker' => $id,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('sing_frame_f0', ['score' => $score, 'frame_audio_query' => $frame_audio_query])
+            ->throw()
+            ->json();
+    }
+
+    /**
+     * Get frame-by-frame volume from a Score and FrameAudioQuery.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function singFrameVolume(array|\Illuminate\Contracts\Support\Arrayable $score, array $frame_audio_query, int|string $id, ?string $core_version = null): array
+    {
+        $score = $score instanceof \Illuminate\Contracts\Support\Arrayable ? $score->toArray() : $score;
+
+        return $this->http()->withQueryParameters(array_filter([
+            'speaker' => $id,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('sing_frame_volume', ['score' => $score, 'frame_audio_query' => $frame_audio_query])
+            ->throw()
+            ->json();
+    }
+
+    /**
+     * Synthesize singing audio from a FrameAudioQuery.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function frameSynthesis(array $frame_audio_query, int|string $id, ?string $core_version = null): TalkResponse
+    {
+        $body = $this->http()->withQueryParameters(array_filter([
+            'speaker' => $id,
+            'core_version' => $core_version,
+        ], fn ($v) => ! is_null($v)))
+            ->post('frame_synthesis', $frame_audio_query)
+            ->throw()
+            ->body();
+
+        return new TalkResponse($body);
+    }
 }
