@@ -6,6 +6,32 @@ return [
     'url' => env('VOICEVOX_URL', 'http://127.0.0.1:50021'),
 
     'core' => [
+        /**
+         * voicevox_coreまでのフルパス。
+         *
+         * /Users/.../.local/voicevox_core/
+         */
         'path' => env('VOICEVOX_CORE_PATH'),
+
+        /**
+         * voicevox_core内のOpenJtalkのパス。
+         *
+         * dict/open_jtalk_dic_utf_8-1.11
+         */
+        'dict' => env('VOICEVOX_CORE_DICT_PATH', 'dict/open_jtalk_dic_utf_8-1.11'),
+
+        /**
+         * voicevox_core内のmodelsのパス。
+         *
+         * models/vvms
+         */
+        'models' => env('VOICEVOX_CORE_MODELS_PATH', 'models/vvms'),
+
+        /**
+         * 起動時に読み込むモデルの配列。[]なら全モデルを読み込み、ただしかなり遅くなるのでデフォルトは0.vvmと歌声用のs0.vvmのみ。
+         *
+         * ['0.vvm', '1.vvm']
+         */
+        'vvms' => ['0.vvm', 's0.vvm'],
     ],
 ];

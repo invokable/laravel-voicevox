@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Revolution\Voicevox;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 use Revolution\Voicevox\Client\VoicevoxClient;
+use Revolution\Voicevox\Core\Enums\AccelerationMode;
+use Revolution\Voicevox\Core\Onnxruntime;
+use Revolution\Voicevox\Core\OpenJtalk;
+use Revolution\Voicevox\Core\Synthesizer;
+use Revolution\Voicevox\Core\VoiceModelFile;
 
 class VoicevoxServiceProvider extends ServiceProvider
 {
@@ -16,6 +22,39 @@ class VoicevoxServiceProvider extends ServiceProvider
         );
 
         $this->app->scoped(VoicevoxClient::class, VoicevoxClient::class);
+
+        $this->configureSynthesizer();
+    }
+
+    protected function configureSynthesizer(): void
+    {
+        $this->app->bind(Synthesizer::class, function () {
+            $voicevoxCoreDir = config('voicevox.core.path');
+            $onnxruntimeFilename = $voicevoxCoreDir.'onnxruntime/lib/'.Onnxruntime::libVersionedFilename();
+            $dictDir = $voicevoxCoreDir.config('voicevox.core.dict', 'dict/open_jtalk_dic_utf_8-1.11');
+            $modelDir = $voicevoxCoreDir.config('voicevox.core.models', 'models/vvms/');
+
+            // 初期化
+            $onnxruntime = Onnxruntime::loadOnce($onnxruntimeFilename);
+            $openJtalk = new OpenJtalk($dictDir);
+            $synthesizer = new Synthesizer($onnxruntime, $openJtalk, AccelerationMode::Auto);
+
+            // 音声モデルの読み込み
+            $load_vvms = config('voicevox.core.vvms');
+            $vvms = File::files($modelDir);
+            foreach ($vvms as $vvm) {
+                if (empty($load_vvms) || in_array(
+                    $vvm->getFilename(),
+                    $load_vvms,
+                    true,
+                )) {
+                    $model = VoiceModelFile::open($vvm->getRealPath());
+                    $synthesizer->loadVoiceModel($model);
+                }
+            }
+
+            return $synthesizer;
+        });
     }
 
     public function boot(): void
