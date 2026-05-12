@@ -54,3 +54,17 @@ Artisan::command('voicevox:client:song', function () {
     $path = $response->storeAs('client', 'song.wav');
     $this->info(Storage::path($path));
 })->purpose('Generate song with client');
+
+// vendor/bin/testbench voicevox:client:wave
+Artisan::command('voicevox:client:wave', function () {
+    $talk = Storage::get('client/talk.wav');
+    $song = Storage::get('client/song.wav');
+
+    $response = Voicevox::connectWaves([
+        base64_encode($talk),
+        base64_encode($song),
+    ]);
+
+    $path = $response->storeAs('client', 'wave.wav');
+    $this->info(Storage::path($path));
+})->purpose('Connect two waves');

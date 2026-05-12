@@ -15,8 +15,8 @@ class SongAudioQuery
     use WithHttp;
 
     public function __construct(
-        public array $frame_audio_query,
         public array $score,
+        public array $frame_audio_query,
         public int|string $id,
     ) {
         //

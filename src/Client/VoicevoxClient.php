@@ -19,9 +19,9 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function talk(string $text, int|string $id = 1, bool $katakana_english = true, ?int $core_version = null): TalkAudioQuery
+    public function talk(string $text, int|string $id = 1, bool $enable_katakana_english = true, ?int $core_version = null): TalkAudioQuery
     {
-        $audio_query = $this->audioQuery($text, $id, $katakana_english, $core_version);
+        $audio_query = $this->audioQuery($text, $id, $enable_katakana_english, $core_version);
 
         return new TalkAudioQuery(audio_query: $audio_query, id: $id);
     }
@@ -32,12 +32,12 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function audioQuery(string $text, int|string $id = 1, bool $katakana_english = true, ?int $core_version = null): array
+    public function audioQuery(string $text, int|string $id = 1, bool $enable_katakana_english = true, ?int $core_version = null): array
     {
         $response = $this->http()->withQueryParameters(array_filter([
             'text' => $text,
             'speaker' => $id,
-            'enable_katakana_english' => $katakana_english,
+            'enable_katakana_english' => $enable_katakana_english,
             'core_version' => $core_version,
         ], fn ($v) => ! is_null($v)))
             ->post('audio_query')
@@ -52,17 +52,16 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function synthesis(array $audio_query, int|string $id = 1, bool $upspeak = true, ?int $core_version = null): string
+    public function synthesis(array $audio_query, int|string $id = 1, bool $enable_interrogative_upspeak = true, ?int $core_version = null): string
     {
         $response = $this->http()
             ->accept('audio/wav')
-            ->withBody(collect($audio_query)->toPrettyJson(JSON_UNESCAPED_SLASHES))
             ->withQueryParameters(array_filter([
                 'speaker' => $id,
-                'enable_interrogative_upspeak' => $upspeak,
+                'enable_interrogative_upspeak' => $enable_interrogative_upspeak,
                 'core_version' => $core_version,
             ], fn ($v) => ! is_null($v)))
-            ->post('synthesis')
+            ->post('synthesis', $audio_query)
             ->throw();
 
         return $response->body();
@@ -223,12 +222,12 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function talkFromPreset(string $text, int $preset_id, bool $katakana_english = true, ?int $core_version = null): TalkAudioQuery
+    public function talkFromPreset(string $text, int $preset_id, bool $enable_katakana_english = true, ?int $core_version = null): TalkAudioQuery
     {
         $response = $this->http()->withQueryParameters(array_filter([
             'text' => $text,
             'preset_id' => $preset_id,
-            'enable_katakana_english' => $katakana_english,
+            'enable_katakana_english' => $enable_katakana_english,
             'core_version' => $core_version,
         ], fn ($v) => ! is_null($v)))
             ->post('audio_query_from_preset')
@@ -303,7 +302,10 @@ class VoicevoxClient
      */
     public function connectWaves(array $waves): TalkResponse
     {
-        $body = $this->http()->post('connect_waves', $waves)->throw()->body();
+        $body = $this->http()
+            ->post('connect_waves', $waves)
+            ->throw()
+            ->body();
 
         return new TalkResponse($body);
     }
@@ -537,7 +539,7 @@ class VoicevoxClient
 
         $frame_audio_query = $this->singFrameAudioQuery($score, $id, $core_version);
 
-        return new SongAudioQuery(frame_audio_query: $frame_audio_query, score: $score, id: $id);
+        return new SongAudioQuery(score: $score, frame_audio_query: $frame_audio_query, id: $id);
     }
 
     /**
@@ -608,12 +610,11 @@ class VoicevoxClient
     {
         $response = $this->http()
             ->accept('audio/wav')
-            ->withBody(collect($frame_audio_query)->toPrettyJson(JSON_UNESCAPED_SLASHES))
             ->withQueryParameters(array_filter([
                 'speaker' => $id,
                 'core_version' => $core_version,
             ], fn ($v) => ! is_null($v)))
-            ->post('frame_synthesis')
+            ->post('frame_synthesis', $frame_audio_query)
             ->throw();
 
         return $response->body();
