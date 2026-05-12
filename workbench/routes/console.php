@@ -44,8 +44,10 @@ Artisan::command('voicevox:client:talk', function () {
 Artisan::command('voicevox:client:song', function () {
     $score = Score::make([
         Note::make(length: 15),
-        Note::make(length: 45, lyric: 'ド', key: 60),
-        Note::make(length: 45, lyric: 'レ', key: 62),
+        Note::make(length: Note::len(480, 120), lyric: 'ド', key: 60),
+        Note::make(length: Note::len(480, 120), lyric: 'レ', key: 62),
+        Note::make(length: Note::len(960, 120), lyric: 'ミ', key: 64),
+        Note::make(length: 2),
     ]);
 
     $response = Voicevox::song($score, id: 6000)

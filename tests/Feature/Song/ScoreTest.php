@@ -17,3 +17,9 @@ test('Score', function () {
         ],
     ]);
 });
+
+test('Note frame length', function () {
+    $len = Note::len(480, 120);
+
+    expect($len)->toBe(47);
+});

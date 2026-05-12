@@ -30,6 +30,17 @@ readonly class Note implements Arrayable
         return new self($length, $lyric, $key, $id);
     }
 
+    /**
+     * フレーム長計算。整数に丸めるので徐々に誤差が生じる。
+     *
+     * @param  int  $ticks  4分音符一つが480として長さを入力。MIDIの分解能480。
+     * @param  int  $bpm  Beats Per Minute。テンポ。
+     */
+    public static function len(int $ticks, int $bpm = 125): int
+    {
+        return (int) round((($ticks / 480) * (60 / $bpm)) * 93.75);
+    }
+
     public function toArray(): array
     {
         return array_filter([
