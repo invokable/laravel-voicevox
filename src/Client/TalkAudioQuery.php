@@ -7,6 +7,7 @@ namespace Revolution\Voicevox\Client;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Traits\Tappable;
+use Revolution\Voicevox\Voicevox;
 
 class TalkAudioQuery
 {
@@ -19,24 +20,15 @@ class TalkAudioQuery
     }
 
     /**
-     * Generate voice.
+     * Generate talk.
      *
      * @throws RequestException
      * @throws ConnectionException
      */
     public function generate(int|string $id = 1, bool $upspeak = true, ?int $core_version = null): TalkResponse
     {
-        $response = $this->http()
-            ->accept('audio/wav')
-            ->withBody(collect($this->audio_query)->toPrettyJson(JSON_UNESCAPED_SLASHES))
-            ->withQueryParameters(array_filter([
-                'speaker' => $id,
-                'enable_interrogative_upspeak' => $upspeak,
-                'core_version' => $core_version,
-            ], fn ($v) => ! is_null($v)))
-            ->post('synthesis')
-            ->throw();
+        $body = Voicevox::synthesis($this->audio_query, $id, $upspeak, $core_version);
 
-        return new TalkResponse($response->body());
+        return new TalkResponse($body);
     }
 }

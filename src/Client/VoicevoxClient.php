@@ -34,6 +34,28 @@ class VoicevoxClient
     }
 
     /**
+     * Synthesize talk audio from an AudioQuery.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function synthesis(array $audio_query, int|string $id = 1, bool $upspeak = true, ?int $core_version = null): string
+    {
+        $response = $this->http()
+            ->accept('audio/wav')
+            ->withBody(collect($audio_query)->toPrettyJson(JSON_UNESCAPED_SLASHES))
+            ->withQueryParameters(array_filter([
+                'speaker' => $id,
+                'enable_interrogative_upspeak' => $upspeak,
+                'core_version' => $core_version,
+            ], fn ($v) => ! is_null($v)))
+            ->post('synthesis')
+            ->throw();
+
+        return $response->body();
+    }
+
+    /**
      * Get Speakers.
      */
     public function speakers(?int $core_version = null): array
@@ -546,5 +568,26 @@ class VoicevoxClient
             ->post('sing_frame_volume', ['score' => $score, 'frame_audio_query' => $frame_audio_query])
             ->throw()
             ->json();
+    }
+
+    /**
+     * Synthesize singing audio from a FrameAudioQuery.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function frameSynthesis(array $frame_audio_query, int|string $id, ?string $core_version = null): string
+    {
+        $response = $this->http()
+            ->accept('audio/wav')
+            ->withBody(collect($frame_audio_query)->toPrettyJson(JSON_UNESCAPED_SLASHES))
+            ->withQueryParameters(array_filter([
+                'speaker' => $id,
+                'core_version' => $core_version,
+            ], fn ($v) => ! is_null($v)))
+            ->post('frame_synthesis')
+            ->throw();
+
+        return $response->body();
     }
 }
