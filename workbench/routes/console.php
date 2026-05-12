@@ -76,10 +76,10 @@ Artisan::command('voicevox:client:wave', function () {
 
 // vendor/bin/testbench voicevox:native:talk
 Artisan::command('voicevox:native:talk', function () {
-    $response = talk('ネイティブ版なのだ')
+    $response = talk('ネイティブ版なのだ', id: 1)
         ->tap(function (NativeTalkAudioQuery $talk) {
             $talk->audio_query['speedScale'] = 1.2;
-        })->generate();
+        })->generate(id: 1);
 
     $path = $response->storeAs('native', 'talk.wav');
     $this->info(Storage::path($path));
