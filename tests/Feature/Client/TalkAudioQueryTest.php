@@ -15,7 +15,7 @@ test('generate returns TalkResponse', function () {
         'http://127.0.0.1:50021/synthesis*' => Http::response('wav-data'),
     ]);
 
-    $response = (new TalkAudioQuery(['text' => 'テスト'], id: 1))->generate();
+    $response = (new TalkAudioQuery(['text' => 'テスト'], id: 1))->generate(id: 1);
 
     expect($response)->toBeInstanceOf(TalkResponse::class)
         ->and($response->content())->toBe('wav-data');
