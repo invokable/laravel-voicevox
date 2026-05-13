@@ -145,7 +145,7 @@ $response = Voicevox::song($score, id: 6000) // sing_frame_audio_queryでframe_a
 $response->storeAs('song.wav');
 ```
 
-SongResponseは今はTalkResponseと同じでも別クラスにしておく。
+sing_frame_audio_queryのidは種類が`sing`か`singing_teacher`のスタイルIDを指定できる、が現状6000がsingでこの一つしか存在してない。frame_synthesisには種類が`sing`か`frame_decode`のスタイルIDを指定、他のほとんどのモデルが対象。3001はテキスト音声と同様ずんだもんのあまあま。6000を教師としてframe_audio_queryを作り、他のボイスで生成する流れ。
 
 ### speaker id
 

@@ -559,10 +559,12 @@ class VoicevoxClient
     /**
      * Create a song.
      *
+     * @param  int|string  $id  typeがsingかsinging_teacherのスタイルID
+     *
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function song(array|Arrayable $score, int|string $id, ?string $core_version = null): SongAudioQuery
+    public function song(array|Arrayable $score, int|string $id = 6000, ?string $core_version = null): SongAudioQuery
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
@@ -574,10 +576,12 @@ class VoicevoxClient
     /**
      * Create a FrameAudioQuery for singing synthesis from a Score.
      *
+     * @param  int|string  $id  typeがsingかsinging_teacherのスタイルID
+     *
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function singFrameAudioQuery(array|Arrayable $score, int|string $id, ?string $core_version = null): array
+    public function singFrameAudioQuery(array|Arrayable $score, int|string $id = 6000, ?string $core_version = null): array
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
@@ -594,10 +598,12 @@ class VoicevoxClient
     /**
      * Get frame-by-frame fundamental frequency (F0) from a Score and FrameAudioQuery.
      *
+     * @param  int|string  $id  typeがsingかsinging_teacherのスタイルID
+     *
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function singFrameF0(array|Arrayable $score, array $frame_audio_query, int|string $id, ?string $core_version = null): array
+    public function singFrameF0(array|Arrayable $score, array $frame_audio_query, int|string $id = 6000, ?string $core_version = null): array
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
@@ -613,10 +619,12 @@ class VoicevoxClient
     /**
      * Get frame-by-frame volume from a Score and FrameAudioQuery.
      *
+     * @param  int|string  $id  typeがsingかsinging_teacherのスタイルID
+     *
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function singFrameVolume(array|Arrayable $score, array $frame_audio_query, int|string $id, ?string $core_version = null): array
+    public function singFrameVolume(array|Arrayable $score, array $frame_audio_query, int|string $id = 6000, ?string $core_version = null): array
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
@@ -631,6 +639,8 @@ class VoicevoxClient
 
     /**
      * Synthesize singing audio from a FrameAudioQuery.
+     *
+     * @param  int|string  $id  typeがframe_decodeかsingのスタイルID
      *
      * @throws RequestException
      * @throws ConnectionException

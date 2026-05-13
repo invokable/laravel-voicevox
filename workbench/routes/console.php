@@ -27,10 +27,16 @@ Artisan::command('voicevox:speakers', function () {
     $speakers = Voicevox::speakers();
     dump($speakers);
 
-    $uuid = data_get($speakers, '{first}.speaker_uuid');
-    $speaker = Voicevox::speaker($uuid);
-    dd($speaker);
+    // $uuid = data_get($speakers, '{first}.speaker_uuid');
+    // $speaker = Voicevox::speaker($uuid);
+    // dd($speaker);
 })->purpose('Display Voicevox speakers');
+
+// vendor/bin/testbench voicevox:singers
+Artisan::command('voicevox:singers', function () {
+    $singers = Voicevox::singers();
+    dump($singers);
+})->purpose('Display Voicevox singers');
 
 // vendor/bin/testbench voicevox:client:talk
 Artisan::command('voicevox:client:talk', function () {

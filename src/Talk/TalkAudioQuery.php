@@ -20,7 +20,10 @@ class TalkAudioQuery
 
     public function generate(int|string $id = 1): TalkResponse
     {
-        $wav = app(Synthesizer::class)->synthesis(collect($this->audio_query)->toPrettyJson(JSON_UNESCAPED_SLASHES), $id);
+        $wav = app(Synthesizer::class)->synthesis(
+            collect($this->audio_query)->toPrettyJson(JSON_UNESCAPED_SLASHES),
+            (int) $id,
+        );
 
         return new TalkResponse($wav);
     }

@@ -25,12 +25,14 @@ class SongAudioQuery
     /**
      * Generate song.
      *
+     * @param  int|string  $id  typeがframe_decodeかsingのスタイルID
+     *
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string|null $id = null, ?string $core_version = null): SongResponse
+    public function generate(int|string $id, ?string $core_version = null): SongResponse
     {
-        $body = Voicevox::frameSynthesis($this->frame_audio_query, $id ?? $this->id, $core_version);
+        $body = Voicevox::frameSynthesis($this->frame_audio_query, $id, $core_version);
 
         return new SongResponse($body);
     }

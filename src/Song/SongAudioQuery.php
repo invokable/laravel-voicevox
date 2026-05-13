@@ -18,7 +18,10 @@ class SongAudioQuery
         //
     }
 
-    public function generate(int|string $id = 1): SongResponse
+    /**
+     * @param  int|string  $id  typeがframe_decodeかsingのスタイルID
+     */
+    public function generate(int|string $id): SongResponse
     {
         $wav = app(Synthesizer::class)->frameSynthesis(
             collect($this->frame_audio_query)->toJson(JSON_UNESCAPED_SLASHES),

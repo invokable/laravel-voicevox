@@ -9,12 +9,18 @@ use Revolution\Voicevox\Core\Synthesizer;
 
 class Song
 {
-    public static function make(Score|array $score, int|string $id = 1): SongAudioQuery
+    /**
+     * @param  int|string  $id  typeがsingかsinging_teacherのスタイルID
+     */
+    public static function make(Score|array $score, int|string $id = 6000): SongAudioQuery
     {
         return (new self)->song($score, $id);
     }
 
-    public function song(Score|array $score, int|string $id = 1): SongAudioQuery
+    /**
+     * @param  int|string  $id  typeがsingかsinging_teacherのスタイルID
+     */
+    public function song(Score|array $score, int|string $id = 6000): SongAudioQuery
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
