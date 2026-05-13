@@ -20,8 +20,8 @@ Work In Progress.
 
 ## Requirements
 
-- PHP >= 8.3
-- Laravel >= 12.x
+- PHP 8.3+
+- Laravel 12.x+
 - FFI: クライアント以外にはFFIを有効にしたPHPが必要です。Laravel Cloudを始め一般的なWebサーバーではほとんどが無効にされているのでこのパッケージはローカルCLIでの利用を前提にしています。
 
 ## Installation
