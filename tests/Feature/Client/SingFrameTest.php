@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
 use Revolution\Voicevox\Client\SongAudioQuery;
-use Revolution\Voicevox\Client\SongResponse;
 use Revolution\Voicevox\Song\Score;
 use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\VoicevoxResponse;
 
 beforeEach(function () {
     Http::preventStrayRequests();
@@ -53,7 +53,7 @@ test('singFrameVolume returns array of floats', function () {
     expect($vol)->toBeArray();
 });
 
-test('frameSynthesis returns TalkResponse', function () {
+test('frameSynthesis returns VoicevoxResponse', function () {
     Http::fake([
         'http://127.0.0.1:50021/frame_synthesis*' => Http::response('binary-audio-data'),
     ]);
@@ -61,6 +61,6 @@ test('frameSynthesis returns TalkResponse', function () {
     $songAudioQuery = new SongAudioQuery(score: ['notes' => []], frame_audio_query: ['f0' => [], 'volume' => [], 'phonemes' => []], id: 6000);
     $response = $songAudioQuery->generate(id: 3001);
 
-    expect($response)->toBeInstanceOf(SongResponse::class);
+    expect($response)->toBeInstanceOf(VoicevoxResponse::class);
     expect($response->content())->toBe('binary-audio-data');
 });

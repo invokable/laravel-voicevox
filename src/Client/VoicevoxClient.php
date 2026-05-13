@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Revolution\Voicevox\Song\Score;
+use Revolution\Voicevox\VoicevoxResponse;
 
 class VoicevoxClient
 {
@@ -300,14 +301,14 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function connectWaves(array $waves): TalkResponse
+    public function connectWaves(array $waves): VoicevoxResponse
     {
         $body = $this->http()
             ->post('connect_waves', $waves)
             ->throw()
             ->body();
 
-        return new TalkResponse($body);
+        return new VoicevoxResponse($body);
     }
 
     /**
@@ -336,7 +337,7 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function morphing(array $audio_query, int|string $base_speaker, int|string $target_speaker, float $morph_rate, ?string $core_version = null): TalkResponse
+    public function morphing(array $audio_query, int|string $base_speaker, int|string $target_speaker, float $morph_rate, ?string $core_version = null): VoicevoxResponse
     {
         $body = $this->http()->withQueryParameters(array_filter([
             'base_speaker' => $base_speaker,
@@ -348,7 +349,7 @@ class VoicevoxClient
             ->throw()
             ->body();
 
-        return new TalkResponse($body);
+        return new VoicevoxResponse($body);
     }
 
     /**
@@ -430,7 +431,7 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function multiSynthesis(array $audio_queries, int|string $id, bool $interrogative_upspeak = false, ?int $core_version = null): TalkResponse
+    public function multiSynthesis(array $audio_queries, int|string $id, bool $interrogative_upspeak = false, ?int $core_version = null): VoicevoxResponse
     {
         $body = $this->http()->withQueryParameters(array_filter([
             'speaker' => $id,
@@ -441,7 +442,7 @@ class VoicevoxClient
             ->throw()
             ->body();
 
-        return new TalkResponse($body);
+        return new VoicevoxResponse($body);
     }
 
     /**

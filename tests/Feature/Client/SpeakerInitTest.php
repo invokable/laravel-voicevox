@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
-use Revolution\Voicevox\Client\TalkResponse;
 use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\VoicevoxResponse;
 
 beforeEach(function () {
     Http::preventStrayRequests();
@@ -47,5 +47,5 @@ test('multiSynthesis returns TalkResponse', function () {
 
     $result = Voicevox::multiSynthesis([[], []], 1);
 
-    expect($result)->toBeInstanceOf(TalkResponse::class);
+    expect($result)->toBeInstanceOf(VoicevoxResponse::class);
 });

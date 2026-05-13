@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Voicevox\Client;
+namespace Revolution\Voicevox;
 
 use Illuminate\Support\Facades\Storage;
 
-class TalkResponse
+class VoicevoxResponse
 {
     public function __construct(protected string $body)
     {

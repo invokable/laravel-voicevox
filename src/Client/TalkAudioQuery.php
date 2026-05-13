@@ -8,6 +8,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Traits\Tappable;
 use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\VoicevoxResponse;
 
 class TalkAudioQuery
 {
@@ -27,10 +28,10 @@ class TalkAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string $id = 1, bool $upspeak = true, ?int $core_version = null): TalkResponse
+    public function generate(int|string $id = 1, bool $upspeak = true, ?int $core_version = null): VoicevoxResponse
     {
         $body = Voicevox::synthesis($this->audio_query, $id, $upspeak, $core_version);
 
-        return new TalkResponse($body);
+        return new VoicevoxResponse($body);
     }
 }

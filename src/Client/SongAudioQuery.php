@@ -8,6 +8,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Traits\Tappable;
 use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\VoicevoxResponse;
 
 class SongAudioQuery
 {
@@ -30,10 +31,10 @@ class SongAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string $id, ?string $core_version = null): SongResponse
+    public function generate(int|string $id, ?string $core_version = null): VoicevoxResponse
     {
         $body = Voicevox::frameSynthesis($this->frame_audio_query, $id, $core_version);
 
-        return new SongResponse($body);
+        return new VoicevoxResponse($body);
     }
 }

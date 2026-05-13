@@ -11,6 +11,7 @@ use Revolution\Voicevox\Song\Score;
 use Revolution\Voicevox\Talk\TalkAudioQuery as NativeTalkAudioQuery;
 use Revolution\Voicevox\Voicevox;
 
+use function Revolution\Voicevox\song;
 use function Revolution\Voicevox\talk;
 
 // Artisan::command('inspire', function () {
@@ -90,3 +91,20 @@ Artisan::command('voicevox:native:talk', function () {
     $path = $response->storeAs('native', 'talk.wav');
     $this->info(Storage::path($path));
 })->purpose('Generate talk with native');
+
+// vendor/bin/testbench voicevox:native:song
+Artisan::command('voicevox:native:song', function () {
+    $score = Score::make([
+        Note::make(length: 15), // 1音目は必ず休符
+        Note::make(length: Note::len(480, 120), lyric: 'ド', key: 60),
+        Note::make(length: Note::len(480, 120), lyric: 'レ', key: 62),
+        Note::make(length: Note::len(960, 120), lyric: 'ミ', key: 64),
+        Note::make(length: 2), // 最後も短く無音を入れるとよい
+    ]);
+
+    $response = song($score, id: 6000)
+        ->generate(id: 3001);
+
+    $path = $response->storeAs('native', 'song.wav');
+    $this->info(Storage::path($path));
+})->purpose('Generate song with native');
