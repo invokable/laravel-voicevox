@@ -9,12 +9,12 @@ Work In Progress.
 
 ## Overview
 
-| Feature         | Supported                                                             |
-|-----------------|-----------------------------------------------------------------------|
-| VOICEVOX Client | ✅                                                                     |
-| VOICEVOX Engine | ❌                                                                     |
-| VOICEVOX Core   | ✅ [voicevox-core-php](https://github.com/invokable/voicevox-core-php) |
-| VOICEVOX Editor | ❌                                                                     |
+| Feature         | Supported | Description                                                         |
+|-----------------|-----------|---------------------------------------------------------------------|
+| VOICEVOX Client | ✅         |                                                                     | 
+| VOICEVOX Engine | ❌         |                                                                     | 
+| VOICEVOX Core   | ✅         | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) |
+| VOICEVOX Editor | ❌         |                                                                     |
 
 ## Requirements
 
