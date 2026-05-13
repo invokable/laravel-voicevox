@@ -9,13 +9,14 @@ Work In Progress.
 
 ## Overview
 
-| Feature         | Supported | Description                                                                                                         |
-|-----------------|-----------|---------------------------------------------------------------------------------------------------------------------|
-| VOICEVOX Client | ✅         | 公式のVOICEVOXエンジンAPIにアクセスするクライアント。FFIなしでも動きます。                                                                        | 
-| VOICEVOX Core   | ✅         | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) VOICEVOX COREの動的ライブラリをFFIでラップしPHPネイティブのように使えます。 |
-| VOICEVOX Native | ✅         | Laravelスタイルでvoicevox-core-phpを扱う。                                                                                   |
-| VOICEVOX Engine | ❌         |                                                                                                                     |
-| VOICEVOX Editor | ❌         |                                                                                                                     |
+| Feature          | Supported | Description                                                                                                         |
+|------------------|-----------|---------------------------------------------------------------------------------------------------------------------|
+| VOICEVOX Client  | ✅         | 公式のVOICEVOXエンジンAPIにアクセスするクライアント。FFIなしでも動きます。                                                                        | 
+| VOICEVOX Core    | ✅         | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) VOICEVOX COREの動的ライブラリをFFIでラップしPHPネイティブのように使えます。 |
+| Laravel style    | ✅         | Laravelスタイルでvoicevox-core-phpを扱う。                                                                                   |
+| Laravel AI SDK統合 | ❌         | Laravel AI SDKのAudioから使う。                                                                                           |
+| VOICEVOX Engine  | ❌         |                                                                                                                     |
+| VOICEVOX Editor  | ❌         |                                                                                                                     |
 
 ## Requirements
 
