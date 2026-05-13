@@ -18,5 +18,6 @@ Work In Progress.
 
 ## Requirements
 
-- PHP >= 8.3
-- Laravel >= 12.x
+- PHP 8.3+
+- Laravel 12.x+
+- FFI
