@@ -29,10 +29,11 @@ class VoicevoxServiceProvider extends ServiceProvider
     protected function configureSynthesizer(): void
     {
         $this->app->scoped(Synthesizer::class, function () {
-            $voicevoxCoreDir = config('voicevox.core.path');
+            $voicevoxCoreDir = rtrim(config('voicevox.core.path'), '/').'/';
+
             $onnxruntimeFilename = $voicevoxCoreDir.'onnxruntime/lib/'.Onnxruntime::libVersionedFilename();
-            $dictDir = $voicevoxCoreDir.config('voicevox.core.dict', 'dict/open_jtalk_dic_utf_8-1.11');
-            $modelDir = $voicevoxCoreDir.config('voicevox.core.models', 'models/vvms/');
+            $dictDir = $voicevoxCoreDir.trim(config('voicevox.core.dict', 'dict/open_jtalk_dic_utf_8-1.11'), '/').'/';
+            $modelDir = $voicevoxCoreDir.trim(config('voicevox.core.models', 'models/vvms'), '/').'/';
 
             // 初期化
             $onnxruntime = Onnxruntime::loadOnce($onnxruntimeFilename);
