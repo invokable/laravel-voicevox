@@ -37,3 +37,7 @@ composer require revolution/laravel-voicevox revolution/voicevox-core-php
 ```shell
 composer require revolution/laravel-voicevox
 ```
+
+### VOICEVOX CORE 動的ライブラリのセットアップ
+
+FFIが必要な機能を使うには、[voicevox-core-phpのREADME](https://github.com/invokable/voicevox-core-php/blob/main/README_jp.md) を参考にVOICEVOX COREをインストールしてください。
