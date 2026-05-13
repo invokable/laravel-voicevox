@@ -32,6 +32,7 @@ https://github.com/voicevox-client
 - [voicevox-core-php](https://github.com/invokable/voicevox-core-php)
 
 ## Command
+
 - `composer run test` - Run pest tests.
 - `composer run lint` - Run pint code formatter.
 
@@ -72,6 +73,7 @@ docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
 - config/voicevox.php: `'url' => env('VOICEVOX_URL','http://127.0.0.1:50021'),`
 
 最終的な使い方のイメージ
+
 ```php
 use Revolution\Voicevox\Voicevox;
 
@@ -102,12 +104,15 @@ $response->storeAs('talk.wav');
 基本的な設計は決まったので後はGitHub Agentic Workflowsで継続。
 
 歌声はこんなコード。
+
 ```php
 $response = Voicevox::song(score: ['notes' => []], id: 6000)->generate(id: 3001);
 ```
+
 歌声機能のコアへの追加は最近。  
 `Score`や`Note`は公式ではコアのPython APIで定義。https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core_python_api/python/voicevox_core/_python/__init__.py
 Arrayableやvalidate()でLaravelの機能を使いたいのでvoicevox-core-phpではなくLaravel版で実装。クライアント限定ではなく他でも使いそうなのでsrc/Song/Score.phpとNote.phpに作成済み。
+
 ```php
 $score = new Score(notes: [
     new Note(length: 15, lyric: ''),
@@ -115,6 +120,7 @@ $score = new Score(notes: [
     new Note(length: 45, lyric: 'レ', key: 62),
 ]);
 ```
+
 ```php
 song(Score|array $score, int|string $id) {
     $score = $score instanceOf Arrayable ? $score->toArray(): $score;
@@ -156,21 +162,21 @@ sing_frame_audio_queryのidは種類が`sing`か`singing_teacher`のスタイル
     "name": "ずんだもん",
     "speaker_uuid": "388f246b-8c41-4ac1-8e2d-5d79f3ff56d9",
     "styles": [
-      {
-        "name": "ノーマル",
-        "id": 3,
-        "type": "talk"
-      },
-      {
-        "name": "あまあま",
-        "id": 1,
-        "type": "talk"
-      },
-      {
-        "name": "ツンツン",
-        "id": 7,
-        "type": "talk"
-      },
+        {
+            "name": "ノーマル",
+            "id": 3,
+            "type": "talk"
+        },
+        {
+            "name": "あまあま",
+            "id": 1,
+            "type": "talk"
+        },
+        {
+            "name": "ツンツン",
+            "id": 7,
+            "type": "talk"
+        },
 ```
 
 ## VOICEVOX コア
@@ -195,6 +201,16 @@ Agentic Workflows環境ではコアの動的ライブラリをインストール
 - src/Engine/Http/Controllers/: Controllerクラスを配置。一応分かりやすくControllerの名前を付けるけど何も継承しない。`__invoke()`だけのシングルアクションコントローラー、APIリソース、APIシングルトンリソースなどで作成。Controllerファイルは増えてもいいのでAPIごとに分割。
 - src/VoicevoxServiceProvider.php: エンジンルートを登録
 - config/voicevox.php: 不要な場合もあるだろうからエンジンルートの無効化設定
+
+```php
+return [
+    //  他の設定
+
+    'engine' => [
+        'disabled' => env('VOICEVOX_ENGINE_DISABLED', false),
+    ],
+]
+```
 
 ### 音声モデルファイル(.vvm)とスタイルIDの対応表
 
@@ -224,7 +240,7 @@ $response->storeAs('talk.wav');
 
 - ~~VOICEVOXコア：RubyやGoなどの各言語版のFFIラッパーが作られているのでPHPのFFIでも同じように実装は可能なはず。実装はできてもPHPの場合は動かす環境に課題がある。PHPではFFIは無効にされていることが多い。何よりLaravel Cloudで無効なので実装しても簡単に使える環境を用意できない。homebrew/MacやWSL/WindowsのPHPならFFIが有効なので「ローカル限定」なら可能かもしれない。~~
 - ~~VOICEVOXエンジン：コアの移植さえできればエンジンは簡単。別に作る必要もなくパッケージ内からルートを提供できる。~~
-- VOICEVOXアプリ：ローカル限定でもいいのでエディターも実装。
+- VOICEVOXアプリ：ローカル限定でもいいのでエディターも実装。音声特化。Laravelではないかも。
 - 他言語版のFFIラッパーを見てもローカルに動的ライブラリをインストール、もしくはコンパイルするアプリを想定している。
 - [NativePHP](https://github.com/nativephp) でデスクトップアプリを作る場合は内部で [static-php-cli](https://github.com/crazywhalecc/static-php-cli) が使われているので動的ライブラリをFFIで使う方法で実装可能。カスタムstatic-php-cliを作る必要がある。
 - ~~[ext-php-rs](https://github.com/extphprs/ext-php-rs) でRustからPHP拡張を作ればstatic-php-cliに拡張を動的リンクしてビルド可能かもしれない。OSごとに異なる。この辺りは要調査。~~ FFIで十分動くので拡張は不要そう。
