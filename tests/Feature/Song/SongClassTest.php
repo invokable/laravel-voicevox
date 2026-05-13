@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Revolution\Voicevox\Song\Score;
 use Revolution\Voicevox\Song\Song;
 use Revolution\Voicevox\Song\SongAudioQuery;
 

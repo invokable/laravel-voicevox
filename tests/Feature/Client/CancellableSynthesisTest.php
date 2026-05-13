@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
-use Revolution\Voicevox\Client\TalkResponse;
 use Revolution\Voicevox\Voicevox;
 
 beforeEach(function () {
