@@ -528,6 +528,35 @@ class VoicevoxClient
     }
 
     /**
+     * Cancellable synthesis — same as synthesis but supports server-sent cancellation.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function cancellableSynthesis(array $audio_query, int|string $id = 1, bool $enable_interrogative_upspeak = true, ?string $core_version = null): string
+    {
+        $response = $this->http()
+            ->accept('audio/wav')
+            ->withQueryParameters(array_filter([
+                'speaker' => $id,
+                'enable_interrogative_upspeak' => $enable_interrogative_upspeak,
+                'core_version' => $core_version,
+            ], fn ($v) => ! is_null($v)))
+            ->post('cancellable_synthesis', $audio_query)
+            ->throw();
+
+        return $response->body();
+    }
+
+    /**
+     * Health / portal check — returns the engine portal page HTML.
+     */
+    public function alive(): string
+    {
+        return $this->http()->get('/')->body();
+    }
+
+    /**
      * Create a song.
      *
      * @throws RequestException
