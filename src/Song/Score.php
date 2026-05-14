@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Revolution\Voicevox\Song;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Collection;
 
-class Score implements Arrayable
+class Score implements Arrayable, Jsonable
 {
     /**
      * 楽譜情報。
@@ -37,5 +38,10 @@ class Score implements Arrayable
         return [
             'notes' => Collection::make($this->notes)->toArray(),
         ];
+    }
+
+    public function toJson($options = 0): string
+    {
+        return Collection::make($this->toArray())->toPrettyJson($options);
     }
 }
