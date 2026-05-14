@@ -20,9 +20,9 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function talk(string $text, int|string $id = 1, bool $enableKatakanaEnglish = true, ?int $coreVersion = null): TalkAudioQuery
+    public function talk(string $text, int|string $id = 1, bool $enableKatakanaEnglish = true): TalkAudioQuery
     {
-        $audioQuery = $this->audioQuery($text, $id, $enableKatakanaEnglish, $coreVersion);
+        $audioQuery = $this->audioQuery($text, $id, $enableKatakanaEnglish);
 
         return new TalkAudioQuery(audioQuery: $audioQuery, id: $id);
     }
@@ -33,13 +33,13 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function audioQuery(string $text, int|string $id = 1, bool $enableKatakanaEnglish = true, ?int $coreVersion = null): array
+    public function audioQuery(string $text, int|string $id = 1, bool $enableKatakanaEnglish = true): array
     {
         $response = $this->http()->withQueryParameters(array_filter([
             'text' => $text,
             'speaker' => $id,
             'enable_katakana_english' => $enableKatakanaEnglish,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('audio_query')
             ->throw();
@@ -53,14 +53,14 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function synthesis(array $audioQuery, int|string $id = 1, bool $enableInterrogativeUpspeak = true, ?int $coreVersion = null): string
+    public function synthesis(array $audioQuery, int|string $id = 1, bool $enableInterrogativeUpspeak = true): string
     {
         $response = $this->http()
             ->accept('audio/wav')
             ->withQueryParameters(array_filter([
                 'speaker' => $id,
                 'enable_interrogative_upspeak' => $enableInterrogativeUpspeak,
-                'core_version' => $coreVersion,
+                'core_version' => config('voicevox.client.core_version'),
             ], fn ($v) => ! is_null($v)))
             ->post('synthesis', $audioQuery)
             ->throw();
@@ -71,22 +71,22 @@ class VoicevoxClient
     /**
      * Get Speakers.
      */
-    public function speakers(?int $coreVersion = null): array
+    public function speakers(): array
     {
         return $this->http()->get('speakers', array_filter([
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ]))->json();
     }
 
     /**
      * Speaker Info.
      */
-    public function speaker(string $uuid, string $format = 'base64', ?int $coreVersion = null): array
+    public function speaker(string $uuid, string $format = 'base64'): array
     {
         return $this->http()->get('speaker_info', array_filter([
             'speaker_uuid' => $uuid,
             'resource_format' => $format,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))->json();
     }
 
@@ -223,13 +223,13 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function talkFromPreset(string $text, int $presetId, bool $enableKatakanaEnglish = true, ?int $coreVersion = null): TalkAudioQuery
+    public function talkFromPreset(string $text, int $presetId, bool $enableKatakanaEnglish = true): TalkAudioQuery
     {
         $response = $this->http()->withQueryParameters(array_filter([
             'text' => $text,
             'preset_id' => $presetId,
             'enable_katakana_english' => $enableKatakanaEnglish,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('audio_query_from_preset')
             ->throw();
@@ -240,22 +240,22 @@ class VoicevoxClient
     /**
      * Get Singers (singing voice speakers).
      */
-    public function singers(?int $coreVersion = null): array
+    public function singers(): array
     {
         return $this->http()->get('singers', array_filter([
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ]))->json();
     }
 
     /**
      * Singer Info.
      */
-    public function singer(string $uuid, string $format = 'base64', ?int $coreVersion = null): array
+    public function singer(string $uuid, string $format = 'base64'): array
     {
         return $this->http()->get('singer_info', array_filter([
             'speaker_uuid' => $uuid,
             'resource_format' => $format,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))->json();
     }
 
@@ -270,10 +270,10 @@ class VoicevoxClient
     /**
      * Supported devices info.
      */
-    public function supportedDevices(?string $coreVersion = null): array
+    public function supportedDevices(): array
     {
         return $this->http()->get('supported_devices', array_filter([
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))->json();
     }
 
@@ -319,10 +319,10 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function morphableTargets(array $styleIds, ?string $coreVersion = null): array
+    public function morphableTargets(array $styleIds): array
     {
         return $this->http()->withQueryParameters(array_filter([
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('morphable_targets', $styleIds)
             ->throw()
@@ -337,13 +337,13 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function morphing(array $audioQuery, int|string $baseSpeaker, int|string $targetSpeaker, float $morphRate, ?string $coreVersion = null): VoicevoxResponse
+    public function morphing(array $audioQuery, int|string $baseSpeaker, int|string $targetSpeaker, float $morphRate): VoicevoxResponse
     {
         $body = $this->http()->withQueryParameters(array_filter([
             'base_speaker' => $baseSpeaker,
             'target_speaker' => $targetSpeaker,
             'morph_rate' => $morphRate,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('synthesis_morphing', $audioQuery)
             ->throw()
@@ -358,14 +358,14 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function accentPhrases(string $text, int|string $id, bool $isKana = false, bool $katakanaEnglish = true, ?int $coreVersion = null): array
+    public function accentPhrases(string $text, int|string $id, bool $isKana = false, bool $katakanaEnglish = true): array
     {
         return $this->http()->withQueryParameters(array_filter([
             'text' => $text,
             'speaker' => $id,
             'is_kana' => $isKana,
             'enable_katakana_english' => $katakanaEnglish,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('accent_phrases')
             ->throw()
@@ -378,11 +378,11 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function moraData(array $accentPhrases, int|string $id, ?int $coreVersion = null): array
+    public function moraData(array $accentPhrases, int|string $id): array
     {
         return $this->http()->withQueryParameters(array_filter([
             'speaker' => $id,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('mora_data', $accentPhrases)
             ->throw()
@@ -395,11 +395,11 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function moraLength(array $accentPhrases, int|string $id, ?int $coreVersion = null): array
+    public function moraLength(array $accentPhrases, int|string $id): array
     {
         return $this->http()->withQueryParameters(array_filter([
             'speaker' => $id,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('mora_length', $accentPhrases)
             ->throw()
@@ -412,11 +412,11 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function moraPitch(array $accentPhrases, int|string $id, ?int $coreVersion = null): array
+    public function moraPitch(array $accentPhrases, int|string $id): array
     {
         return $this->http()->withQueryParameters(array_filter([
             'speaker' => $id,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('mora_pitch', $accentPhrases)
             ->throw()
@@ -431,12 +431,12 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function multiSynthesis(array $audioQueries, int|string $id, bool $interrogativeUpspeak = false, ?int $coreVersion = null): VoicevoxResponse
+    public function multiSynthesis(array $audioQueries, int|string $id, bool $interrogativeUpspeak = false): VoicevoxResponse
     {
         $body = $this->http()->withQueryParameters(array_filter([
             'speaker' => $id,
             'enable_interrogative_upspeak' => $interrogativeUpspeak,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('multi_synthesis', $audioQueries)
             ->throw()
@@ -465,12 +465,12 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function initializeSpeaker(int|string $id, bool $skipReinit = false, ?int $coreVersion = null): void
+    public function initializeSpeaker(int|string $id, bool $skipReinit = false): void
     {
         $this->http()->withQueryParameters(array_filter([
             'speaker' => $id,
             'skip_reinit' => $skipReinit,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('initialize_speaker')
             ->throw();
@@ -479,11 +479,11 @@ class VoicevoxClient
     /**
      * Check if a speaker has been initialized.
      */
-    public function isInitializedSpeaker(int|string $id, ?int $coreVersion = null): bool
+    public function isInitializedSpeaker(int|string $id): bool
     {
         return $this->http()->get('is_initialized_speaker', array_filter([
             'speaker' => $id,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))->json();
     }
 
@@ -534,14 +534,14 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function cancellableSynthesis(array $audioQuery, int|string $id = 1, bool $enableInterrogativeUpspeak = true, ?string $coreVersion = null): string
+    public function cancellableSynthesis(array $audioQuery, int|string $id = 1, bool $enableInterrogativeUpspeak = true): string
     {
         $response = $this->http()
             ->accept('audio/wav')
             ->withQueryParameters(array_filter([
                 'speaker' => $id,
                 'enable_interrogative_upspeak' => $enableInterrogativeUpspeak,
-                'core_version' => $coreVersion,
+                'core_version' => config('voicevox.client.core_version'),
             ], fn ($v) => ! is_null($v)))
             ->post('cancellable_synthesis', $audioQuery)
             ->throw();
@@ -565,11 +565,11 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function song(array|Arrayable $score, int|string $teacher = 6000, ?string $coreVersion = null): SongAudioQuery
+    public function song(array|Arrayable $score, int|string $teacher = 6000): SongAudioQuery
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
-        $frameAudioQuery = $this->singFrameAudioQuery($score, $teacher, $coreVersion);
+        $frameAudioQuery = $this->singFrameAudioQuery($score, $teacher);
 
         return new SongAudioQuery(score: $score, frameAudioQuery: $frameAudioQuery, teacher: $teacher);
     }
@@ -582,13 +582,13 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function singFrameAudioQuery(array|Arrayable $score, int|string $teacher = 6000, ?string $coreVersion = null): array
+    public function singFrameAudioQuery(array|Arrayable $score, int|string $teacher = 6000): array
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
         $response = $this->http()->withQueryParameters(array_filter([
             'speaker' => $teacher,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('sing_frame_audio_query', $score)
             ->throw();
@@ -604,13 +604,13 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function singFrameF0(array|Arrayable $score, array $frameAudioQuery, int|string $teacher = 6000, ?string $coreVersion = null): array
+    public function singFrameF0(array|Arrayable $score, array $frameAudioQuery, int|string $teacher = 6000): array
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
         return $this->http()->withQueryParameters(array_filter([
             'speaker' => $teacher,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('sing_frame_f0', ['score' => $score, 'frame_audio_query' => $frameAudioQuery])
             ->throw()
@@ -625,13 +625,13 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function singFrameVolume(array|Arrayable $score, array $frameAudioQuery, int|string $teacher = 6000, ?string $coreVersion = null): array
+    public function singFrameVolume(array|Arrayable $score, array $frameAudioQuery, int|string $teacher = 6000): array
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
         return $this->http()->withQueryParameters(array_filter([
             'speaker' => $teacher,
-            'core_version' => $coreVersion,
+            'core_version' => config('voicevox.client.core_version'),
         ], fn ($v) => ! is_null($v)))
             ->post('sing_frame_volume', ['score' => $score, 'frame_audio_query' => $frameAudioQuery])
             ->throw()
@@ -646,13 +646,13 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function frameSynthesis(array $frameAudioQuery, int|string $id, ?string $coreVersion = null): string
+    public function frameSynthesis(array $frameAudioQuery, int|string $id): string
     {
         $response = $this->http()
             ->accept('audio/wav')
             ->withQueryParameters(array_filter([
                 'speaker' => $id,
-                'core_version' => $coreVersion,
+                'core_version' => config('voicevox.client.core_version'),
             ], fn ($v) => ! is_null($v)))
             ->post('frame_synthesis', $frameAudioQuery)
             ->throw();

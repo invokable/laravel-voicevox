@@ -31,9 +31,9 @@ class SongAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string $id, ?string $coreVersion = null): VoicevoxResponse
+    public function generate(int|string $id): VoicevoxResponse
     {
-        $body = Voicevox::frameSynthesis($this->frameAudioQuery, $id, $coreVersion);
+        $body = Voicevox::frameSynthesis($this->frameAudioQuery, $id);
 
         return new VoicevoxResponse($body);
     }

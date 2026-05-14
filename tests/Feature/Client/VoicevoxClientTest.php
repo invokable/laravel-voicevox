@@ -22,3 +22,15 @@ test('talk returns TalkAudioQuery', function () {
     expect($query)->toBeInstanceOf(TalkAudioQuery::class)
         ->and($query->audioQuery)->toBe(['speedScale' => 1]);
 });
+
+test('talk uses configured core version', function () {
+    config()->set('voicevox.client.core_version', '0.15.0');
+
+    Http::fake([
+        'http://127.0.0.1:50021/audio_query*' => Http::response(['speedScale' => 1]),
+    ]);
+
+    app(VoicevoxClient::class)->talk('テスト');
+
+    Http::assertSent(fn ($request) => str($request->url())->contains('core_version=0.15.0'));
+});
