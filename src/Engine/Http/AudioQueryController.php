@@ -25,7 +25,7 @@ class AudioQueryController
             );
         } catch (Throwable) {
             return response(status: Response::HTTP_NOT_IMPLEMENTED)->json([
-                'error' => __('The Laravel version of the engine does not support this endpoint. Please use the official engine instead.'),
+                'error' => __(config('voicevox.engine.fallback_error')),
             ], options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         }
     }
