@@ -31,7 +31,7 @@ readonly class Note implements Arrayable
     }
 
     /**
-     * フレーム長計算。整数に丸めるので徐々に誤差が生じる。
+     * フレーム長計算ヘルパー。MIDIに慣れてる人向け。整数に丸めるので徐々に誤差が生じる。
      *
      * @param  int  $ticks  4分音符一つが480として長さを入力。MIDIの分解能480。
      * @param  int  $bpm  Beats Per Minute。テンポ。
