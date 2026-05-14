@@ -13,7 +13,7 @@ class TalkAudioQuery
     use Tappable;
 
     public function __construct(
-        public array $audio_query,
+        public array $audioQuery,
         public int|string|null $id = null,
     ) {
         //
@@ -22,7 +22,7 @@ class TalkAudioQuery
     public function generate(int|string $id = 1): VoicevoxResponse
     {
         $wav = app(Synthesizer::class)->synthesis(
-            collect($this->audio_query)->toPrettyJson(JSON_UNESCAPED_SLASHES),
+            collect($this->audioQuery)->toPrettyJson(JSON_UNESCAPED_SLASHES),
             (int) $id,
         );
 

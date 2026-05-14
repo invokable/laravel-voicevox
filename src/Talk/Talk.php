@@ -15,8 +15,8 @@ class Talk
 
     public function talk(string $text, int|string $id = 1): TalkAudioQuery
     {
-        $audio_query = json_decode(app(Synthesizer::class)->createAudioQuery($text, $id), true);
+        $audioQuery = json_decode(app(Synthesizer::class)->createAudioQuery($text, $id), true);
 
-        return new TalkAudioQuery($audio_query, $id);
+        return new TalkAudioQuery($audioQuery, $id);
     }
 }

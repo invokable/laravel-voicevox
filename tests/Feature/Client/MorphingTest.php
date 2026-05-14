@@ -25,7 +25,7 @@ test('morphing returns VoicevoxResponse', function () {
         'http://127.0.0.1:50021/synthesis_morphing*' => Http::response('wav-data'),
     ]);
 
-    $response = Voicevox::morphing(audio_query: [], base_speaker: 1, target_speaker: 3, morph_rate: 0.5);
+    $response = Voicevox::morphing(audioQuery: [], baseSpeaker: 1, targetSpeaker: 3, morphRate: 0.5);
 
     expect($response)->toBeInstanceOf(VoicevoxResponse::class);
     expect($response->content())->toBe('wav-data');

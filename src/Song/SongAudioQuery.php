@@ -13,7 +13,7 @@ class SongAudioQuery
     use Tappable;
 
     public function __construct(
-        public array $frame_audio_query,
+        public array $frameAudioQuery,
         public int|string|null $id = null,
     ) {
         //
@@ -25,7 +25,7 @@ class SongAudioQuery
     public function generate(int|string $id): VoicevoxResponse
     {
         $wav = app(Synthesizer::class)->frameSynthesis(
-            collect($this->frame_audio_query)->toJson(JSON_UNESCAPED_SLASHES),
+            collect($this->frameAudioQuery)->toJson(JSON_UNESCAPED_SLASHES),
             (int) $id,
         );
 

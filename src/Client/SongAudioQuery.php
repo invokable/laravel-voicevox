@@ -17,7 +17,7 @@ class SongAudioQuery
 
     public function __construct(
         public array $score,
-        public array $frame_audio_query,
+        public array $frameAudioQuery,
         public int|string $id,
     ) {
         //
@@ -31,9 +31,9 @@ class SongAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string $id, ?string $core_version = null): VoicevoxResponse
+    public function generate(int|string $id, ?string $coreVersion = null): VoicevoxResponse
     {
-        $body = Voicevox::frameSynthesis($this->frame_audio_query, $id, $core_version);
+        $body = Voicevox::frameSynthesis($this->frameAudioQuery, $id, $coreVersion);
 
         return new VoicevoxResponse($body);
     }

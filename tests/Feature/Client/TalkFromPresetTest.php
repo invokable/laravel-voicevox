@@ -15,7 +15,7 @@ test('voice from preset returns VoiceAudioQuery', function () {
         'http://127.0.0.1:50021/audio_query_from_preset*' => Http::response([]),
     ]);
 
-    $query = Voicevox::talkFromPreset('テスト', preset_id: 1);
+    $query = Voicevox::talkFromPreset('テスト', presetId: 1);
 
     expect($query)->toBeInstanceOf(TalkAudioQuery::class);
 });

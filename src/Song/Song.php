@@ -24,7 +24,7 @@ class Song
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
-        $frame_audio_query = json_decode(
+        $frameAudioQuery = json_decode(
             app(Synthesizer::class)->createSingFrameAudioQuery(
                 collect($score)->toJson(JSON_UNESCAPED_SLASHES),
                 (int) $id,
@@ -32,6 +32,6 @@ class Song
             true,
         );
 
-        return new SongAudioQuery($frame_audio_query, $id);
+        return new SongAudioQuery($frameAudioQuery, $id);
     }
 }
