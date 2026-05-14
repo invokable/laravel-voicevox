@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Voicevox\Talk;
 
 use Illuminate\Support\Traits\Tappable;
-use Revolution\Voicevox\Core\Synthesizer;
+use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\VoicevoxResponse;
 
 class TalkAudioQuery
@@ -21,7 +21,7 @@ class TalkAudioQuery
 
     public function generate(int|string $id = 1): VoicevoxResponse
     {
-        $wav = app(Synthesizer::class)->synthesis(
+        $wav = Synthesizer::synthesis(
             collect($this->audioQuery)->toPrettyJson(JSON_UNESCAPED_SLASHES),
             (int) $id,
         );

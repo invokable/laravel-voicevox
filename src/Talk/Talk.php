@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Revolution\Voicevox\Talk;
 
-use Revolution\Voicevox\Core\Synthesizer;
+use Revolution\Voicevox\Synthesizer;
 
 class Talk
 {
-    public static function make(string $text, int|string $id = 1): TalkAudioQuery
+    public static function make(): self
     {
-        return (new self)->talk($text, $id);
+        return new self;
     }
 
     public function talk(string $text, int|string $id = 1): TalkAudioQuery
     {
-        $audioQuery = json_decode(app(Synthesizer::class)->createAudioQuery($text, $id), true);
+        $audioQuery = json_decode(Synthesizer::createAudioQuery($text, $id), true);
 
         return new TalkAudioQuery($audioQuery, $id);
     }

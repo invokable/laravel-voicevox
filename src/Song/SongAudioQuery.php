@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Voicevox\Song;
 
 use Illuminate\Support\Traits\Tappable;
-use Revolution\Voicevox\Core\Synthesizer;
+use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\VoicevoxResponse;
 
 class SongAudioQuery
@@ -24,7 +24,7 @@ class SongAudioQuery
      */
     public function generate(int|string $id): VoicevoxResponse
     {
-        $wav = app(Synthesizer::class)->frameSynthesis(
+        $wav = Synthesizer::frameSynthesis(
             collect($this->frameAudioQuery)->toJson(JSON_UNESCAPED_SLASHES),
             (int) $id,
         );

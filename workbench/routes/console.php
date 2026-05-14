@@ -60,7 +60,7 @@ Artisan::command('voicevox:client:song', function () {
         Note::make(length: 2), // 最後も短く無音を入れるとよい
     ]);
 
-    $response = Voicevox::song($score, id: 6000)
+    $response = Voicevox::song($score, teacher: 6000)
         ->generate(id: 3001);
 
     $path = $response->storeAs('client', 'song.wav');
@@ -102,9 +102,10 @@ Artisan::command('voicevox:native:song', function () {
         Note::make(length: 2), // 最後も短く無音を入れるとよい
     ]);
 
-    $response = song($score, id: 6000)
+    $response = song($score, teacher: 6000)
         ->generate(id: 3001);
 
+    // 同じScoreならclientもnativeも全く同じファイル
     $path = $response->storeAs('native', 'song.wav');
     $this->info(Storage::path($path));
 })->purpose('Generate song with native');

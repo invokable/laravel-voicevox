@@ -15,7 +15,7 @@ use Revolution\Voicevox\Talk\TalkAudioQuery;
  */
 function talk(string $text, int|string $id = 1): TalkAudioQuery
 {
-    return Talk::make($text, $id);
+    return Talk::make()->talk($text, $id);
 }
 
 /**
@@ -23,5 +23,5 @@ function talk(string $text, int|string $id = 1): TalkAudioQuery
  */
 function song(Score|array $score, int|string $teacher = 6000): SongAudioQuery
 {
-    return Song::make($score, $teacher);
+    return Song::make()->song($score, $teacher);
 }

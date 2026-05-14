@@ -44,10 +44,24 @@ Agentic Workflows環境でも`setup-php`でPHPはインストールされてる�
 
 ## コーディングガイドライン
 
-- VOICEVOXエンジンのAPIと一対一の対応ではなくLaravelスタイルのクラス名やメソッド名を使う。
+- クライアント：VOICEVOXエンジンのAPIと一対一の対応ではなくLaravelスタイルのクラス名やメソッド名を使う。
 - POSTメソッドでもクエリーパラメーターで渡す値と、リクエストボディで渡すJSONが混在しているので実装時には注意する。
 - VOICEVOXは歴史的経緯によりSpeakerId(UUID) と StyleId(整数)が混同している。後発のLaravel版では気にしなくていいので将来的に変更されてもいいように引数では`int|string $id`とする。
 - VOICEVOXエンジンやコア内部の命名は、テキスト音声合成は`talk`や`tts`、歌声音声合成は`song`が使われている模様。公開APIは変更しにくいけど内部は変更できるので後からでも変わっている。最新の公式に合わせてLaravel版でもTalkとSongを使う。
+
+## ディレクトリ構成
+
+- src/Voicevox.php: クライアント機能のFacade。ユーザーが使う。
+- src/Synthesizer.php: コア機能のFacade。ユーザーにはなるべく見せない設計。コアのSynthesizerはVoicevoxServiceProviderでコンテナに登録しているのでSynthesizer FacadeからコアSynthesizerの機能を全て使えてテスト時のモックもしやすい。ネイティブ版やエンジンはSynthesizer Facadeを使えば作りやすいはず。
+- src/Client/: クライアント機能ディレクトリ
+- src/Talk/: ネイティブのトーク機能ディレクトリ。VOICEVOX公式ではトークとソングを2大機能のように扱っているのでsrc直下に配置。
+- src/Song/: ネイティブのソング機能ディレクトリ
+- functions.php: `talk()`や`song()`のネイティブ版ヘルパー関数。クライアントはVoicevox Facadeから使う、ネイティブ版はヘルパーから使う全く別の導線。
+- src/Engine/: エンジン機能ディレクトリ。これから開発。Talk、Song以外のコアを使う機能（プリセット、辞書など）はEngine内に配置するかも。基本的に全てヘルパーからの利用を想定しているのでクラスファイルの配置場所は分かりやすければどこでもいい。
+  src/VoicevoxResponse.php: 音声の生データを保持するレスポンス。ひとまず全部で共通のVoicevoxResponseを使用。分けた方が良くなったら別クラス化。
+- src/VoicevoxServiceProvider.php
+- config/voicevox.php
+- src/Ai/: [Laravel AI SDK](https://github.com/laravel/ai) 連携。AI SDKのAudioを使った音声合成を実装。`Audio::of('I love coding with Laravel.')->generate();`。`VoicevoxProvider.php`と`VoicevoxGateway.php`を作成。AI SDKカスタムプロバイダーは他でも作ってるので間違っても修正できる。
 
 ## VOICEVOX クライアント
 
@@ -66,11 +80,8 @@ docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
 
 - src/Client/VoicevoxClient.php: メインのクライアントクラス。`talk($text, $id): TalkAudioQuery`で`audio_query`を実行。
 - src/Client/TalkAudioQuery.php: TalkのAudioQueryクラス。`audio_query`の結果のjsonを保持して、`synthesis`を実行。`generate($id = 1): TalkResponse`
-- src/VoicevoxResponse.php: `synthesis`の結果の音声の生データを保持するレスポンス。ひとまず全部で共通のVoicevoxResponseを使用。分けた方が良くなったら別クラス化。
+- src/VoicevoxResponse.php: `synthesis`の結果の音声の生データを保持するレスポンス。
 - src/Voicevox.php: Facade。interfaceなしで直接VoicevoxClientを指定。最近のLaravel公式に多い書き方。
-- src/Ai/: [Laravel AI SDK](https://github.com/laravel/ai) 連携。AI SDKのAudioを使った音声合成を実装。`Audio::of('I love coding with Laravel.')->generate();`。`VoicevoxProvider.php`と`VoicevoxGateway.php`を作成。AI SDKカスタムプロバイダーは他でも作ってるので間違っても修正できる。
-- src/VoicevoxServiceProvider.php: `$this->app->scoped(VoicevoxClient::class`でVoicevoxClientを初期化。
-- config/voicevox.php: `'url' => env('VOICEVOX_URL','http://127.0.0.1:50021'),`
 
 最終的な使い方のイメージ
 
@@ -91,7 +102,7 @@ use Revolution\Voicevox\Client\TalkAudioQuery;
 
 $response = Voicevox::talk('タップで調整できるのだ')
     ->tap(function(TalkAudioQuery $talk) {
-        $talk->audio_query['speedScale'] = 1.2;
+        $talk->audioQuery['speedScale'] = 1.2;
     })
     ->generate();
 
@@ -140,11 +151,11 @@ $response = Voicevox::song($score, id: 6000) // sing_frame_audio_queryでframe_a
 
                 // 1. $song->scoreのnoteのkeyなどを変更したら
                 // 2. f0を変更
-                $f0 = Voicevox::singFrameF0($song->score, $song->frame_audio_query, $song->id);
-                $song->frame_audio_query['f0'] = $f0;
+                $f0 = Voicevox::singFrameF0($song->score, $song->frameAudioQuery, $song->id);
+                $song->frameAudioQuery['f0'] = $f0;
                 // 3. volumeを変更。必ずf0→volumeの順番で変更する。
-                $volume= Voicevox::singFrameVolume($song->score, $song->frame_audio_query, $song->id);
-                $song->frame_audio_query['volume'] = $volume;
+                $volume= Voicevox::singFrameVolume($song->score, $song->frameAudioQuery, $song->id);
+                $song->frameAudioQuery['volume'] = $volume;
             })
             ->generate(id: 3001); // frame_synthesisで音声を生成
 
@@ -221,9 +232,10 @@ https://github.com/VOICEVOX/voicevox_vvm
 
 クライアントとは違うPHP版コアを使う場合の使い方案。最近の公式に合わせてトークとソングを2大機能のように扱う。
 
-- src/Talk/Talk.php: `Talk::make(text:)->generate()`。`Talk::fake()`でテスト用にモック。
-- src/Song/Song.php: `Song::make(score:)->generate()`
-- functions.php: `talk()`, `song()`。Talk、Songクラスは実際には関数から使う。Laravel AI SDKの`agnet()`と同じ実装パターン。
+- src/Talk/Talk.php: `Talk::make()->talk(text:)->->generate()`。`Talk::fake()`でテスト用にモック。
+- src/Song/Song.php: `Song::make()->song(score:)->generate()`
+- src/Engine/: 他の機能は仮でEngine内に配置。
+- functions.php: `talk()`, `song()`。Talk、Songクラスは実際には関数から使う。Laravel AI SDKの`agnet()`とやLaravel Promptsと同じ実装パターン。
 
 ```php
 use function Revolution\Voicevox\{talk, song};
@@ -233,6 +245,15 @@ $response->storeAs('talk.wav');
 ```
 
 クライアントの`Voicevox::talk()`から`Voicevox::`を消せば移行できるようにしておく。
+
+### 仮の機能リスト
+```php
+talk($text, id: $id)->generate($id);
+talk($text, preset: $preset)->generate($id);
+
+song($score, teacher: $teacher)->generate($id);
+
+```
 
 ## 将来的な計画
 
