@@ -123,10 +123,19 @@ Artisan::command('voicevox:ai:client', function () {
 
 // vendor/bin/testbench voicevox:ai:native
 Artisan::command('voicevox:ai:native', function () {
-    $response = Audio::of('ララベルエーアイからも使えます')
+    $word = 'ララベルAIからも使えます';
+    $response = Audio::of($word)
         ->male()
         ->generate('voicevox');
 
     $path = $response->storeAs('ai', 'native.wav');
     $this->info(Storage::path($path));
 })->purpose('Generate talk with AI SDK voicevox');
+
+// vendor/bin/testbench voicevox:kanalizer
+Artisan::command('voicevox:kanalizer', function () {
+    // transliterator_transliterateは期待するカタカナ変換はできないので他の方法が必要。
+
+    $word = 'Laravel AIからも使えます';
+    $this->info(transliterator_transliterate('Lower(); Latin-Katakana', $word));
+})->purpose('kanalizer');
