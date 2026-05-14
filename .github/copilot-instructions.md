@@ -241,7 +241,7 @@ https://github.com/VOICEVOX/voicevox_vvm
 - functions.php: `talk()`, `song()`。Talk、Songクラスは実際には関数から使う。Laravel AI SDKの`agent()`とやLaravel Promptsと同じ実装パターン。
 
 ```php
-use function Revolution\Voicevox\{talk, song};
+use function Revolution\Voicevox\talk;
 
 $response = talk(text: 'ララベルが好きなのだ', id: 1)->generate();
 $response->storeAs('talk.wav');
