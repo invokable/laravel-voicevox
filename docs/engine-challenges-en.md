@@ -197,7 +197,8 @@ base_aperiodicity        = pw.d4c(base_wave, base_f0, base_time_axis, fs)
 target_spectrogram       = pw.cheaptrick(target_wave, target_f0, morph_time_axis, fs)
 morph_spectrogram = base_spectrogram * (1.0 - morph_rate) + target_spectrogram * morph_rate
 y_h = pw.synthesize(base_f0, morph_spectrogram, base_aperiodicity, fs, 1.0)
-```[^5]
+```
+[^5]
 
 ### Why It's Hard to Port
 
@@ -265,7 +266,8 @@ The engine expects a specific **directory structure** under `engine_characters_p
     portrait.png
     icons/{style_id}.png
     voice_samples/{style_id}_001.wav  (always exactly 3)
-```[^6]
+```
+[^6]
 
 Two resource delivery modes exist:
 - `resource_format=base64` — files read and inlined as base64 strings
