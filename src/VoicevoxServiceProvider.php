@@ -68,6 +68,8 @@ class VoicevoxServiceProvider extends ServiceProvider
             __DIR__.'/../config/voicevox.php' => config_path('voicevox.php'),
         ], 'voicevox-config');
 
+        $this->configureEngine();
+
         Ai::extend('voicevox', function ($app, array $config) {
             return new VoicevoxProvider($config, $app->make(Dispatcher::class));
         });
@@ -75,5 +77,14 @@ class VoicevoxServiceProvider extends ServiceProvider
         Ai::extend('voicevox-client', function ($app, array $config) {
             return new VoicevoxClientProvider($config, $app->make(Dispatcher::class));
         });
+    }
+
+    protected function configureEngine(): void
+    {
+        if (config('voicevox.engine.disabled', false)) {
+            return;
+        }
+
+        $this->loadRoutesFrom(__DIR__.'/../routes/voicevox.php');
     }
 }

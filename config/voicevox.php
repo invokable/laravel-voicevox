@@ -39,4 +39,8 @@ return [
          */
         'vvms' => ['0.vvm', '9.vvm', 's0.vvm'],
     ],
+
+    'engine' => [
+        'disabled' => env('VOICEVOX_ENGINE_DISABLED', false),
+    ],
 ];
