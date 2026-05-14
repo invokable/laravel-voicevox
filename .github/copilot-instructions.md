@@ -200,6 +200,8 @@ Laravel版エンジンが完成したら変更するかもしれないけどHttp
 
 公式エンジンを別で動かせばLaravel版クライアントはFFIなしで使えるメリットがあるので残す理由があった。
 
+名前空間：`Revolution\Voicevox\Core`
+
 ## VOICEVOX エンジン
 
 公式互換のWeb APIを作る。Laravelなら当然簡単。このパッケージ内からルートを提供。
