@@ -7,6 +7,9 @@ namespace Revolution\Voicevox;
 use Illuminate\Support\Facades\Facade;
 use Revolution\Voicevox\Client\VoicevoxClient;
 
+/**
+ * @mixin VoicevoxClient
+ */
 class Voicevox extends Facade
 {
     protected static function getFacadeAccessor(): string

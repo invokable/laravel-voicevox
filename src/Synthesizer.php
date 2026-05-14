@@ -7,6 +7,9 @@ namespace Revolution\Voicevox;
 use Illuminate\Support\Facades\Facade;
 use Revolution\Voicevox\Core\Synthesizer as CoreSynthesizer;
 
+/**
+ * @mixin CoreSynthesizer
+ */
 class Synthesizer extends Facade
 {
     protected static function getFacadeAccessor(): string
