@@ -22,7 +22,7 @@ class TalkAudioQuery
     public function generate(int|string $id = 1): VoicevoxResponse
     {
         $wav = Synthesizer::synthesis(
-            collect($this->audioQuery)->toPrettyJson(JSON_UNESCAPED_SLASHES),
+            collect($this->audioQuery)->toJson(JSON_UNESCAPED_SLASHES),
             (int) $id,
         );
 
