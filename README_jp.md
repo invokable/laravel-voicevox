@@ -14,7 +14,7 @@ Work In Progress.
 | VOICEVOX Client  | ✅         | 公式のVOICEVOXエンジンAPIにアクセスするクライアント。FFIなしでも動きます。                                                                        | 
 | VOICEVOX Core    | ✅         | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) VOICEVOX COREの動的ライブラリをFFIでラップしPHPネイティブのように使えます。 |
 | Laravel style    | ✅         | Laravelスタイルでvoicevox-core-phpを扱う。                                                                                   |
-| Laravel AI SDK統合 | ❌         | Laravel AI SDKのAudioから使う。                                                                                           |
+| Laravel AI SDK統合 | ✅         | Laravel AI SDKのAudioから使う。クライアント版とネイティブ版、両方で対応しています。                                                                 |
 | VOICEVOX Engine  | ❌         |                                                                                                                     |
 | VOICEVOX Editor  | ❌         |                                                                                                                     |
 

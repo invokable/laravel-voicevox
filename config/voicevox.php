@@ -33,10 +33,10 @@ return [
         'models' => env('VOICEVOX_CORE_MODELS_PATH', 'models/vvms'),
 
         /**
-         * 起動時に読み込むモデルの配列。[]なら全モデルを読み込み、ただしかなり遅くなるのでデフォルトは0.vvmと歌声用のs0.vvmのみ。
+         * 起動時に読み込むモデルの配列。[]なら全モデルを読み込み、ただしかなり遅くなるのでデフォルトは0.vvmと歌声用のs0.vvmとAI SDKのデフォルト男性音声用の9.vvmのみ。
          *
          * ['0.vvm', '1.vvm']
          */
-        'vvms' => ['0.vvm', 's0.vvm'],
+        'vvms' => ['0.vvm', '9.vvm', 's0.vvm'],
     ],
 ];

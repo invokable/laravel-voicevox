@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Ai\Audio;
 use Revolution\Voicevox\Client\TalkAudioQuery;
 use Revolution\Voicevox\Song\Note;
 use Revolution\Voicevox\Song\Score;
@@ -112,10 +113,20 @@ Artisan::command('voicevox:native:song', function () {
 
 // vendor/bin/testbench voicevox:ai:client
 Artisan::command('voicevox:ai:client', function () {
-    $response = \Laravel\Ai\Audio::of('ララベルAIからも使えます')
+    $response = Audio::of('ララベルAIからも使えます')
         ->voice('春日部つむぎ')
         ->generate('voicevox-client');
 
     $path = $response->storeAs('ai', 'client.wav');
     $this->info(Storage::path($path));
 })->purpose('Generate talk with AI SDK voicevox-client');
+
+// vendor/bin/testbench voicevox:ai:native
+Artisan::command('voicevox:ai:native', function () {
+    $response = Audio::of('ララベルエーアイからも使えます')
+        ->male()
+        ->generate('voicevox');
+
+    $path = $response->storeAs('ai', 'native.wav');
+    $this->info(Storage::path($path));
+})->purpose('Generate talk with AI SDK voicevox');
