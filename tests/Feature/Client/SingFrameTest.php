@@ -19,7 +19,7 @@ test('singFrameAudioQuery returns array', function () {
 
     $query = Voicevox::song(['notes' => []], 3001);
 
-    expect($query->frame_audio_query)->toBeArray()->toHaveKey('f0');
+    expect($query->frameAudioQuery)->toBeArray()->toHaveKey('f0');
 });
 
 test('singFrameAudioQuery accepts Arrayable Score', function () {
@@ -58,7 +58,7 @@ test('frameSynthesis returns VoicevoxResponse', function () {
         'http://127.0.0.1:50021/frame_synthesis*' => Http::response('binary-audio-data'),
     ]);
 
-    $songAudioQuery = new SongAudioQuery(score: ['notes' => []], frame_audio_query: ['f0' => [], 'volume' => [], 'phonemes' => []], id: 6000);
+    $songAudioQuery = new SongAudioQuery(score: ['notes' => []], frameAudioQuery: ['f0' => [], 'volume' => [], 'phonemes' => []], id: 6000);
     $response = $songAudioQuery->generate(id: 3001);
 
     expect($response)->toBeInstanceOf(VoicevoxResponse::class);

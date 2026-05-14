@@ -15,8 +15,10 @@ test('talk returns TalkAudioQuery', function () {
         'http://127.0.0.1:50021/audio_query*' => Http::response(['speedScale' => 1]),
     ]);
 
-    $query = app(VoicevoxClient::class)->talk('テスト', id: 1);
+    $query = app(VoicevoxClient::class)->talk('テスト', id: 1, enableKatakanaEnglish: false);
+
+    Http::assertSent(fn ($request) => str($request->url())->contains('enable_katakana_english=0'));
 
     expect($query)->toBeInstanceOf(TalkAudioQuery::class)
-        ->and($query->audio_query)->toBe(['speedScale' => 1]);
+        ->and($query->audioQuery)->toBe(['speedScale' => 1]);
 });

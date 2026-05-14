@@ -43,7 +43,7 @@ Artisan::command('voicevox:singers', function () {
 Artisan::command('voicevox:client:talk', function () {
     $response = Voicevox::talk('ララベルが好きなのだ')
         ->tap(function (TalkAudioQuery $talk) {
-            $talk->audio_query['speedScale'] = 1.2;
+            $talk->audioQuery['speedScale'] = 1.2;
         })->generate();
 
     $path = $response->storeAs('client', 'talk.wav');
@@ -85,7 +85,7 @@ Artisan::command('voicevox:client:wave', function () {
 Artisan::command('voicevox:native:talk', function () {
     $response = talk('ネイティブ版なのだ', id: 1)
         ->tap(function (NativeTalkAudioQuery $talk) {
-            $talk->audio_query['speedScale'] = 1.2;
+            $talk->audioQuery['speedScale'] = 1.2;
         })->generate(id: 1);
 
     $path = $response->storeAs('native', 'talk.wav');

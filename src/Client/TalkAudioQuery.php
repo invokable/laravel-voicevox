@@ -16,7 +16,7 @@ class TalkAudioQuery
     use WithHttp;
 
     public function __construct(
-        public array $audio_query,
+        public array $audioQuery,
         public int|string|null $id = null,
     ) {
         //
@@ -28,9 +28,9 @@ class TalkAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string $id = 1, bool $upspeak = true, ?int $core_version = null): VoicevoxResponse
+    public function generate(int|string $id = 1, bool $upspeak = true, ?int $coreVersion = null): VoicevoxResponse
     {
-        $body = Voicevox::synthesis($this->audio_query, $id, $upspeak, $core_version);
+        $body = Voicevox::synthesis($this->audioQuery, $id, $upspeak, $coreVersion);
 
         return new VoicevoxResponse($body);
     }
