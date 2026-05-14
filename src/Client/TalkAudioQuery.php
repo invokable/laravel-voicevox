@@ -28,9 +28,9 @@ class TalkAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string $id = 1, bool $upspeak = true, ?int $coreVersion = null): VoicevoxResponse
+    public function generate(int|string $id = 1, bool $upspeak = true): VoicevoxResponse
     {
-        $body = Voicevox::synthesis($this->audioQuery, $id, $upspeak, $coreVersion);
+        $body = Voicevox::synthesis($this->audioQuery, $id, $upspeak);
 
         return new VoicevoxResponse($body);
     }
