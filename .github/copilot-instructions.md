@@ -58,7 +58,7 @@ Agentic Workflows環境でも`setup-php`でPHPはインストールされてる�
 - src/Song/: ネイティブのソング機能ディレクトリ
 - functions.php: `talk()`や`song()`のネイティブ版ヘルパー関数。クライアントはVoicevox Facadeから使う、ネイティブ版はヘルパーから使う全く別の導線。
 - src/Engine/: エンジン機能ディレクトリ。これから開発。Talk、Song以外のコアを使う機能（プリセット、辞書など）はEngine内に配置するかも。基本的に全てヘルパーからの利用を想定しているのでクラスファイルの配置場所は分かりやすければどこでもいい。
-  src/VoicevoxResponse.php: 音声の生データを保持するレスポンス。ひとまず全部で共通のVoicevoxResponseを使用。分けた方が良くなったら別クラス化。
+- src/VoicevoxResponse.php: 音声の生データを保持するレスポンス。ひとまず全部で共通のVoicevoxResponseを使用。分けた方が良くなったら別クラス化。
 - src/VoicevoxServiceProvider.php
 - config/voicevox.php
 - src/Ai/: [Laravel AI SDK](https://github.com/laravel/ai) 連携。AI SDKのAudioを使った音声合成を実装。`Audio::of('I love coding with Laravel.')->generate();`。`VoicevoxProvider.php`と`VoicevoxGateway.php`を作成。AI SDKカスタムプロバイダーは他でも作ってるので間違っても修正できる。
