@@ -212,7 +212,7 @@ Agentic Workflows環境ではコアの動的ライブラリをインストール
 名前空間：`Revolution\Voicevox\Engine`
 
 - routes/voicevox.php: ルート
-- src/Engine/Http/Controllers/: Controllerクラスを配置。一応分かりやすくControllerの名前を付けるけど何も継承しない。`__invoke()`だけのシングルアクションコントローラー、APIリソース、APIシングルトンリソースなどで作成。Controllerファイルは増えてもいいのでAPIごとに分割。
+- src/Engine/Http/: Controllerクラスを配置。一応分かりやすくControllerの名前を付けるけど何も継承しない。`__invoke()`だけのシングルアクションコントローラー、APIリソース、APIシングルトンリソースなどで作成。Controllerファイルは増えてもいいのでAPIごとに分割。
 - src/VoicevoxServiceProvider.php: エンジンルートを登録
 - config/voicevox.php: 不要な場合もあるだろうからエンジンルートの無効化設定
 
