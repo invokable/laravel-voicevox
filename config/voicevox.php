@@ -52,5 +52,10 @@ return [
          * 対応してないAPIは公式エンジンに移譲。
          */
         'fallback_url' => env('VOICEVOX_ENGINE_FALLBACK_URL', 'http://127.0.0.1:50021'),
+
+        /**
+         * 公式エンジンに移譲したけど起動してない時のエラーメッセージ。
+         */
+        'fallback_error' => 'The Laravel version of the engine does not support this endpoint. Please use the official engine instead.',
     ],
 ];
