@@ -8,7 +8,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Ai\Ai;
-use Revolution\Voicevox\Ai\VoicevoxProvider;
+use Revolution\Voicevox\Ai\VoicevoxClientProvider;
 use Revolution\Voicevox\Client\VoicevoxClient;
 use Revolution\Voicevox\Core\Enums\AccelerationMode;
 use Revolution\Voicevox\Core\Onnxruntime;
@@ -67,8 +67,8 @@ class VoicevoxServiceProvider extends ServiceProvider
             __DIR__.'/../config/voicevox.php' => config_path('voicevox.php'),
         ], 'voicevox-config');
 
-        Ai::extend('voicevox', function ($app, array $config) {
-            return new VoicevoxProvider($config, $app->make(Dispatcher::class));
+        Ai::extend('voicevox-client', function ($app, array $config) {
+            return new VoicevoxClientProvider($config, $app->make(Dispatcher::class));
         });
     }
 }

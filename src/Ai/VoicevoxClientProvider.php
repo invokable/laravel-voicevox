@@ -11,7 +11,7 @@ use Laravel\Ai\Providers\Concerns\GeneratesAudio;
 use Laravel\Ai\Providers\Concerns\HasAudioGateway;
 use Laravel\Ai\Providers\Provider;
 
-class VoicevoxProvider extends Provider implements AudioProvider
+class VoicevoxClientProvider extends Provider implements AudioProvider
 {
     use GeneratesAudio;
     use HasAudioGateway;
@@ -26,7 +26,7 @@ class VoicevoxProvider extends Provider implements AudioProvider
      */
     public function audioGateway(): AudioGateway
     {
-        return $this->audioGateway ??= new VoicevoxGateway;
+        return $this->audioGateway ??= new VoicevoxClientGateway;
     }
 
     /**

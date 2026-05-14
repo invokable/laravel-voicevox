@@ -10,8 +10,8 @@ beforeEach(function () {
     Http::preventStrayRequests();
 
     config([
-        'ai.providers.voicevox' => [
-            'driver' => 'voicevox',
+        'ai.providers.voicevox-client' => [
+            'driver' => 'voicevox-client',
             'key' => 'http://127.0.0.1:50021',
         ],
     ]);
@@ -23,7 +23,7 @@ test('voicevox ai provider generates audio', function () {
         'http://127.0.0.1:50021/synthesis*' => Http::response('fake-wav-bytes'),
     ]);
 
-    $response = Audio::of('ララベルが好きなのだ')->voice('1')->generate('voicevox');
+    $response = Audio::of('ララベルが好きなのだ')->voice('ずんだもん')->generate('voicevox-client');
 
     expect($response)->toBeInstanceOf(AudioResponse::class)
         ->and($response->mimeType())->toBe('audio/wav')
@@ -36,7 +36,7 @@ test('voicevox ai provider uses default-female voice', function () {
         'http://127.0.0.1:50021/synthesis*' => Http::response('fake-wav-bytes'),
     ]);
 
-    $response = Audio::of('テスト')->generate('voicevox');
+    $response = Audio::of('テスト')->generate('voicevox-client');
 
-    Http::assertSent(fn ($req) => str_contains($req->url(), 'speaker=1'));
+    Http::assertSent(fn ($req) => str_contains($req->url(), 'speaker=10'));
 });

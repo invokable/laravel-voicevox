@@ -109,3 +109,13 @@ Artisan::command('voicevox:native:song', function () {
     $path = $response->storeAs('native', 'song.wav');
     $this->info(Storage::path($path));
 })->purpose('Generate song with native');
+
+// vendor/bin/testbench voicevox:ai:client
+Artisan::command('voicevox:ai:client', function () {
+    $response = \Laravel\Ai\Audio::of('ララベルAIからも使えます')
+        ->voice('春日部つむぎ')
+        ->generate('voicevox-client');
+
+    $path = $response->storeAs('ai', 'client.wav');
+    $this->info(Storage::path($path));
+})->purpose('Generate talk with AI SDK voicevox-client');
