@@ -8,6 +8,11 @@ return [
          * VOICEVOXエンジンAPIのURL。
          */
         'url' => env('VOICEVOX_URL', 'http://127.0.0.1:50021'),
+
+        /**
+         * エンジンAPIで指定するコアバージョン。
+         */
+        'core_version' => env('VOICEVOX_CLIENT_CORE_VERSION'),
     ],
 
     'core' => [
