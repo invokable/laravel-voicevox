@@ -14,7 +14,7 @@ class SongAudioQuery
 
     public function __construct(
         public array $frameAudioQuery,
-        public int|string|null $id = null,
+        public int|string|null $teacher = null,
     ) {
         //
     }

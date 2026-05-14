@@ -19,9 +19,9 @@ function talk(string $text, int|string $id = 1): TalkAudioQuery
 }
 
 /**
- * @param  int|string  $id  typeがsingかsinging_teacherのスタイルID
+ * @param  int|string  $teacher  typeがsingかsinging_teacherのスタイルID
  */
-function song(Score|array $score, int|string $id = 6000): SongAudioQuery
+function song(Score|array $score, int|string $teacher = 6000): SongAudioQuery
 {
-    return Song::make($score, $id);
+    return Song::make($score, $teacher);
 }

@@ -14,14 +14,14 @@ test('Song::make is callable', function () {
 });
 
 test('SongAudioQuery accepts array and id', function () {
-    $query = new SongAudioQuery(['f0' => [], 'volume' => [], 'phonemes' => []], id: 6000);
+    $query = new SongAudioQuery(['f0' => [], 'volume' => [], 'phonemes' => []], teacher: 6000);
 
     expect($query->frameAudioQuery)->toHaveKey('f0')
-        ->and($query->id)->toBe(6000);
+        ->and($query->teacher)->toBe(6000);
 });
 
 test('SongAudioQuery is tappable', function () {
-    $query = new SongAudioQuery(['f0' => [0.0], 'volume' => [], 'phonemes' => []], id: 6000);
+    $query = new SongAudioQuery(['f0' => [0.0], 'volume' => [], 'phonemes' => []], teacher: 6000);
 
     $tapped = $query->tap(function (SongAudioQuery $q) {
         $q->frameAudioQuery['f0'] = [440.0];
