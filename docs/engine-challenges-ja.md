@@ -195,7 +195,8 @@ base_aperiodicity        = pw.d4c(base_wave, base_f0, base_time_axis, fs)
 target_spectrogram       = pw.cheaptrick(target_wave, target_f0, morph_time_axis, fs)
 morph_spectrogram = base_spectrogram * (1.0 - morph_rate) + target_spectrogram * morph_rate
 y_h = pw.synthesize(base_f0, morph_spectrogram, base_aperiodicity, fs, 1.0)
-```[^5]
+```
+[^5]
 
 ### なぜ移植が難しいか
 
@@ -260,7 +261,8 @@ AquesTalk記法（`/audio_query_from_kana`と`/validate_kana`で使用）は日�
     portrait.png
     icons/{style_id}.png
     voice_samples/{style_id}_001.wav  （常に3ファイル）
-```[^6]
+```
+[^6]
 
 リソース配信モード:
 - `resource_format=base64` — ファイルを読んでBase64文字列にインライン化
