@@ -244,7 +244,7 @@ $response = talk(text: 'ララベルが好きなのだ', id: 1)->generate();
 $response->storeAs('talk.wav');
 ```
 
-クライアントの`Voicevox::talk()`から`Voicevox::`を消せば移行できるようにしておく。
+主要機能の`talk()`, `song()`はクライアントの`Voicevox::talk()`から`Voicevox::`を消せば移行できるようにしておく。他も全部揃えるのは難しい。
 
 ### 仮の機能リスト
 
