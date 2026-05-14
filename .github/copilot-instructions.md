@@ -247,12 +247,27 @@ $response->storeAs('talk.wav');
 クライアントの`Voicevox::talk()`から`Voicevox::`を消せば移行できるようにしておく。
 
 ### 仮の機能リスト
+
+VoicevoxClientと同等の機能は一通り用意したい。`_`を使わない簡潔な関数名が理想。
+
 ```php
+use function Revolution\Voicevox\{talk, song, dict, preset};
+
 talk($text, id: $id)->generate($id);
 talk($text, preset: $preset)->generate($id);
 
 song($score, teacher: $teacher)->generate($id);
 
+dict()->all();
+dict()->add();
+dict()->update();
+dict()->delete();
+dict()->import();
+
+preset()->all();
+preset()->add();
+preset()->update();
+preset()->delete();
 ```
 
 ## 将来的な計画
