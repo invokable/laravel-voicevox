@@ -10,28 +10,28 @@ use Revolution\Voicevox\Core\Synthesizer;
 class Song
 {
     /**
-     * @param  int|string  $id  typeがsingかsinging_teacherのスタイルID
+     * @param  int|string  $teacher  typeがsingかsinging_teacherのスタイルID
      */
-    public static function make(Score|array $score, int|string $id = 6000): SongAudioQuery
+    public static function make(Score|array $score, int|string $teacher = 6000): SongAudioQuery
     {
-        return (new self)->song($score, $id);
+        return (new self)->song($score, $teacher);
     }
 
     /**
-     * @param  int|string  $id  typeがsingかsinging_teacherのスタイルID
+     * @param  int|string  $teacher  typeがsingかsinging_teacherのスタイルID
      */
-    public function song(Score|array $score, int|string $id = 6000): SongAudioQuery
+    public function song(Score|array $score, int|string $teacher = 6000): SongAudioQuery
     {
         $score = $score instanceof Arrayable ? $score->toArray() : $score;
 
         $frameAudioQuery = json_decode(
             app(Synthesizer::class)->createSingFrameAudioQuery(
                 collect($score)->toJson(JSON_UNESCAPED_SLASHES),
-                (int) $id,
+                (int) $teacher,
             ),
             true,
         );
 
-        return new SongAudioQuery($frameAudioQuery, $id);
+        return new SongAudioQuery($frameAudioQuery, $teacher);
     }
 }
