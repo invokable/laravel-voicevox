@@ -7,12 +7,14 @@ namespace Revolution\Voicevox\Ai;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Ai\Contracts\Gateway\AudioGateway;
 use Laravel\Ai\Contracts\Providers\AudioProvider;
+use Laravel\Ai\Providers\Concerns\GeneratesAudio;
+use Laravel\Ai\Providers\Concerns\HasAudioGateway;
 use Laravel\Ai\Providers\Provider;
 
 class VoicevoxProvider extends Provider implements AudioProvider
 {
-    use \Laravel\Ai\Providers\Concerns\GeneratesAudio;
-    use \Laravel\Ai\Providers\Concerns\HasAudioGateway;
+    use GeneratesAudio;
+    use HasAudioGateway;
 
     public function __construct(
         protected array $config,
