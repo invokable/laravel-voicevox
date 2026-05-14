@@ -47,5 +47,10 @@ return [
 
     'engine' => [
         'disabled' => env('VOICEVOX_ENGINE_DISABLED', false),
+
+        /**
+         * 対応してないAPIは公式エンジンに移譲。
+         */
+        'fallback_url' => env('VOICEVOX_ENGINE_FALLBACK_URL', 'http://127.0.0.1:50021'),
     ],
 ];

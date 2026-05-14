@@ -9,8 +9,17 @@ use Illuminate\Support\Facades\Http;
 
 trait WithHttp
 {
+    protected ?string $base_url = null;
+
+    protected function baseUrl(?string $base_url = null): self
+    {
+        $this->base_url = $base_url;
+
+        return $this;
+    }
+
     protected function http(): PendingRequest
     {
-        return Http::baseUrl(config('voicevox.client.url', 'http://127.0.0.1:50021'));
+        return Http::baseUrl($this->base_url ?? config('voicevox.client.url', 'http://127.0.0.1:50021'));
     }
 }
