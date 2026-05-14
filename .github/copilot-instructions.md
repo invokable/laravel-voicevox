@@ -256,6 +256,7 @@ VoicevoxClientと同等の機能は一通り用意したい。`_`を使わない
 use function Revolution\Voicevox\{talk, song, dict, preset};
 
 talk($text, id: $id)->generate($id);
+// プリセットはコアにはなくエンジンの機能
 talk($text, preset: $preset)->generate($id);
 
 song($score, teacher: $teacher)->generate($id);
