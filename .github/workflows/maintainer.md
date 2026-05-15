@@ -14,6 +14,8 @@ steps:
             coverage: xdebug
     -   name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
+    -   name: PHP version
+        run: php -v
 
 permissions:
     contents: read
