@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Storage;
 
 class VoicevoxResponse
 {
-    public function __construct(protected string $body)
+    public function __construct(protected string $content)
     {
         //
     }
 
     public function content(): string
     {
-        return $this->body;
+        return $this->content;
     }
 
     public function storeAs(string $path, ?string $name = null, ?string $disk = null, array $options = []): string|bool
