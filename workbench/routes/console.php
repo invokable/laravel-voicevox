@@ -82,6 +82,14 @@ Artisan::command('voicevox:client:wave', function () {
     $this->info(Storage::path($path));
 })->purpose('Connect two waves');
 
+// vendor/bin/testbench voicevox:native:meta
+// config/voicevox.php で指定しているコアで読み込んでいるモデルの情報
+Artisan::command('voicevox:native:meta', function () {
+    $meta = \Revolution\Voicevox\Synthesizer::metas();
+
+    $this->info($meta);
+})->purpose('Show model meta');
+
 // vendor/bin/testbench voicevox:native:talk
 Artisan::command('voicevox:native:talk', function () {
     $response = talk('ネイティブ版なのだ', id: 1)
