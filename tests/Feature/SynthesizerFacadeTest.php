@@ -15,3 +15,9 @@ test('Synthesizer facade accessor is CoreSynthesizer', function () {
 
     expect($reflection->invoke(null))->toBe(CoreSynthesizer::class);
 });
+
+test('Synthesizer mock', function () {
+    Synthesizer::expects('metas')->andReturn('json');
+
+    expect(Synthesizer::metas())->toBe('json');
+});
