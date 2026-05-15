@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 
 test('engine audio_query endpoint returns json', function () {
@@ -41,6 +42,7 @@ test('engine speaker_info endpoint returns info', function () {
 });
 
 test('engine singers endpoint returns array', function () {
+    Synthesizer::expects('metas')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->singers')->andReturn([['name' => 'ずんだもん']]);
 
     $response = $this->getJson('/singers');
