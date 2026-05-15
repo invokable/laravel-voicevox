@@ -30,8 +30,8 @@ class TalkAudioQuery
      */
     public function generate(int|string $id = 1, bool $enableInterrogativeUpspeak = true): VoicevoxResponse
     {
-        $body = Voicevox::synthesis($this->audioQuery, $id, $enableInterrogativeUpspeak);
+        $audio = Voicevox::synthesis($this->audioQuery, $id, $enableInterrogativeUpspeak);
 
-        return new VoicevoxResponse($body);
+        return new VoicevoxResponse($audio);
     }
 }

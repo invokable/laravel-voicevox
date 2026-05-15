@@ -24,11 +24,11 @@ class SongAudioQuery
      */
     public function generate(int|string $id): VoicevoxResponse
     {
-        $wav = Synthesizer::frameSynthesis(
+        $audio = Synthesizer::frameSynthesis(
             collect($this->frameAudioQuery)->toJson(JSON_UNESCAPED_SLASHES),
             (int) $id,
         );
 
-        return new VoicevoxResponse($wav);
+        return new VoicevoxResponse($audio);
     }
 }

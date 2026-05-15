@@ -21,11 +21,11 @@ class TalkAudioQuery
 
     public function generate(int|string $id = 1): VoicevoxResponse
     {
-        $wav = Synthesizer::synthesis(
+        $audio = Synthesizer::synthesis(
             collect($this->audioQuery)->toJson(JSON_UNESCAPED_SLASHES),
             (int) $id,
         );
 
-        return new VoicevoxResponse($wav);
+        return new VoicevoxResponse($audio);
     }
 }

@@ -33,8 +33,8 @@ class SongAudioQuery
      */
     public function generate(int|string $id): VoicevoxResponse
     {
-        $body = Voicevox::frameSynthesis($this->frameAudioQuery, $id);
+        $audio = Voicevox::frameSynthesis($this->frameAudioQuery, $id);
 
-        return new VoicevoxResponse($body);
+        return new VoicevoxResponse($audio);
     }
 }
