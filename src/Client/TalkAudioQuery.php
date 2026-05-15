@@ -28,9 +28,9 @@ class TalkAudioQuery
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function generate(int|string $id = 1, bool $upspeak = true): VoicevoxResponse
+    public function generate(int|string $id = 1, bool $enableInterrogativeUpspeak = true): VoicevoxResponse
     {
-        $body = Voicevox::synthesis($this->audioQuery, $id, $upspeak);
+        $body = Voicevox::synthesis($this->audioQuery, $id, $enableInterrogativeUpspeak);
 
         return new VoicevoxResponse($body);
     }
