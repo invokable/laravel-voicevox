@@ -24,9 +24,12 @@ class AudioQueryController
                 options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
             );
         } catch (Throwable) {
-            return response(status: Response::HTTP_NOT_IMPLEMENTED)->json([
+            return response()->json([
                 'error' => __(config('voicevox.engine.fallback_error')),
-            ], options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            ],
+                status: Response::HTTP_NOT_IMPLEMENTED,
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+            );
         }
     }
 }

@@ -25,7 +25,10 @@ class SynthesisController
         } catch (Throwable) {
             return response()->json([
                 'error' => __(config('voicevox.engine.fallback_error')),
-            ], Response::HTTP_NOT_IMPLEMENTED, options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            ],
+                status: Response::HTTP_NOT_IMPLEMENTED,
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+            );
         }
     }
 }
