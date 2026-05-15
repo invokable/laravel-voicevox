@@ -15,7 +15,7 @@ Work In Progress.
 | VOICEVOX Core    | ✅         | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) VOICEVOX COREの動的ライブラリをFFIでラップしPHPネイティブのように使えます。 |
 | Laravel style    | ✅         | Laravelスタイルでvoicevox-core-phpを扱う。                                                                                   |
 | Laravel AI SDK統合 | ✅         | Laravel AI SDKのAudioから使う。クライアント版とネイティブ版、両方で対応しています。                                                                 |
-| VOICEVOX Engine  | ⚠️         | PHPでは技術的に移植不可能な機能があるので公式エンジンと併用しつつ一部のみの対応です。                                                                                                                    |
+| VOICEVOX Engine  | ⚠️        | PHPでは技術的に移植不可能な機能があるので公式エンジンと併用しつつ一部のみの対応です。                                                                        |
 | VOICEVOX Editor  | ❌         |                                                                                                                     |
 
 ## Requirements
