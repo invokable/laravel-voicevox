@@ -52,7 +52,7 @@ Agentic Workflows環境でも`setup-php`でPHPはインストールされてる�
 ## ディレクトリ構成
 
 - src/Voicevox.php: クライアント機能のFacade。ユーザーが使う。
-- src/Synthesizer.php: コア機能のFacade。ユーザーにはなるべく見せない設計。コアのSynthesizerはVoicevoxServiceProviderでコンテナに登録しているのでSynthesizer FacadeからコアSynthesizerの機能を全て使えてテスト時のモックもしやすい。ネイティブ版やエンジンはSynthesizer Facadeを使えば作りやすいはず。
+- src/Synthesizer.php: コア機能のFacade。ユーザーにはなるべく見せない設計。コアのSynthesizerはVoicevoxServiceProviderでコンテナに登録しているのでSynthesizer FacadeからコアSynthesizerの機能を全て使えてテスト時のモックもしやすい。`getMockableClass()`がないとモックできなかったので追加。ネイティブ版やエンジンはSynthesizer Facadeを使えば作りやすいはず。
 - src/Client/: クライアント機能ディレクトリ
 - src/Talk/: ネイティブのトーク機能ディレクトリ。VOICEVOX公式ではトークとソングを2大機能のように扱っているのでsrc直下に配置。
 - src/Song/: ネイティブのソング機能ディレクトリ

@@ -16,4 +16,9 @@ class Synthesizer extends Facade
     {
         return CoreSynthesizer::class;
     }
+
+    protected static function getMockableClass(): ?string
+    {
+        return CoreSynthesizer::class;
+    }
 }
