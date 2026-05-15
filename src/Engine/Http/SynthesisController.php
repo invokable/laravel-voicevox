@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\Request;
+use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -16,6 +17,14 @@ class SynthesisController
         $audioQuery = $request->json()->all();
         $id = $request->integer('speaker', 1);
         $enableInterrogativeUpspeak = $request->boolean('enable_interrogative_upspeak', true);
+
+        try {
+            $audio = Synthesizer::synthesis(json_encode($audioQuery), $id, $enableInterrogativeUpspeak);
+
+            return response($audio, 200, ['Content-Type' => 'audio/wav']);
+        } catch (Throwable) {
+            // Fall back to Voicevox client if native core is unavailable
+        }
 
         try {
             $audio = Voicevox::baseUrl(config('voicevox.engine.fallback_url'))

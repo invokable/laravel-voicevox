@@ -15,6 +15,7 @@ test('engine audio_query endpoint returns json', function () {
 });
 
 test('engine synthesis endpoint returns wav', function () {
+    Synthesizer::expects('synthesis')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->synthesis')->andReturn('wav_binary_data');
 
     $response = $this->postJson('/synthesis?speaker=1', ['speedScale' => 1.0]);
