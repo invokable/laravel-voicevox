@@ -24,6 +24,7 @@ test('engine synthesis endpoint returns wav', function () {
 });
 
 test('engine speakers endpoint returns array', function () {
+    Synthesizer::expects('metas')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->speakers')->andReturn([['name' => 'ずんだもん']]);
 
     $response = $this->getJson('/speakers');
