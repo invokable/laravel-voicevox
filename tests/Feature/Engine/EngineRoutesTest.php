@@ -3,15 +3,14 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
+use Revolution\Voicevox\Voicevox;
 
 beforeEach(function () {
     Http::preventStrayRequests();
 });
 
 test('engine audio_query endpoint returns json', function () {
-    Http::fake([
-        'http://127.0.0.1:50021/audio_query*' => Http::response(['speedScale' => 1.0]),
-    ]);
+    Voicevox::expects('baseUrl->audioQuery')->andReturn(['speedScale' => 1.0]);
 
     $response = $this->postJson('/audio_query?text=テスト&speaker=1');
 
