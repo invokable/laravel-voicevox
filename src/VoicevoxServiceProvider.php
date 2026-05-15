@@ -85,6 +85,6 @@ class VoicevoxServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->loadRoutesFrom(__DIR__.'/../routes/voicevox.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/engine.php');
     }
 }
