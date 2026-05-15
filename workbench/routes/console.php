@@ -9,6 +9,7 @@ use Laravel\Ai\Audio;
 use Revolution\Voicevox\Client\TalkAudioQuery;
 use Revolution\Voicevox\Song\Note;
 use Revolution\Voicevox\Song\Score;
+use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Talk\TalkAudioQuery as NativeTalkAudioQuery;
 use Revolution\Voicevox\Voicevox;
 
@@ -85,7 +86,7 @@ Artisan::command('voicevox:client:wave', function () {
 // vendor/bin/testbench voicevox:native:meta
 // config/voicevox.php で指定しているコアで読み込んでいるモデルの情報
 Artisan::command('voicevox:native:meta', function () {
-    $meta = \Revolution\Voicevox\Synthesizer::metas();
+    $meta = Synthesizer::metas();
 
     $this->info($meta);
 })->purpose('Show model meta');
