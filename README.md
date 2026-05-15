@@ -9,12 +9,14 @@ Work In Progress.
 
 ## Overview
 
-| Feature         | Supported | Description                                                         |
-|-----------------|-----------|---------------------------------------------------------------------|
-| VOICEVOX Client | ✅         |                                                                     | 
-| VOICEVOX Engine | ❌         |                                                                     | 
-| VOICEVOX Core   | ✅         | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) |
-| VOICEVOX Editor | ❌         |                                                                     |
+| Feature                    | Supported | Description                                                         |
+|----------------------------|-----------|---------------------------------------------------------------------|
+| VOICEVOX Client            | ✅         |                                                                     | 
+| VOICEVOX Core              | ✅         | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) |
+| Laravel style              | ✅         |                                                                     |
+| Laravel AI SDK Integration | ✅         |                                                                     |
+| VOICEVOX Engine            | ⚠️        |                                                                     | 
+| VOICEVOX Editor            | ❌         |                                                                     |
 
 ## Requirements
 
