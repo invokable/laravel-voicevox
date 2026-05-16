@@ -259,6 +259,10 @@ vendor/bin/testbench voicevox:install
 engine_manifest.jsonはインストールなどの変換処理は挟まず公式を参考にLaravel用に作ればいいはず。
 `voicevox_engine/engine_manifest.json`
 
+### プリセット機能
+
+公式エンジンでは`presets.yaml`ファイルを使って管理。おそらくDocker内にしかない。Dockerの公式エンジンとLaravelではプリセット設定を共有できないので、SQLiteデータベースを使う完全に別実装でもいいかもしれない。
+
 ### 音声モデルファイル(.vvm)とスタイルIDの対応表
 
 コアではvvmを読み込んでからスタイルIDを指定して使う。エンジンAPIでは全モデルを読み込んでるのでスタイルIDだけで全部使える。全部読み込むと遅いのでconfigで設定できるようにする。  
