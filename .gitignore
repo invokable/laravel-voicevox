@@ -6,3 +6,4 @@
 .ai/mcp/mcp.json
 /build
 .phpunit.result.cache
+workbench/storage

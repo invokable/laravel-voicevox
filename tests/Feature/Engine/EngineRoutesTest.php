@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Revolution\Voicevox\Enums\Engine;
 use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 
@@ -61,9 +62,8 @@ test('engine singer_info endpoint returns info', function () {
 });
 
 test('engine version endpoint returns version', function () {
-    Voicevox::expects('baseUrl->version')->andReturn('0.20.0');
-
     $response = $this->getJson('/version');
 
-    $response->assertOk();
+    $response->assertOk()
+        ->assertSee(Engine::Version->value);
 });

@@ -11,7 +11,7 @@ trait WithHttp
 {
     protected ?string $base_url = null;
 
-    protected function baseUrl(?string $base_url = null): self
+    public function baseUrl(?string $base_url = null): self
     {
         $this->base_url = $base_url;
 

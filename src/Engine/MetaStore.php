@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Revolution\Voicevox\Engine;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class MetaStore
@@ -52,8 +53,15 @@ class MetaStore
             $character = (array) $character;
             $character['styles'] = collect($character['styles'])
                 ->map(fn ($style) => (array) $style)
+                ->map(function ($style) {
+                    Arr::forget($style, 'order');
+                    return $style;
+                })
                 ->all();
 
+            return $character;
+        })->map(function ($character) {
+            Arr::forget($character, 'order');
             return $character;
         });
     }
