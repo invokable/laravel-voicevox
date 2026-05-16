@@ -21,9 +21,16 @@ use Revolution\Voicevox\Engine\Http\SynthesisController;
 use Revolution\Voicevox\Engine\Http\UpdatePresetController;
 use Revolution\Voicevox\Engine\Http\VersionController;
 
+/**
+ * Laravelでは難しいので常に公式エンジンにフォールバック
+ */
 Route::post('/audio_query', AudioQueryController::class);
-Route::post('/synthesis', SynthesisController::class);
 Route::post('/accent_phrases', AccentPhrasesController::class);
+
+/**
+ * PHP版コアで対応可能。失敗時にフォールバックも行う。
+ */
+Route::post('/synthesis', SynthesisController::class);
 Route::post('/mora_data', MoraDataController::class);
 Route::post('/mora_length', MoraLengthController::class);
 Route::post('/mora_pitch', MoraPitchController::class);
@@ -31,6 +38,10 @@ Route::get('/speakers', SpeakersController::class);
 Route::get('/speaker_info', SpeakerInfoController::class);
 Route::get('/singers', SingersController::class);
 Route::get('/singer_info', SingerInfoController::class);
+
+/**
+ * コアもフォールバックも不要で対応可能
+ */
 Route::get('/version', VersionController::class);
 Route::get('/engine_manifest', EngineManifestController::class);
 Route::get('/presets', PresetsController::class);
