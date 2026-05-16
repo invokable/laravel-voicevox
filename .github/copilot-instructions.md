@@ -263,6 +263,11 @@ engine_manifest.jsonはインストールなどの変換処理は挟まず公式
 
 公式エンジンでは`presets.yaml`ファイルを使って管理。おそらくDocker内にしかない。Dockerの公式エンジンとLaravelではプリセット設定を共有できないので、SQLiteデータベースを使う完全に別実装でもいいかもしれないけど、それでは`/audio_query_from_preset`が利用できないので常にフォールバックの対応。
 
+### kanalizer
+
+エンジンAPIにある`enable_katakana_english`は英語をカタカナに変換する機能。  
+コアにはないので対応できない部分だったけどよく考えたらVOICEVOXの前にLLMを挟む運用でカバーできるかもしれない。
+
 ### 音声モデルファイル(.vvm)とスタイルIDの対応表
 
 コアではvvmを読み込んでからスタイルIDを指定して使う。エンジンAPIでは全モデルを読み込んでるのでスタイルIDだけで全部使える。全部読み込むと遅いのでconfigで設定できるようにする。  
@@ -288,15 +293,12 @@ $response->storeAs('talk.wav');
 
 ### 仮の機能リスト
 
-VoicevoxClientと同等の機能は一通り用意したい。`_`を使わない簡潔な関数名が理想。
+VoicevoxClientと同等の機能は一通り用意したいけど対応不可な機能も多い。`_`を使わない簡潔な関数名が理想。
 
 ```php
 use function Revolution\Voicevox\{talk, song, dict, preset};
 
 talk($text, id: $id)->generate($id);
-// プリセットはコアにはなくエンジンの機能
-talk($text, preset: $preset)->generate($id);
-
 song($score, teacher: $teacher)->generate($id);
 
 dict()->all();
@@ -304,12 +306,9 @@ dict()->add();
 dict()->update();
 dict()->delete();
 dict()->import();
-
-preset()->all();
-preset()->add();
-preset()->update();
-preset()->delete();
 ```
+
+プリセットはコアにはなくエンジンの機能なのでなし。
 
 ## 将来的な計画
 
