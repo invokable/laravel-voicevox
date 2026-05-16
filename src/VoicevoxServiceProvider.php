@@ -70,6 +70,8 @@ class VoicevoxServiceProvider extends ServiceProvider
 
         $this->configureEngine();
 
+        $this->configureCommands();
+
         Ai::extend('voicevox', function ($app, array $config) {
             return new VoicevoxProvider($config, $app->make(Dispatcher::class));
         });
@@ -86,5 +88,14 @@ class VoicevoxServiceProvider extends ServiceProvider
         }
 
         $this->loadRoutesFrom(__DIR__.'/../routes/engine.php');
+    }
+
+    protected function configureCommands(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Console\EngineInstallCommand::class,
+            ]);
+        }
     }
 }

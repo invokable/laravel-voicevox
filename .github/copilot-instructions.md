@@ -58,6 +58,7 @@ Agentic Workflows環境でも`setup-php`でPHPはインストールされてる�
 - src/Song/: ネイティブのソング機能ディレクトリ
 - src/functions.php: `talk()`や`song()`のネイティブ版ヘルパー関数。クライアントはVoicevox Facadeから使う、ネイティブ版はヘルパーから使う全く別の導線。
 - src/Engine/: エンジン機能ディレクトリ。これから開発。Talk、Song以外のコアを使う機能（辞書など）はEngine内に配置するかも。基本的に全てヘルパーからの利用を想定しているのでクラスファイルの配置場所は分かりやすければどこでもいい。コアではなくエンジンで実装してる機能も意外とあるので独自開発が必要かも。
+- src/Console/: ユーザーが使うartisanコマンド。エンジンで使うresourcesのインストールなど。
 - src/VoicevoxResponse.php: 音声の生データを保持するレスポンス。ひとまず全部で共通のVoicevoxResponseを使用。分けた方が良くなったら別クラス化。
 - src/VoicevoxServiceProvider.php
 - config/voicevox.php
@@ -239,6 +240,23 @@ php artisan serveやtestbench serveで使用するにはphp.iniでFFIを有効�
 ```
 ffi.enable=true
 ```
+
+### キャラクター情報
+
+`resources/character_info/`内に公式エンジンと同じリソースが必要。
+500MB以上なので別途インストール。Laravelプロジェクト直下ではなく、vendorのこのパッケージ内にダウンロードされる。
+
+ユーザー向け通常のLaravelプロジェクト。
+```bash
+php artisan voicevox:install
+```
+開発環境のtestbench。
+```bash
+vendor/bin/testbench voicevox:install
+```
+
+engine_manifest.jsonはインストールなどの変換処理は挟まず公式を参考にLaravel用に作ればいいはず。
+`voicevox_engine/engine_manifest.json`
 
 ### 音声モデルファイル(.vvm)とスタイルIDの対応表
 
