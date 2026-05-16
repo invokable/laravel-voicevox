@@ -69,3 +69,19 @@ test('engine version endpoint returns version', function () {
     $response->assertOk()
         ->assertSee(Engine::Version->value);
 });
+
+test('engine resources endpoint returns 404 for unknown hash', function () {
+    $response = $this->get('/_resources/'.str_repeat('0', 64));
+
+    $response->assertNotFound();
+});
+
+test('engine resources endpoint returns file for known hash', function () {
+    $file = dirname(__DIR__, 3).'/resources/character_info/388f246b-8c41-4ac1-8e2d-5d79f3ff56d9/icons/3.png';
+    $hash = hash('sha256', file_get_contents($file));
+
+    $response = $this->get("/_resources/{$hash}");
+
+    $response->assertOk()
+        ->assertHeader('Content-Type', 'image/png');
+});

@@ -239,15 +239,15 @@ test('speaker returns URL format with hash when format is url', function () use 
     }
 
     $store = new MetaStore($sampleMetas, $tempDir);
-    $info = $store->speaker($uuid, 'url', 'http://127.0.0.1:50021');
+    $info = $store->speaker($uuid, 'url');
 
     $expectedPortraitHash = hash('sha256', 'portrait-data');
     $expectedIconHash = hash('sha256', 'icon-3');
     $expectedSampleHash = hash('sha256', 'wav-3-001');
 
-    expect($info['portrait'])->toBe("http://127.0.0.1:50021/_resources/{$expectedPortraitHash}");
-    expect($info['style_infos'][0]['icon'])->toBe("http://127.0.0.1:50021/_resources/{$expectedIconHash}");
-    expect($info['style_infos'][0]['voice_samples'][0])->toBe("http://127.0.0.1:50021/_resources/{$expectedSampleHash}");
+    expect($info['portrait'])->toContain('/_resources/'.$expectedPortraitHash);
+    expect($info['style_infos'][0]['icon'])->toContain('/_resources/'.$expectedIconHash);
+    expect($info['style_infos'][0]['voice_samples'][0])->toContain('/_resources/'.$expectedSampleHash);
 
     File::deleteDirectory($tempDir);
 });

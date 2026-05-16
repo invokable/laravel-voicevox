@@ -20,7 +20,7 @@ class SingerInfoController
         $format = $request->string('resource_format', 'base64')->value();
 
         try {
-            $info = MetaStore::make(json_decode(Synthesizer::metas(), true))->singer($uuid, $format, $request->getSchemeAndHttpHost());
+            $info = MetaStore::make(json_decode(Synthesizer::metas(), true))->singer($uuid, $format);
 
             return response()->json(
                 $info,

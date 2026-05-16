@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 use Revolution\Voicevox\Engine\Http\AudioQueryController;
+use Revolution\Voicevox\Engine\Http\ResourcesController;
 use Revolution\Voicevox\Engine\Http\SingerInfoController;
 use Revolution\Voicevox\Engine\Http\SingersController;
 use Revolution\Voicevox\Engine\Http\SpeakerInfoController;
@@ -18,3 +19,4 @@ Route::get('/speaker_info', SpeakerInfoController::class);
 Route::get('/singers', SingersController::class);
 Route::get('/singer_info', SingerInfoController::class);
 Route::get('/version', VersionController::class);
+Route::get('/_resources/{hash}', ResourcesController::class)->name('voicevox.resources');
