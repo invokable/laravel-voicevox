@@ -19,4 +19,24 @@ class Talk
 
         return new TalkAudioQuery($audioQuery, $id);
     }
+
+    public function kana(string $kana, int|string $id = 1): TalkAudioQuery
+    {
+        $accent_phrases = json_decode(Synthesizer::createAccentPhrasesFromKana($kana, $id), true);
+
+        $audioQuery = [
+            'accent_phrases' => $accent_phrases,
+            'speedScale' => 1.0,
+            'pitchScale' => 0.0,
+            'intonationScale' => 1.0,
+            'volumeScale' => 1.0,
+            'prePhonemeLength' => 0.1,
+            'postPhonemeLength' => 0.1,
+            'outputSamplingRate' => 24000,
+            'outputStereo' => false,
+            'kana' => $kana,
+        ];
+
+        return new TalkAudioQuery($audioQuery, $id);
+    }
 }

@@ -19,6 +19,14 @@ function talk(string $text, int|string $id = 1): TalkAudioQuery
 }
 
 /**
+ * AquesTalk風記法カタカナから音声合成。
+ */
+function kana(string $kana, int|string $id = 1): TalkAudioQuery
+{
+    return Talk::make()->kana($kana, $id);
+}
+
+/**
  * 歌声合成。
  *
  * @param  int|string  $teacher  typeがsingかsinging_teacherのスタイルID
