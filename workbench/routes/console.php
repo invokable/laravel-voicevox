@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Ai\Audio;
 use Revolution\Voicevox\Client\TalkAudioQuery;
-use Revolution\Voicevox\Core\Onnxruntime;
 use Revolution\Voicevox\Core\VoiceModelFile;
 use Revolution\Voicevox\Song\Note;
 use Revolution\Voicevox\Song\Score;
