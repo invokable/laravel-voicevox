@@ -230,20 +230,45 @@ PHPでは:
 
 ---
 
-## 課題8: AquesTalk記法パーサー（validate_kana）
+## 課題8: AquesTalk記法パーサー（`/accent_phrases?is_kana=true` と `validate_kana`）
 
-**難易度: 🟡 中程度**
+**難易度: 🟢 低い（PHP FFIで対応済み）**
 
-AquesTalk記法（`/audio_query_from_kana`と`/validate_kana`で使用）は日本語の音声略記法。例: `コンニチワ'`（最終モーラにアクセント）、`ア'/イウ`（ポーズあり）。
+AquesTalk記法は`/accent_phrases?is_kana=true`と`/validate_kana`で使用される日本語の音声略記法。例: `コンニチワ'`（最終モーラにアクセント）、`ア'/イウ`（ポーズあり）。
+
+なお `/audio_query_from_kana` というエンドポイントは**存在しない**。AquesTalk入力は `/accent_phrases?is_kana=true` が正しいエンドポイント。
+
+### `is_kana=true` パイプライン
+
+```
+AquesTalk風カタカナ → parse_kana() → AccentPhrase[] (pitch/length=0)
+                                          ↓
+                               update_length_and_pitch()
+                               (yukarin_s + yukarin_sa via FFI)
+                                          ↓
+                                 AccentPhrase[] (値入り)
+```
+
+**最重要ポイント: `is_kana=true` は OpenJTalk を完全にバイパスする。** 課題1（OpenJTalk）という最大の障壁が消える。
+
+### PHP FFI対応状況
+
+| ステップ | Python | PHP FFI | 状況 |
+|---|---|---|---|
+| AquesTalk解析 + 音素長・ピッチ更新 | `create_accent_phrases_from_kana()` | `Synthesizer::createAccentPhrasesFromKana()` | ✅ 対応済み |
+| 音声合成 | `decode_forward` + soxr + soundfile | `Synthesizer::synthesis()` | ✅ WAV直接返す |
+| 疑問文語尾処理 | `enable_interrogative_upspeak` | `synthesis(enableInterrogativeUpspeak:)` | ✅ 対応済み |
+
+**`is_kana=true` の全パイプラインは既存のPHP FFIで実装可能。** 現在の `AccentPhrasesController` は常にfallbackへプロキシしているが、`is_kana=true` 時はネイティブ処理に切り替えられる。
 
 パーサー（`kana_converter.py`）が処理するもの:
 - アクセント記号（`'`）
 - ポーズマーカー（`/`）
-- 疑問符（文末`?`）
+- 疑問符（文末`？`全角）
 - 全角カタカナのモーラテーブル
 - エラーコード: `UNKNOWN_TEXT`、`ACCENT_TOP`、`MISSING_ACCENT`等
 
-**移植性:** 高い——NLP依存なしの純粋な文字列パース。PHP正規表現＋ステートマシンで約1日で移植可能。
+パーサー自体の移植性も高い——NLP依存なしの純粋な文字列パース。ただしPHP FFIの`createAccentPhrasesFromKana()`が内部でそのまま処理するため、PHP側での再実装は不要。`/validate_kana` エンドポイントのみパーサー単独移植が必要（難易度低）。
 
 ---
 

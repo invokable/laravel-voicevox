@@ -232,20 +232,45 @@ In PHP:
 
 ---
 
-## Challenge 8: AquesTalk Notation Parser (validate_kana)
+## Challenge 8: AquesTalk Notation Parser (`/accent_phrases?is_kana=true` and `validate_kana`)
 
-**Difficulty: 🟡 Medium**
+**Difficulty: 🟢 Low (already covered by PHP FFI)**
 
-AquesTalk notation (used in `/audio_query_from_kana` and `/validate_kana`) is a phonetic shorthand for Japanese. Examples: `コンニチワ'` (konnichiwa with accent on last mora), `ア'/イウ` (with pause).
+AquesTalk notation is used in `/accent_phrases?is_kana=true` and `/validate_kana`. It is a phonetic shorthand for Japanese. Examples: `コンニチワ'` (konnichiwa with accent on last mora), `ア'/イウ` (with pause).
+
+Note: there is **no** `/audio_query_from_kana` endpoint. The correct endpoint for AquesTalk input is `/accent_phrases?is_kana=true`.
+
+### `is_kana=true` pipeline
+
+```
+AquesTalk katakana → parse_kana() → AccentPhrase[] (pitch/length = 0)
+                                           ↓
+                                update_length_and_pitch()
+                                (yukarin_s + yukarin_sa via FFI)
+                                           ↓
+                                  AccentPhrase[] (with values)
+```
+
+**Key insight: `is_kana=true` completely bypasses OpenJTalk** — the biggest blocker from Challenge 1 disappears entirely.
+
+### PHP FFI coverage
+
+| Step | Python | PHP FFI | Status |
+|---|---|---|---|
+| Parse AquesTalk + update length & pitch | `create_accent_phrases_from_kana()` | `Synthesizer::createAccentPhrasesFromKana()` | ✅ Already available |
+| Audio synthesis | `decode_forward` + soxr + soundfile | `Synthesizer::synthesis()` | ✅ Returns WAV directly |
+| Interrogative upspeak | `enable_interrogative_upspeak` | `synthesis(enableInterrogativeUpspeak:)` | ✅ Already available |
+
+**The entire `is_kana=true` pipeline is implementable with the existing PHP FFI.** The current `AccentPhrasesController` always proxies to the fallback URL, but when `is_kana=true` it can be switched to native processing.
 
 The parser (`kana_converter.py`) handles:
 - Accent marks (`'`)
 - Pause markers (`/`)
-- Question marks (sentence-final `?`)
+- Question marks (sentence-final `？` full-width)
 - Full-width katakana mora table
 - Error codes: `UNKNOWN_TEXT`, `ACCENT_TOP`, `MISSING_ACCENT`, etc.
 
-**Portability:** High — it's pure string parsing with no NLP dependencies. Can be ported to PHP regex + state machine in ~1 day.
+The parser itself is highly portable — pure string parsing with no NLP dependencies. However, since the PHP FFI's `createAccentPhrasesFromKana()` handles this internally, a PHP reimplementation is unnecessary. Only `/validate_kana` requires a standalone parser port (low difficulty).
 
 ---
 

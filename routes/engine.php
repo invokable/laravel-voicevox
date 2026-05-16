@@ -25,7 +25,6 @@ use Revolution\Voicevox\Engine\Http\VersionController;
  * Laravelでは難しいので常に公式エンジンにフォールバック
  */
 Route::post('/audio_query', AudioQueryController::class);
-Route::post('/accent_phrases', AccentPhrasesController::class);
 // audio_query_from_presetが難しいのでプリセット機能ごと全部フォールバック
 Route::get('/presets', PresetsController::class);
 Route::post('/add_preset', AddPresetController::class);
@@ -35,6 +34,9 @@ Route::post('/delete_preset', DeletePresetController::class);
 /**
  * PHP版コアで対応可能。失敗時にフォールバックも行う。
  */
+// is_kana=true時のみ対応
+Route::post('/accent_phrases', AccentPhrasesController::class);
+
 Route::post('/synthesis', SynthesisController::class);
 Route::post('/mora_data', MoraDataController::class);
 Route::post('/mora_length', MoraLengthController::class);

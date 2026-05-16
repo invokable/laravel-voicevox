@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 
 test('engine engine_manifest endpoint returns manifest', function () {
@@ -49,6 +50,7 @@ test('engine delete_preset endpoint returns null', function () {
 });
 
 test('engine accent_phrases endpoint returns phrases', function () {
+    Synthesizer::expects('createAccentPhrasesFromKana')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->accentPhrases')->andReturn([['moras' => []]]);
 
     $response = $this->postJson('/accent_phrases?text=テスト&speaker=1');
