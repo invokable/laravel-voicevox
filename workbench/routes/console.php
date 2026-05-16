@@ -6,7 +6,8 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Ai\Audio;
-use Revolution\Voicevox\Ai\Agents\VoicevoxAgent;
+use Revolution\Voicevox\Ai\Agents\KanalizerAgent;
+use Revolution\Voicevox\Ai\Agents\AquesTalkAgent;
 use Revolution\Voicevox\Client\TalkAudioQuery;
 use Revolution\Voicevox\Core\VoiceModelFile;
 use Revolution\Voicevox\Song\Note;
@@ -166,7 +167,7 @@ Artisan::command('voicevox:ai:native', function () {
 // vendor/bin/testbench voicevox:ai:kana-agent
 Artisan::command('voicevox:ai:kana-agent', function () {
     $word = 'Laravel AI SDKを使ってAquesTalk風記法カタカナに変換しました。';
-    $response = VoicevoxAgent::make()
+    $response = AquesTalkAgent::make()
         ->prompt(
             $word,
         );
@@ -182,4 +183,24 @@ Artisan::command('voicevox:ai:kana-agent', function () {
 
     $path = $response->storeAs('native', 'kana-agent.wav');
     $this->info(Storage::path($path));
-})->purpose('VoicevoxAgent');
+})->purpose('AquesTalkAgent');
+
+// vendor/bin/testbench voicevox:ai:kanalizer
+Artisan::command('voicevox:ai:kanalizer', function () {
+    $word = 'Laravel AI SDKを使ってkanalizer風のカタカナ変換を行います';
+    $response = KanalizerAgent::make()
+        ->prompt(
+            $word,
+        );
+
+    $this->info($response->text);
+
+    // 上手く変換できるとは限らないので直接音声化は難しい。
+    // カタカナ化だけなのでAquesTalkAgentよりは正常。
+
+    $response = talk($response->text, id: 1)
+        ->generate(id: 1);
+
+    $path = $response->storeAs('native', 'kanalizer.wav');
+    $this->info(Storage::path($path));
+})->purpose('kanalizer');
