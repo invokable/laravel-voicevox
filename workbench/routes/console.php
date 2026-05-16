@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Ai\Audio;
 use Revolution\Voicevox\Client\TalkAudioQuery;
+use Revolution\Voicevox\Core\Onnxruntime;
+use Revolution\Voicevox\Core\VoiceModelFile;
 use Revolution\Voicevox\Song\Note;
 use Revolution\Voicevox\Song\Score;
 use Revolution\Voicevox\Synthesizer;
@@ -89,6 +91,15 @@ Artisan::command('voicevox:native:meta', function () {
     $meta = Synthesizer::metas();
 
     $this->info($meta);
+})->purpose('Show model meta');
+
+// vendor/bin/testbench voicevox:native:model
+Artisan::command('voicevox:native:model', function () {
+    $voicevoxCoreDir = rtrim(config('voicevox.core.path', ''), '/').'/';
+    $modelDir = $voicevoxCoreDir.trim(config('voicevox.core.models'));
+    $model = VoiceModelFile::open($modelDir.'/0.vvm');
+
+    $this->info($model->createMetasJson());
 })->purpose('Show model meta');
 
 // vendor/bin/testbench voicevox:native:talk
