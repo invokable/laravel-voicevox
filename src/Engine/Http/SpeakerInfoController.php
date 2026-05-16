@@ -24,7 +24,7 @@ class SpeakerInfoController
 
             return response()->json(
                 $info,
-                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
             );
         } catch (Throwable) {
             // Fall back to Voicevox client if native core or character_info is unavailable
@@ -33,14 +33,14 @@ class SpeakerInfoController
         try {
             return response()->json(
                 Voicevox::baseUrl(config('voicevox.engine.fallback_url'))->speaker($uuid, $format),
-                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
             );
         } catch (Throwable) {
             return response()->json([
                 'error' => __(config('voicevox.engine.fallback_error')),
             ],
                 status: Response::HTTP_NOT_IMPLEMENTED,
-                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
             );
         }
     }

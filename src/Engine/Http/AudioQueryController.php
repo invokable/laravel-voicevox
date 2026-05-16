@@ -21,7 +21,7 @@ class AudioQueryController
         try {
             return response()->json(
                 Voicevox::baseUrl(config('voicevox.engine.fallback_url'))->audioQuery($text, $id, $enable_katakana_english),
-                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
             );
         } catch (Throwable) {
             return response()->json([

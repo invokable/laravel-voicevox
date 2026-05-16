@@ -24,7 +24,7 @@ class SingerInfoController
 
             return response()->json(
                 $info,
-                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
             );
         } catch (Throwable) {
             // Fall back to Voicevox client if native core or character_info is unavailable
@@ -33,7 +33,7 @@ class SingerInfoController
         try {
             return response()->json(
                 Voicevox::baseUrl(config('voicevox.engine.fallback_url'))->singer($uuid, $format),
-                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
             );
         } catch (Throwable) {
             return response()->json([
