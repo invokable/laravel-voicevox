@@ -303,7 +303,7 @@ use function Revolution\Voicevox\{talk, song, dict, kana};
 // コア機能のみなので英語からカタカナ変換がないなどエンジンAPIとは少し違う。
 talk($text, id: $id)->generate($id);
 
-//AquesTalk風記法カタカナからならエンジンAPIと近い機能が使える。
+// AquesTalk風記法カタカナからならエンジンAPIと近い機能が使える。
 kana($kana, id: $id)->generate($id);
 
 song($score, teacher: $teacher)->generate($id);
