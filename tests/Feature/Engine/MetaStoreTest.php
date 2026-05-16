@@ -218,3 +218,36 @@ test('singer throws when UUID not found in singers list', function () use ($samp
 
     File::deleteDirectory($tempDir);
 });
+
+test('speaker returns URL format with hash when format is url', function () use ($sampleMetas) {
+    $uuid = '388f246b-8c41-4ac1-8e2d-5d79f3ff56d9';
+    $tempDir = sys_get_temp_dir().'/metastore_test_'.uniqid();
+    $charDir = $tempDir.'/'.$uuid;
+
+    File::makeDirectory($charDir.'/icons', recursive: true);
+    File::makeDirectory($charDir.'/voice_samples', recursive: true);
+    File::put($charDir.'/policy.md', 'Test policy');
+    File::put($charDir.'/portrait.png', 'portrait-data');
+    File::put($charDir.'/metas.json', json_encode(['supported_features' => ['permitted_synthesis_morphing' => 'ALL']]));
+
+    foreach ([3, 1] as $id) {
+        File::put($charDir.'/icons/'.$id.'.png', 'icon-'.$id);
+        for ($j = 1; $j <= 3; $j++) {
+            $num = str_pad((string) $j, 3, '0', STR_PAD_LEFT);
+            File::put($charDir.'/voice_samples/'.$id.'_'.$num.'.wav', "wav-{$id}-{$num}");
+        }
+    }
+
+    $store = new MetaStore($sampleMetas, $tempDir);
+    $info = $store->speaker($uuid, 'url', 'http://127.0.0.1:50021');
+
+    $expectedPortraitHash = hash('sha256', 'portrait-data');
+    $expectedIconHash = hash('sha256', 'icon-3');
+    $expectedSampleHash = hash('sha256', 'wav-3-001');
+
+    expect($info['portrait'])->toBe("http://127.0.0.1:50021/_resources/{$expectedPortraitHash}");
+    expect($info['style_infos'][0]['icon'])->toBe("http://127.0.0.1:50021/_resources/{$expectedIconHash}");
+    expect($info['style_infos'][0]['voice_samples'][0])->toBe("http://127.0.0.1:50021/_resources/{$expectedSampleHash}");
+
+    File::deleteDirectory($tempDir);
+});

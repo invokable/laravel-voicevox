@@ -18,12 +18,15 @@ class MetaStore
         'permitted_synthesis_morphing' => 'ALL',
     ];
 
+    protected const string RESOURCES_ROUTE = '/_resources/';
+
     /** @var array<string, array<string, string>> UUID => supported_features */
     protected array $supportedFeatures = [];
 
     public function __construct(
         protected array $metas,
         protected ?string $characterInfoPath = null,
+        protected ?ResourceManager $resourceManager = null,
     ) {
         if ($characterInfoPath !== null && File::isDirectory($characterInfoPath)) {
             $this->loadSupportedFeatures($characterInfoPath);
@@ -33,10 +36,15 @@ class MetaStore
     /**
      * @param  string|null  $characterInfoPath  Path to the character_info directory.
      *                                          Defaults to the package's own resources/character_info.
+     * @param  ResourceManager|null  $resourceManager  Pre-configured ResourceManager for URL format.
+     *                                                 If null, one is created lazily when needed.
      */
-    public static function make(array $metas, ?string $characterInfoPath = null): self
-    {
-        return new self($metas, $characterInfoPath ?? dirname(__DIR__, 2).'/resources/character_info');
+    public static function make(
+        array $metas,
+        ?string $characterInfoPath = null,
+        ?ResourceManager $resourceManager = null,
+    ): self {
+        return new self($metas, $characterInfoPath ?? dirname(__DIR__, 2).'/resources/character_info', $resourceManager);
     }
 
     /**
@@ -66,24 +74,30 @@ class MetaStore
     /**
      * Character info (policy, portrait, style icons/samples) for a speaker by UUID.
      *
+     * @param  string  $format  'base64' or 'url'
+     * @param  string  $baseUrl  Base URL for resource links when format is 'url' (e.g. 'http://127.0.0.1:50021')
+     *
      * @throws \RuntimeException
      */
-    public function speaker(string $uuid): array
+    public function speaker(string $uuid, string $format = 'base64', string $baseUrl = ''): array
     {
-        return $this->characterInfo($uuid, 'talk');
+        return $this->characterInfo($uuid, 'talk', $format, $baseUrl);
     }
 
     /**
      * Character info (policy, portrait, style icons/samples) for a singer by UUID.
      *
+     * @param  string  $format  'base64' or 'url'
+     * @param  string  $baseUrl  Base URL for resource links when format is 'url' (e.g. 'http://127.0.0.1:50021')
+     *
      * @throws \RuntimeException
      */
-    public function singer(string $uuid): array
+    public function singer(string $uuid, string $format = 'base64', string $baseUrl = ''): array
     {
-        return $this->characterInfo($uuid, 'sing');
+        return $this->characterInfo($uuid, 'sing', $format, $baseUrl);
     }
 
-    protected function characterInfo(string $uuid, string $type): array
+    protected function characterInfo(string $uuid, string $type, string $format, string $baseUrl): array
     {
         if ($this->characterInfoPath === null) {
             throw new \RuntimeException('characterInfoPath is not set.');
@@ -99,23 +113,27 @@ class MetaStore
         $charDir = $this->characterInfoPath.'/'.$uuid;
 
         $policy = File::get($charDir.'/policy.md');
-        $portrait = base64_encode(File::get($charDir.'/portrait.png'));
+        $portrait = $this->resolveResourceStr($charDir.'/portrait.png', $format, $baseUrl);
 
         $styleInfos = [];
         foreach ($character['styles'] as $style) {
             $id = $style['id'];
 
-            $icon = base64_encode(File::get($charDir.'/icons/'.$id.'.png'));
+            $icon = $this->resolveResourceStr($charDir.'/icons/'.$id.'.png', $format, $baseUrl);
 
             $stylePortraitPath = $charDir.'/portraits/'.$id.'.png';
             $stylePortrait = File::exists($stylePortraitPath)
-                ? base64_encode(File::get($stylePortraitPath))
+                ? $this->resolveResourceStr($stylePortraitPath, $format, $baseUrl)
                 : null;
 
             $voiceSamples = [];
             for ($j = 1; $j <= 3; $j++) {
                 $num = str_pad((string) $j, 3, '0', STR_PAD_LEFT);
-                $voiceSamples[] = base64_encode(File::get($charDir.'/voice_samples/'.$id.'_'.$num.'.wav'));
+                $voiceSamples[] = $this->resolveResourceStr(
+                    $charDir.'/voice_samples/'.$id.'_'.$num.'.wav',
+                    $format,
+                    $baseUrl,
+                );
             }
 
             $styleInfos[] = [
@@ -131,6 +149,38 @@ class MetaStore
             'portrait' => $portrait,
             'style_infos' => $styleInfos,
         ];
+    }
+
+    /**
+     * Resolve a resource file as base64 content or as a hash-based URL.
+     */
+    protected function resolveResourceStr(string $path, string $format, string $baseUrl): string
+    {
+        if ($format === 'url') {
+            $hash = $this->getResourceManager()->resourceStr($path, 'hash');
+
+            return rtrim($baseUrl, '/').self::RESOURCES_ROUTE.$hash;
+        }
+
+        return base64_encode(File::get($path));
+    }
+
+    /**
+     * Lazily initialise and return a ResourceManager bound to the character_info directory.
+     * Uses createFilemapIfNotExist so it works even when filemap.json has not been generated yet.
+     * For production use, pre-generate filemap.json with `voicevox:filemap` for best performance.
+     */
+    protected function getResourceManager(): ResourceManager
+    {
+        if ($this->resourceManager === null) {
+            $rm = new ResourceManager(createFilemapIfNotExist: true);
+            if ($this->characterInfoPath !== null) {
+                $rm->registerDir($this->characterInfoPath);
+            }
+            $this->resourceManager = $rm;
+        }
+
+        return $this->resourceManager;
     }
 
     protected function loadSupportedFeatures(string $path): void
