@@ -19,11 +19,12 @@ class TalkAudioQuery
         //
     }
 
-    public function generate(int|string $id = 1): VoicevoxResponse
+    public function generate(int|string $id = 1, bool $enableInterrogativeUpspeak = true): VoicevoxResponse
     {
         $audio = Synthesizer::synthesis(
             collect($this->audioQuery)->toJson(JSON_UNESCAPED_SLASHES),
             (int) $id,
+            $enableInterrogativeUpspeak,
         );
 
         return new VoicevoxResponse($audio);
