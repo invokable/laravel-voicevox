@@ -204,6 +204,9 @@ class MetaStore
                 })
                 ->all();
 
+            // 公式のJSONとはspeaker_uuidの位置だけ違うのでおそらくkeyで並べ替えている
+            ksort($character);
+
             $uuid = $character['speaker_uuid'];
             $character['supported_features'] = $this->supportedFeatures[$uuid] ?? self::DEFAULT_SUPPORTED_FEATURES;
 
