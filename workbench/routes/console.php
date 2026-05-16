@@ -14,6 +14,7 @@ use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Talk\TalkAudioQuery as NativeTalkAudioQuery;
 use Revolution\Voicevox\Voicevox;
 
+use function Revolution\Voicevox\kana;
 use function Revolution\Voicevox\song;
 use function Revolution\Voicevox\talk;
 
@@ -105,12 +106,22 @@ Artisan::command('voicevox:native:model', function () {
 Artisan::command('voicevox:native:talk', function () {
     $response = talk('ネイティブ版なのだ', id: 1)
         ->tap(function (NativeTalkAudioQuery $talk) {
+            dump($talk->audioQuery);
             $talk->audioQuery['speedScale'] = 1.2;
         })->generate(id: 1);
 
     $path = $response->storeAs('native', 'talk.wav');
     $this->info(Storage::path($path));
 })->purpose('Generate talk with native');
+
+// vendor/bin/testbench voicevox:native:kana
+Artisan::command('voicevox:native:kana', function () {
+    $response = kana("ネイティブ'バンナ/ノダ'", id: 1)
+        ->generate(id: 1);
+
+    $path = $response->storeAs('native', 'kana.wav');
+    $this->info(Storage::path($path));
+})->purpose('Generate talk with native kana');
 
 // vendor/bin/testbench voicevox:native:song
 Artisan::command('voicevox:native:song', function () {
@@ -150,11 +161,3 @@ Artisan::command('voicevox:ai:native', function () {
     $path = $response->storeAs('ai', 'native.wav');
     $this->info(Storage::path($path));
 })->purpose('Generate talk with AI SDK voicevox');
-
-// vendor/bin/testbench voicevox:kanalizer
-Artisan::command('voicevox:kanalizer', function () {
-    // transliterator_transliterateは期待するカタカナ変換はできないので他の方法が必要。
-
-    $word = 'Laravel AIからも使えます';
-    $this->info(transliterator_transliterate('Lower(); Latin-Katakana', $word));
-})->purpose('kanalizer');
