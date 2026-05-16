@@ -166,7 +166,20 @@ Artisan::command('voicevox:ai:native', function () {
 // vendor/bin/testbench voicevox:ai:kana-agent
 Artisan::command('voicevox:ai:kana-agent', function () {
     $word = 'Laravel AI SDKを使ってAquesTalk風記法カタカナに変換しました。';
-    $response = VoicevoxAgent::make()->prompt($word);
+    $response = VoicevoxAgent::make()
+        ->prompt(
+            $word,
+        );
 
     $this->info($response->text);
+
+    // 上手く変換できるとは限らないので直接音声化は難しい。
+    // カタカナ→人間が確認・修正→音声化
+
+    //$word = "ララベ'ル/エイア'イ/エスディイケ'イオ/ツカ'ッテ/アケストオクフウキホウカタカナニ'/ヘンカンシマシタ'";
+    $response = kana($response->text, id: 1)
+        ->generate(id: 1);
+
+    $path = $response->storeAs('native', 'kana-agent.wav');
+    $this->info(Storage::path($path));
 })->purpose('VoicevoxAgent');
