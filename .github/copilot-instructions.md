@@ -65,6 +65,7 @@ Agentic Workflows環境でも`setup-php`でPHPはインストールされてる�
 - src/Ai/: [Laravel AI SDK](https://github.com/laravel/ai) 連携。AI SDKのAudioを使った音声合成を実装。`Audio::of('I love coding with Laravel.')->voice('ずんだもん')->generate();`。`voicevox-client`がクライアント版。`voicevox`がネイティブ版。
 - voicevox_engine: 公式エンジンのgitサブモジュール
 - voicevox_resource: resourcesのサブモジュール。公式エンジンでは[process_voicevox_resource.bash](../voicevox_engine/tools/process_voicevox_resource.bash) などで使用している。必要なファイルだけLaravel側にコピー。`/speaker_info'`や`/singer_info`で必要。
+- resources: voicevox_resourceもしくはGitHubからダウンロードしたキャラ情報。500MB以上のサイズなので別途インストール。
 
 ## VOICEVOX クライアント
 
