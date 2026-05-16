@@ -6,6 +6,8 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Revolution\Voicevox\Engine\MetaStore;
+use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -16,6 +18,17 @@ class SpeakerInfoController
     {
         $uuid = $request->string('speaker_uuid')->value();
         $format = $request->string('resource_format', 'base64')->value();
+
+        try {
+            $info = MetaStore::make(json_decode(Synthesizer::metas(), true))->speaker($uuid);
+
+            return response()->json(
+                $info,
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+            );
+        } catch (Throwable) {
+            // Fall back to Voicevox client if native core or character_info is unavailable
+        }
 
         try {
             return response()->json(

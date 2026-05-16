@@ -36,6 +36,7 @@ test('engine speakers endpoint returns array', function () {
 });
 
 test('engine speaker_info endpoint returns info', function () {
+    Synthesizer::expects('metas')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->speaker')->andReturn(['policy' => 'test']);
 
     $response = $this->getJson('/speaker_info?speaker_uuid=388f246b-8c41-4ac1-8e2d-5d79f3ff56d9');
@@ -54,6 +55,7 @@ test('engine singers endpoint returns array', function () {
 });
 
 test('engine singer_info endpoint returns info', function () {
+    Synthesizer::expects('metas')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->singer')->andReturn(['policy' => 'test']);
 
     $response = $this->getJson('/singer_info?speaker_uuid=388f246b-8c41-4ac1-8e2d-5d79f3ff56d9');
