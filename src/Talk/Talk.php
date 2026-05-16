@@ -13,6 +13,9 @@ class Talk
         return new self;
     }
 
+    /**
+     * テキスト音声合成。
+     */
     public function talk(string $text, int|string $id = 1): TalkAudioQuery
     {
         $audioQuery = json_decode(Synthesizer::createAudioQuery($text, $id), true);
@@ -20,6 +23,9 @@ class Talk
         return new TalkAudioQuery($audioQuery, $id);
     }
 
+    /**
+     * AquesTalk風記法カタカナから音声合成。
+     */
     public function kana(string $kana, int|string $id = 1): TalkAudioQuery
     {
         $accent_phrases = json_decode(Synthesizer::createAccentPhrasesFromKana($kana, $id), true);
