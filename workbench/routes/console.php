@@ -6,6 +6,7 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Ai\Audio;
+use Revolution\Voicevox\Ai\Agents\VoicevoxAgent;
 use Revolution\Voicevox\Client\TalkAudioQuery;
 use Revolution\Voicevox\Core\VoiceModelFile;
 use Revolution\Voicevox\Song\Note;
@@ -161,3 +162,11 @@ Artisan::command('voicevox:ai:native', function () {
     $path = $response->storeAs('ai', 'native.wav');
     $this->info(Storage::path($path));
 })->purpose('Generate talk with AI SDK voicevox');
+
+// vendor/bin/testbench voicevox:ai:kana-agent
+Artisan::command('voicevox:ai:kana-agent', function () {
+    $word = 'Laravel AI SDKを使ってAquesTalk風記法カタカナに変換しました。';
+    $response = VoicevoxAgent::make()->prompt($word);
+
+    $this->info($response->text);
+})->purpose('VoicevoxAgent');
