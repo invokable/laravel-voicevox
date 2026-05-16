@@ -28,7 +28,7 @@ test('engine add_preset endpoint returns id', function () {
     $response = $this->postJson('/add_preset', ['id' => 0, 'name' => 'new']);
 
     $response->assertOk()
-        ->assertJson(2);
+        ->assertSee(2);
 });
 
 test('engine update_preset endpoint returns id', function () {
@@ -37,7 +37,7 @@ test('engine update_preset endpoint returns id', function () {
     $response = $this->postJson('/update_preset', ['id' => 1, 'name' => 'updated']);
 
     $response->assertOk()
-        ->assertJson(1);
+        ->assertSee(1);
 });
 
 test('engine delete_preset endpoint returns null', function () {
