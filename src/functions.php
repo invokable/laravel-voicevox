@@ -19,6 +19,8 @@ function talk(string $text, int|string $id = 1): TalkAudioQuery
 }
 
 /**
+ * 歌声合成。
+ *
  * @param  int|string  $teacher  typeがsingかsinging_teacherのスタイルID
  */
 function song(Score|array $score, int|string $teacher = 6000): SongAudioQuery
