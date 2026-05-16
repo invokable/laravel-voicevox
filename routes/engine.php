@@ -26,6 +26,11 @@ use Revolution\Voicevox\Engine\Http\VersionController;
  */
 Route::post('/audio_query', AudioQueryController::class);
 Route::post('/accent_phrases', AccentPhrasesController::class);
+// audio_query_from_presetが難しいのでプリセット機能ごと全部フォールバック
+Route::get('/presets', PresetsController::class);
+Route::post('/add_preset', AddPresetController::class);
+Route::post('/update_preset', UpdatePresetController::class);
+Route::post('/delete_preset', DeletePresetController::class);
 
 /**
  * PHP版コアで対応可能。失敗時にフォールバックも行う。
@@ -44,8 +49,4 @@ Route::get('/singer_info', SingerInfoController::class);
  */
 Route::get('/version', VersionController::class);
 Route::get('/engine_manifest', EngineManifestController::class);
-Route::get('/presets', PresetsController::class);
-Route::post('/add_preset', AddPresetController::class);
-Route::post('/update_preset', UpdatePresetController::class);
-Route::post('/delete_preset', DeletePresetController::class);
 Route::get('/_resources/{hash}', ResourcesController::class)->name('voicevox.resources');
