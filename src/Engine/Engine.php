@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Voicevox\Enums;
+namespace Revolution\Voicevox\Engine;
 
 enum Engine: string
 {

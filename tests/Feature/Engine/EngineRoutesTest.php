@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\File;
+use Revolution\Voicevox\Engine\Engine;
 use Revolution\Voicevox\Engine\Http\ResourcesController;
-use Revolution\Voicevox\Enums\Engine;
 use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 
