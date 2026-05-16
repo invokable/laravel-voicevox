@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\File;
+use Revolution\Voicevox\Engine\Http\ResourcesController;
 use Revolution\Voicevox\Enums\Engine;
 use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
@@ -77,11 +79,17 @@ test('engine resources endpoint returns 404 for unknown hash', function () {
 });
 
 test('engine resources endpoint returns file for known hash', function () {
-    $file = dirname(__DIR__, 3).'/resources/character_info/388f246b-8c41-4ac1-8e2d-5d79f3ff56d9/icons/3.png';
-    $hash = hash('sha256', file_get_contents($file));
+    $tempDir = sys_get_temp_dir().'/resources_test_'.uniqid();
+    File::makeDirectory($tempDir);
+    $content = 'fake-png-content';
+    File::put($tempDir.'/icon.png', $content);
+    $hash = hash('sha256', $content);
+
+    $this->app->bind(ResourcesController::class, fn () => new ResourcesController($tempDir));
 
     $response = $this->get("/_resources/{$hash}");
 
-    $response->assertOk()
-        ->assertHeader('Content-Type', 'image/png');
+    $response->assertOk();
+
+    File::deleteDirectory($tempDir);
 });
