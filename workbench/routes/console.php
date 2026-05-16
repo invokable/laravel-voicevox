@@ -6,8 +6,8 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Ai\Audio;
-use Revolution\Voicevox\Ai\Agents\KanalizerAgent;
 use Revolution\Voicevox\Ai\Agents\AquesTalkAgent;
+use Revolution\Voicevox\Ai\Agents\KanalizerAgent;
 use Revolution\Voicevox\Client\TalkAudioQuery;
 use Revolution\Voicevox\Core\VoiceModelFile;
 use Revolution\Voicevox\Song\Note;
@@ -177,7 +177,7 @@ Artisan::command('voicevox:ai:kana-agent', function () {
     // 上手く変換できるとは限らないので直接音声化は難しい。
     // カタカナ→人間が確認・修正→音声化
 
-    //$word = "ララベ'ル/エイア'イ/エスディイケ'イオ/ツカ'ッテ/アケストオクフウキホウカタカナニ'/ヘンカンシマシタ'";
+    // $word = "ララベ'ル/エイア'イ/エスディイケ'イオ/ツカ'ッテ/アケストオクフウキホウカタカナニ'/ヘンカンシマシタ'";
     $response = kana($response->text, id: 1)
         ->generate(id: 1);
 
