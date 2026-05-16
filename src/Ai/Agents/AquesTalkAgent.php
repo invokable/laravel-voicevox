@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Revolution\Voicevox\Ai\Agents;
 
 use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Laravel\Ai\Attributes\TopP;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\HasStructuredOutput;
 use Laravel\Ai\Promptable;
 use Stringable;
 
-class VoicevoxAgent implements Agent, HasStructuredOutput
+#[TopP(0.1)]
+class AquesTalkAgent implements Agent, HasStructuredOutput
 {
     use Promptable;
 
@@ -29,11 +31,11 @@ class VoicevoxAgent implements Agent, HasStructuredOutput
 
 ## AquesTalk風記法の規則
 - 読みはカタカナのみ
-- `/` で区切り
-- `、` で無音付き区切り
-- `_` で無声化
-- `'` でアクセント位置
-- `？` で疑問文
+- `/` で区切り（半角）
+- `、` で無音付き区切り（全角）
+- `_` で無声化（半角）
+- `'` でアクセント位置（半角）
+- `？` で疑問文（全角）
 - 区切りごとにアクセント位置を必ず１つ入れる
 
 ## ルール
@@ -43,7 +45,7 @@ class VoicevoxAgent implements Agent, HasStructuredOutput
 4. 数字や記号も、音声合成に適した読み方に開いてください（例: "100円" -> 「ひゃくえん」）。
 5. 「ー」は文脈に合わせてカタカナに変換してください。A（エー） -> エイ、D（ディー） -> ディイ、トーク -> トオク。
 6. 「を」は「ヲ」ではなく「オ」に変換してください。
-7. カタカナと記法以外の文字を含めないでください。（「。」「ー」など）
+7. カタカナと記法以外の文字を含めないでください。（「。」「ー」 「 」など全てエラーになります）
 
 ## 変換後の例
 - コンニチワ'
