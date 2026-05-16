@@ -7,6 +7,7 @@ namespace Revolution\Voicevox\Engine;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use RuntimeException;
 
 class MetaStore
 {
@@ -74,7 +75,7 @@ class MetaStore
      *
      * @param  string  $format  'base64' or 'url'
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function speaker(string $uuid, string $format = 'base64'): array
     {
@@ -86,7 +87,7 @@ class MetaStore
      *
      * @param  string  $format  'base64' or 'url'
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function singer(string $uuid, string $format = 'base64'): array
     {
@@ -96,14 +97,14 @@ class MetaStore
     protected function characterInfo(string $uuid, string $type, string $format): array
     {
         if ($this->characterInfoPath === null) {
-            throw new \RuntimeException('characterInfoPath is not set.');
+            throw new RuntimeException('characterInfoPath is not set.');
         }
 
         $list = $type === 'talk' ? $this->speakers() : $this->singers();
         $character = collect($list)->firstWhere('speaker_uuid', $uuid);
 
         if ($character === null) {
-            throw new \RuntimeException("Character not found: {$uuid}");
+            throw new RuntimeException("Character not found: {$uuid}");
         }
 
         $charDir = $this->characterInfoPath.'/'.$uuid;
