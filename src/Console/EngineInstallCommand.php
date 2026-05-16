@@ -22,6 +22,8 @@ class EngineInstallCommand extends Command
 
         $this->copyResources();
         $this->cleanCharacterInfo();
+
+        $this->call('voicevox:filemap', ['dir' => $this->characterInfoPath()]);
     }
 
     /**

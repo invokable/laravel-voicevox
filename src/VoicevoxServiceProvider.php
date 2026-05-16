@@ -95,6 +95,7 @@ class VoicevoxServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Console\EngineInstallCommand::class,
+                Console\GenerateFilemapCommand::class,
             ]);
         }
     }
