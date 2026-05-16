@@ -55,6 +55,7 @@ class MetaStore
                 ->map(fn ($style) => (array) $style)
                 ->map(function ($style) {
                     Arr::forget($style, 'order');
+
                     return $style;
                 })
                 ->all();
@@ -62,6 +63,7 @@ class MetaStore
             return $character;
         })->map(function ($character) {
             Arr::forget($character, 'order');
+
             return $character;
         });
     }
