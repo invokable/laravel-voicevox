@@ -50,12 +50,10 @@ Route::post('/import_user_dict', ImportUserDictController::class);
 Route::post('/audio_query', AudioQueryController::class);
 // is_kana=true時のみ対応
 Route::post('/accent_phrases', AccentPhrasesController::class);
-
 Route::post('/synthesis', SynthesisController::class);
 Route::post('/mora_data', MoraDataController::class);
 Route::post('/mora_length', MoraLengthController::class);
 Route::post('/mora_pitch', MoraPitchController::class);
-Route::post('/validate_kana', ValidateKanaController::class);
 Route::get('/speakers', SpeakersController::class);
 Route::get('/speaker_info', SpeakerInfoController::class);
 Route::get('/singers', SingersController::class);
@@ -67,3 +65,4 @@ Route::get('/singer_info', SingerInfoController::class);
 Route::get('/version', VersionController::class);
 Route::get('/engine_manifest', EngineManifestController::class);
 Route::get('/_resources/{hash}', ResourcesController::class)->name('voicevox.resources');
+Route::post('/validate_kana', ValidateKanaController::class);
