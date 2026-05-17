@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
-use Revolution\Voicevox\Engine\Engine;
+use Revolution\Voicevox\Enums\Engine;
 
 class VersionController
 {
