@@ -9,6 +9,7 @@ use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 
 test('engine audio_query endpoint returns json', function () {
+    Synthesizer::expects('createAudioQuery')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->audioQuery')->andReturn(['speedScale' => 1.0]);
 
     $response = $this->postJson('/audio_query?text=テスト&speaker=1');

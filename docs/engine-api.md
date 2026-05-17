@@ -9,7 +9,7 @@
 | API               | Laravel（PHP版コアを使用） | 公式エンジンにフォールバック | 説明                                      |
 |-------------------|--------------------|----------------|-----------------------------------------|
 | `/version`        | ✅                  | ❌              | `"0.25.2"`のようなバージョンを返すだけなのでLaravelのみで可能 |
-| `/audio_query`    | ❌                  | ✅              | Laravelでは非対応                            |
+| `/audio_query`    | ⚠️                 | ✅              | Laravelではenable_katakana_englishには非対応   |
 | `/accent_phrases` | ⚠️                 | ✅              | `is_kana`のAquesTalk風記法カタカナのみLaravelでも対応 |
 | `/synthesis`      | ✅                  | ✅              | コアで可能                                   |
 | `/speakers`       | ✅                  | ✅              | 公式のJSONと完全一致                            |
