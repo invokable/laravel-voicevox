@@ -242,7 +242,7 @@ php artisan serveやtestbench serveで使用するにはphp.iniでFFIを有効�
 ffi.enable=true
 ```
 
-### キャラクター情報
+### キャラクター情報・リソース
 
 `resources/character_info/`内に公式エンジンと同じリソースが必要。
 500MB以上なので別途インストール。Laravelプロジェクト直下ではなく、vendorのこのパッケージ内にダウンロードされる。
@@ -255,6 +255,8 @@ php artisan voicevox:install
 ```bash
 vendor/bin/testbench voicevox:install
 ```
+
+`/speakers`から`/singer_info`、`/_resources/{hash}`のルート辺りは公式とほぼ同じ機能で再現できた。
 
 engine_manifest.jsonはインストールなどの変換処理は挟まず公式を参考にLaravel用に作ればいいはず。
 `voicevox_engine/engine_manifest.json`
