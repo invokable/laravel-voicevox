@@ -13,9 +13,14 @@ The current state of the Engine implementation in this repository has multiple c
 | File | Status |
 |------|--------|
 | `src/Engine/Http/AudioQueryController.php` | Implemented natively via `Synthesizer::createAudioQuery()`. `enable_katakana_english` unsupported but fallback available |
-| `src/Engine/Http/AccentPhrasesController.php` | `is_kana=true` handled natively via `Synthesizer::createAccentPhrasesFromKana()`. `is_kana=false` proxies to fallback |
+| `src/Engine/Http/AccentPhrasesController.php` | `is_kana=true` handled natively via `Synthesizer::createAccentPhrasesFromKana()`. `is_kana=false` proxies to fallback (natively implementable by extracting `accent_phrases` from `createAudioQuery()`) |
+| `src/Engine/Http/MoraDataController.php` | Implemented natively via `Synthesizer::replaceMoraData()`. Fallback available |
+| `src/Engine/Http/MoraLengthController.php` | Implemented natively via `Synthesizer::replacePhonemeLength()`. Fallback available |
+| `src/Engine/Http/MoraPitchController.php` | Implemented natively via `Synthesizer::replaceMoraPitch()`. Fallback available |
 
 `AudioQueryController` is now implemented using the Core's high-level API `createAudioQuery()`. Investigation of the [Rust source](https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core/src/lib.rs) confirmed that the high-level API produces equivalent results to the low-level pipeline.[^1] `enable_katakana_english` is an engine-specific feature absent from the Core, but can be covered operationally by pre-converting English to katakana via an LLM.[^3]
+
+It has also been confirmed that the AudioQuery returned by the Core's `createAudioQuery()` includes an `accent_phrases` field, making native implementation of the `is_kana=false` case in `AccentPhrasesController` possible without requiring a separate OpenJTalk process. `createAudioQueryFromKana` exists only in the Core (not as an engine API endpoint) and is used by `Talk::kana()`.
 
 ---
 
@@ -161,18 +166,21 @@ While the official engine uses the low-level pipeline, investigation of the [Rus
 
 ## Challenge 5: Query Editing Endpoints
 
-**Difficulty: 🟠 Hard**
+**Difficulty: 🟢 Low (fully covered by Core's high-level API)**
 
 Four endpoints allow fine-grained adjustment of the generated AudioQuery:
 
-| Endpoint | What It Does |
-|----------|-------------|
-| `POST /accent_phrases` | Re-runs text analysis from scratch (needs OpenJTalk) |
-| `POST /mora_data` | Re-runs both `yukarin_s` and `yukarin_sa` (PHP FFI: `replaceMoraData`) |
-| `POST /mora_length` | Re-runs only `yukarin_s` (PHP FFI: `replacePhonemeLength`) |
-| `POST /mora_pitch` | Re-runs only `yukarin_sa` (PHP FFI: `replaceMoraPitch`) |
+| Endpoint | What It Does | How to Implement |
+|----------|-------------|-----------------|
+| `POST /accent_phrases` (`is_kana=false`) | Re-runs text analysis from scratch | Extract `accent_phrases` from `createAudioQuery()` ✅ |
+| `POST /accent_phrases` (`is_kana=true`) | Parse from AquesTalk notation | `createAccentPhrasesFromKana()` ✅ |
+| `POST /mora_data` | Re-runs both `yukarin_s` and `yukarin_sa` | `replaceMoraData()` ✅ |
+| `POST /mora_length` | Re-runs only `yukarin_s` | `replacePhonemeLength()` ✅ |
+| `POST /mora_pitch` | Re-runs only `yukarin_sa` | `replaceMoraPitch()` ✅ |
 
-The last three are **directly available via the PHP FFI wrapper** (`replaceMoraData`, `replacePhonemeLength`, `replaceMoraPitch`). Only `/accent_phrases` requires OpenJTalk.
+**All five are natively implementable via the PHP FFI wrapper.** The Core's `createAudioQuery()` returns a full AudioQuery containing an `accent_phrases` field, so the `is_kana=false` case requires no separate OpenJTalk process — the Core handles text analysis internally.
+
+Note: `createAudioQueryFromKana` is a Core-only API with no corresponding engine endpoint (the engine uses `/accent_phrases?is_kana=true` for AquesTalk input). It is used by `src/Talk/Talk.php`'s `kana()` method.
 
 ---
 
@@ -368,7 +376,7 @@ The singing synthesis pipeline is actually **easier** than talk synthesis becaus
 | `enable_katakana_english` | 🟡 Medium | Engine-specific; LLM pre-conversion as workaround | No |
 | Full-context label parsing | 🟢 Low | Portable regex | N/A |
 | AudioQuery construction (end-to-end) | 🟢 Low | Handled by Core's `createAudioQuery()` | Yes |
-| Query editing (`/mora_data` etc.) | 🟠 Hard | `/accent_phrases` needs NLP | Yes (3 of 4 endpoints) |
+| Query editing (`/mora_data` etc.) | 🟢 Low | Fully covered by Core's high-level API | Yes (all 5) |
 | Voice morphing | 🔴 Extreme | WORLD vocoder | No |
 | connect_waves | 🟡 Medium | Needs ffmpeg exec | No |
 | AquesTalk parser | 🟢 Low | `is_kana=true` implemented (`createAccentPhrasesFromKana`) | Yes |
@@ -389,16 +397,15 @@ Route all endpoints to the running Python VOICEVOX Engine via the existing HTTP 
 ### Phase 2: Native Implementation of FFI-Covered Endpoints
 Implement natively (no subprocess):
 - `POST /synthesis` — `Synthesizer::synthesis()`
-- `POST /mora_data`, `/mora_length`, `/mora_pitch` — `Synthesizer::replaceMoraData()` etc.
-- `POST /audio_query` — `Synthesizer::createAudioQuery()` (`enable_katakana_english` unsupported)
-- `POST /accent_phrases?is_kana=true` — `Synthesizer::createAccentPhrasesFromKana()`
+- `POST /mora_data`, `/mora_length`, `/mora_pitch` — `Synthesizer::replaceMoraData()` etc. (already implemented)
+- `POST /audio_query` — `Synthesizer::createAudioQuery()` (`enable_katakana_english` unsupported) (already implemented)
+- `POST /accent_phrases?is_kana=true` — `Synthesizer::createAccentPhrasesFromKana()` (already implemented)
+- `POST /accent_phrases?is_kana=false` — extract `accent_phrases` from `Synthesizer::createAudioQuery()`
 - `POST /sing_frame_audio_query`, `/frame_synthesis` — `Synthesizer::createSingFrameAudioQuery()` + `frameSynthesis()`
 - `GET /speakers`, `/singer_info`, `/speaker_info` — build from `Synthesizer::metas()`
 
 ### Phase 3: Subprocess-Assisted Endpoints
 Implement using subprocess calls:
-- `POST /accent_phrases` (`is_kana=false`) — call pyopenjtalk via subprocess
-- `POST /audio_query_from_kana` — port `parse_kana()` + use FFI synthesis
 - `enable_katakana_english=true` — pre-convert English to katakana via LLM
 
 ### Defer or Always Proxy

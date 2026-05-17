@@ -15,9 +15,14 @@ VOICEVOXエンジンはPython/FastAPIで実装されたHTTPサーバーであり
 | ファイル | 状況 |
 |------|------|
 | `src/Engine/Http/AudioQueryController.php` | `Synthesizer::createAudioQuery()`でネイティブ実装済み。`enable_katakana_english`は非対応だがフォールバックあり |
-| `src/Engine/Http/AccentPhrasesController.php` | `is_kana=true`時は`Synthesizer::createAccentPhrasesFromKana()`でネイティブ処理。`is_kana=false`はフォールバック |
+| `src/Engine/Http/AccentPhrasesController.php` | `is_kana=true`時は`Synthesizer::createAccentPhrasesFromKana()`でネイティブ処理。`is_kana=false`はフォールバック（`createAudioQuery()`から`accent_phrases`を取り出す方法でネイティブ化可能） |
+| `src/Engine/Http/MoraDataController.php` | `Synthesizer::replaceMoraData()`でネイティブ実装済み。フォールバックあり |
+| `src/Engine/Http/MoraLengthController.php` | `Synthesizer::replacePhonemeLength()`でネイティブ実装済み。フォールバックあり |
+| `src/Engine/Http/MoraPitchController.php` | `Synthesizer::replaceMoraPitch()`でネイティブ実装済み。フォールバックあり |
 
 `AudioQueryController`はコアの高レベルAPI `createAudioQuery()` を使って実装済み。Rustのソースコードを確認した結果、高レベルAPIは低レベルパイプラインと同等の結果を返すことが判明した[^1]。`enable_katakana_english`はコアにないエンジン独自機能だが、LLMで事前にカタカナ変換することで運用カバーが可能。[^3]
+
+また、コアの `createAudioQuery()` が返すAudioQueryには `accent_phrases` フィールドが含まれるため、`AccentPhrasesController`の`is_kana=false`ケースもネイティブ実装可能と判明した。`createAudioQueryFromKana`はコアにのみ存在するAPIで（エンジンAPIにはない）、`Talk::kana()`から利用されている。
 
 ---
 
@@ -163,18 +168,21 @@ result = re.search(
 
 ## 課題5: クエリ編集エンドポイント
 
-**難易度: 🟠 難しい**
+**難易度: 🟢 低い（コアの高レベルAPIで全て対応済み）**
 
 4つのエンドポイントが生成されたAudioQueryのきめ細かな調整を可能にする:
 
-| エンドポイント | 処理内容 |
-|--------------|---------|
-| `POST /accent_phrases` | テキスト解析をゼロから再実行（OpenJTalkが必要） |
-| `POST /mora_data` | `yukarin_s`と`yukarin_sa`の両方を再実行（PHP FFI: `replaceMoraData`） |
-| `POST /mora_length` | `yukarin_s`のみ再実行（PHP FFI: `replacePhonemeLength`） |
-| `POST /mora_pitch` | `yukarin_sa`のみ再実行（PHP FFI: `replaceMoraPitch`） |
+| エンドポイント | 処理内容 | 対応方法 |
+|--------------|---------|---------|
+| `POST /accent_phrases` (`is_kana=false`) | テキスト解析をゼロから再実行 | `createAudioQuery()`から`accent_phrases`を抽出 ✅ |
+| `POST /accent_phrases` (`is_kana=true`) | AquesTalk風記法から解析 | `createAccentPhrasesFromKana()` ✅ |
+| `POST /mora_data` | `yukarin_s`と`yukarin_sa`の両方を再実行 | `replaceMoraData()` ✅ |
+| `POST /mora_length` | `yukarin_s`のみ再実行 | `replacePhonemeLength()` ✅ |
+| `POST /mora_pitch` | `yukarin_sa`のみ再実行 | `replaceMoraPitch()` ✅ |
 
-後者3つは**PHP FFIラッパーで直接利用可能**（`replaceMoraData`、`replacePhonemeLength`、`replaceMoraPitch`）。`/accent_phrases`のみOpenJTalkが必要。
+**4つ全てPHP FFIラッパーで対応可能。** コアの `createAudioQuery()` が返すAudioQueryには `accent_phrases` フィールドが含まれるため、`is_kana=false`ケースでも別途OpenJTalkは不要。コア内部でOpenJTalkの処理が完結している。
+
+なお `createAudioQueryFromKana`はコアにのみ存在するAPIで、エンジンAPIには対応するエンドポイントが存在しない（AquesTalk入力はエンジンAPIでは `/accent_phrases?is_kana=true` が正しいエンドポイント）。`src/Talk/Talk.php` の `kana()` メソッドがこのコアAPIを使用している。
 
 ---
 
@@ -367,7 +375,7 @@ PHP従来のリクエスト・レスポンスモデルでは、合成途中の�
 | `enable_katakana_english` | 🟡 中 | エンジン独自機能、LLMで運用カバー可 | いいえ |
 | フルコンテキストラベルパース | 🟢 低 | 正規表現で移植可能 | 該当なし |
 | AudioQuery構築（E2E） | 🟢 低 | コアの高レベルAPIで対応済み | はい（createAudioQuery） |
-| クエリ編集（/mora_data等） | 🟠 難 | /accent_phrasesのみNLP依存 | はい（4つ中3つ） |
+| クエリ編集（/mora_data等） | 🟢 低 | コアの高レベルAPIで全て対応済み | はい（5つ全て） |
 | ボイスモーフィング | 🔴 最難関 | WORLDボコーダー | いいえ |
 | connect_waves | 🟡 中 | ffmpegのexecが必要 | いいえ |
 | AquesTalkパーサー | 🟢 低 | is_kana=true対応済み（`createAccentPhrasesFromKana`） | はい |
@@ -388,16 +396,15 @@ PHP従来のリクエスト・レスポンスモデルでは、合成途中の�
 ### フェーズ2: FFI対応エンドポイントのネイティブ実装
 サブプロセス不要でネイティブ実装:
 - `POST /synthesis` — `Synthesizer::synthesis()`
-- `POST /mora_data`、`/mora_length`、`/mora_pitch` — `Synthesizer::replaceMoraData()`等
-- `POST /audio_query` — `Synthesizer::createAudioQuery()`（`enable_katakana_english`のみ非対応）
-- `POST /accent_phrases?is_kana=true` — `Synthesizer::createAccentPhrasesFromKana()`
+- `POST /mora_data`、`/mora_length`、`/mora_pitch` — `Synthesizer::replaceMoraData()`等（実装済み）
+- `POST /audio_query` — `Synthesizer::createAudioQuery()`（`enable_katakana_english`のみ非対応）（実装済み）
+- `POST /accent_phrases?is_kana=true` — `Synthesizer::createAccentPhrasesFromKana()`（実装済み）
+- `POST /accent_phrases?is_kana=false` — `Synthesizer::createAudioQuery()`から`accent_phrases`を抽出
 - `POST /sing_frame_audio_query`、`/frame_synthesis` — `Synthesizer::createSingFrameAudioQuery()` + `frameSynthesis()`
 - `GET /speakers`、`/singer_info`、`/speaker_info` — `Synthesizer::metas()`から構築
 
 ### フェーズ3: サブプロセス支援エンドポイント
 サブプロセス呼び出しを使った実装:
-- `POST /accent_phrases`（`is_kana=false`） — pyopenjtalkをサブプロセスで呼ぶ
-- `POST /audio_query_from_kana` — `parse_kana()`を移植 + FFIで合成
 - `enable_katakana_english=true` — LLMによる事前変換で運用カバー
 
 ### 常にプロキシまたは後回し
