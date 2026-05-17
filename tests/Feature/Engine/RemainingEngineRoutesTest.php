@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 use Revolution\Voicevox\VoicevoxResponse;
 
@@ -53,6 +54,7 @@ test('engine synthesis_morphing returns audio', function () {
 });
 
 test('engine sing_frame_audio_query returns json', function () {
+    Synthesizer::expects('createSingFrameAudioQuery')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->singFrameAudioQuery')->andReturn(['f0' => [], 'volume' => []]);
 
     $response = $this->postJson('/sing_frame_audio_query?speaker=6000', ['notes' => []]);
@@ -138,12 +140,12 @@ test('engine uninstall_library returns 204', function () {
 });
 
 test('engine GET setting returns json', function () {
-    Voicevox::expects('baseUrl->setting')->andReturn(['allow_origin' => '*']);
+    Voicevox::expects('baseUrl->setting')->andReturn('html');
 
-    $response = $this->getJson('/setting');
+    $response = $this->get('/setting');
 
     $response->assertOk()
-        ->assertJsonFragment(['allow_origin' => '*']);
+        ->assertSee('html');
 });
 
 test('engine POST setting returns 204', function () {
