@@ -31,12 +31,14 @@ use Revolution\Voicevox\Engine\Http\VersionController;
 /**
  * Laravelでは難しいので常に公式エンジンにフォールバック
  */
+// プリセットを共有できないので対応方法は未定
 Route::get('/presets', PresetsController::class);
 Route::post('/add_preset', AddPresetController::class);
 Route::post('/update_preset', UpdatePresetController::class);
 Route::post('/delete_preset', DeletePresetController::class);
 Route::post('/audio_query_from_preset', AudioQueryFromPresetController::class);
 
+// TODO
 Route::get('/user_dict', UserDictController::class);
 Route::post('/user_dict_word', AddUserDictWordController::class);
 Route::put('/user_dict_word/{word_uuid}', UpdateUserDictWordController::class);
@@ -48,8 +50,8 @@ Route::post('/import_user_dict', ImportUserDictController::class);
  */
 // enable_katakana_englishには非対応
 Route::post('/audio_query', AudioQueryController::class);
-// is_kana=true時のみ対応
 Route::post('/accent_phrases', AccentPhrasesController::class);
+
 Route::post('/synthesis', SynthesisController::class);
 Route::post('/mora_data', MoraDataController::class);
 Route::post('/mora_length', MoraLengthController::class);
@@ -63,6 +65,9 @@ Route::get('/singer_info', SingerInfoController::class);
  * コアもフォールバックも不要で対応可能
  */
 Route::get('/version', VersionController::class);
-Route::get('/engine_manifest', EngineManifestController::class);
+
 Route::get('/_resources/{hash}', ResourcesController::class)->name('voicevox.resources');
 Route::post('/validate_kana', ValidateKanaController::class);
+
+// TODO
+Route::get('/engine_manifest', EngineManifestController::class);
