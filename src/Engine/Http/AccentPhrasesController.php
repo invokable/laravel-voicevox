@@ -20,6 +20,7 @@ class AccentPhrasesController
         $isKana = $request->boolean('is_kana', true);
         $katakanaEnglish = $request->boolean('enable_katakana_english', true);
 
+        // AquesTalk風記法カタカナのみ対応
         if ($isKana) {
             try {
                 $accent_phrase = Synthesizer::createAccentPhrasesFromKana($text, $id);
