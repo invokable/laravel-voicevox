@@ -121,7 +121,7 @@ $response->storeAs('talk.wav');
 歌声はこんなコード。
 
 ```php
-$response = Voicevox::song(score: ['notes' => []], id: 6000)->generate(id: 3001);
+$response = Voicevox::song(score: ['notes' => []], teacher: 6000)->generate(id: 3001);
 ```
 
 歌声機能のコアへの追加は最近。  
@@ -137,7 +137,7 @@ $score = new Score(notes: [
 ```
 
 ```php
-song(Score|array $score, int|string $id) {
+song(Score|array $score, int|string $teacher) {
     $score = $score instanceOf Arrayable ? $score->toArray(): $score;
 }
 ```
@@ -149,16 +149,16 @@ singFrameAudioQueryも残してaudioQueryも追加して、talkとsongはメソ�
 use Revolution\Voicevox\Voicevox;
 use Revolution\Voicevox\Client\SongAudioQuery;
 
-$response = Voicevox::song($score, id: 6000) // sing_frame_audio_queryでframe_audio_queryを生成
+$response = Voicevox::song($score, teacher: 6000) // sing_frame_audio_queryでframe_audio_queryを生成
             ->tap(function(SongAudioQuery $song) {
                 // sing_frame_f0やsing_frame_volumeは最初にframe_audio_queryを作った後の調整用。
 
                 // 1. $song->scoreのnoteのkeyなどを変更したら
                 // 2. f0を変更
-                $f0 = Voicevox::singFrameF0($song->score, $song->frameAudioQuery, $song->id);
+                $f0 = Voicevox::singFrameF0($song->score, $song->frameAudioQuery, $song->teacher);
                 $song->frameAudioQuery['f0'] = $f0;
                 // 3. volumeを変更。必ずf0→volumeの順番で変更する。
-                $volume= Voicevox::singFrameVolume($song->score, $song->frameAudioQuery, $song->id);
+                $volume= Voicevox::singFrameVolume($song->score, $song->frameAudioQuery, $song->teacher);
                 $song->frameAudioQuery['volume'] = $volume;
             })
             ->generate(id: 3001); // frame_synthesisで音声を生成
