@@ -53,7 +53,7 @@ test('engine accent_phrases endpoint returns phrases', function () {
     Synthesizer::expects('createAudioQuery')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->accentPhrases')->andReturn([['moras' => []]]);
 
-    $response = $this->postJson('/accent_phrases?text=テスト&speaker=1');
+    $response = $this->postJson('/accent_phrases?text=テスト&speaker=1&is_kana=false');
 
     $response->assertOk()
         ->assertJsonFragment(['moras' => []]);
