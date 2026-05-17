@@ -58,6 +58,7 @@ Agentic Workflows環境でも`setup-php`でPHPはインストールされてる�
 - src/Song/: ネイティブのソング機能ディレクトリ
 - src/functions.php: `talk()`や`song()`のネイティブ版ヘルパー関数。クライアントはVoicevox Facadeから使う、ネイティブ版はヘルパーから使う全く別の導線。
 - src/Engine/: エンジン機能ディレクトリ。これから開発。Talk、Song以外のコアを使う機能（辞書など）はEngine内に配置するかも。基本的に全てヘルパーからの利用を想定しているのでクラスファイルの配置場所は分かりやすければどこでもいい。コアではなくエンジンで実装してる機能も意外とあるので独自開発が必要かも。
+- src/Support/: クライアントでもエンジンでも全部で使いそうなヘルパー。
 - src/Console/: ユーザーが使うartisanコマンド。エンジンで使うresourcesのインストールなど。
 - src/VoicevoxResponse.php: 音声の生データを保持するレスポンス。ひとまず全部で共通のVoicevoxResponseを使用。分けた方が良くなったら別クラス化。
 - src/VoicevoxServiceProvider.php
