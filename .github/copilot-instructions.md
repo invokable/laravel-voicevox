@@ -312,6 +312,7 @@ VoicevoxClientと同等の機能は一通り用意したいけど対応不可な
 use function Revolution\Voicevox\{talk, song, dict, kana};
 
 // コア機能のみなので英語からカタカナ変換がないなどエンジンAPIとは少し違う。
+// 事前にLLMでカタカナに変換すれば同じ結果。
 talk($text, id: $id)->generate($id);
 
 // AquesTalk風記法カタカナからならエンジンAPIと同等の合成結果。
