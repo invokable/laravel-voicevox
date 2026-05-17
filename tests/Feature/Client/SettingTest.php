@@ -11,12 +11,12 @@ beforeEach(function () {
 
 test('setting returns array', function () {
     Http::fake([
-        'http://127.0.0.1:50021/setting' => Http::response(['setting_key' => 'setting_value']),
+        'http://127.0.0.1:50021/setting' => Http::response('html'),
     ]);
 
     $setting = Voicevox::setting();
 
-    expect($setting)->toBeArray()->toHaveKey('setting_key');
+    expect($setting)->toBeString()->toBe('html');
 });
 
 test('updateSetting sends form request', function () {
