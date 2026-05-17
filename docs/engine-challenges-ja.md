@@ -14,8 +14,6 @@ VOICEVOXエンジンはPython/FastAPIで実装されたHTTPサーバーであり
 
 | ファイル | 状況 |
 |------|------|
-| ファイル | 状況 |
-|------|------|
 | `src/Engine/Http/AudioQueryController.php` | `Synthesizer::createAudioQuery()`でネイティブ実装済み。`enable_katakana_english`は非対応だがフォールバックあり |
 | `src/Engine/Http/AccentPhrasesController.php` | `is_kana=true`時は`Synthesizer::createAccentPhrasesFromKana()`でネイティブ処理。`is_kana=false`はフォールバック |
 
