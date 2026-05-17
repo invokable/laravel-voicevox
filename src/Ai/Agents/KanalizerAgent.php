@@ -33,7 +33,7 @@ class KanalizerAgent implements Agent, HasStructuredOutput
 2. 文脈から判断して、最も自然な発音を採用してください（例: "Apple" -> 文脈に応じて「アップル」または「リンゴ」）。
 
 ## 変換の例
-- VOICEVOXは音声合成エンジンです -> ボイスボックスはは音声合成エンジンです
+- VOICEVOXは音声合成エンジンです -> ボイスボックスは音声合成エンジンです
 SYSTEM;
     }
 
