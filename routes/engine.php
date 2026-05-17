@@ -86,12 +86,12 @@ Route::get('/speakers', SpeakersController::class);
 Route::get('/speaker_info', SpeakerInfoController::class);
 Route::get('/singers', SingersController::class);
 Route::get('/singer_info', SingerInfoController::class);
-
-// TODO
 Route::post('/sing_frame_audio_query', SingFrameAudioQueryController::class);
 Route::post('/sing_frame_f0', SingFrameF0Controller::class);
 Route::post('/sing_frame_volume', SingFrameVolumeController::class);
 Route::post('/frame_synthesis', FrameSynthesisController::class);
+
+// TODO
 Route::post('/initialize_speaker', InitializeSpeakerController::class);
 Route::get('/is_initialized_speaker', IsInitializedSpeakerController::class);
 
