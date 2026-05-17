@@ -4,6 +4,9 @@ providers:
   # - Workbench\App\Providers\WorkbenchServiceProvider
   - Revolution\Voicevox\VoicevoxServiceProvider
 
+env:
+  APP_ENV: local
+
 migrations:
   - workbench/database/migrations
 
