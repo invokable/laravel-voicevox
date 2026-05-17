@@ -7,7 +7,7 @@ namespace Revolution\Voicevox\Engine\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Revolution\Voicevox\Engine\ResourceManager;
-use Revolution\Voicevox\Engine\ResourceManagerError;
+use Revolution\Voicevox\Exceptions\ResourceManagerError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ResourcesController

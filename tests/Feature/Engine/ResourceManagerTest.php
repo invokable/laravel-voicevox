@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\File;
 use Revolution\Voicevox\Engine\ResourceManager;
-use Revolution\Voicevox\Engine\ResourceManagerError;
+use Revolution\Voicevox\Exceptions\ResourceManagerError;
 
 beforeEach(function () {
     $this->tmpDir = sys_get_temp_dir().'/voicevox_rm_test_'.uniqid();

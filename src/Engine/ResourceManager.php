@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Voicevox\Engine;
 
 use Illuminate\Support\Facades\File;
+use Revolution\Voicevox\Exceptions\ResourceManagerError;
 
 /**
  * リソースファイルのパスと一意なハッシュ値の対応(filemap)を管理する。
