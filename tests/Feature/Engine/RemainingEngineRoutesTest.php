@@ -64,6 +64,7 @@ test('engine sing_frame_audio_query returns json', function () {
 });
 
 test('engine frame_synthesis returns audio', function () {
+    Synthesizer::expects('frameSynthesis')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->frameSynthesis')->andReturn('audio-bytes');
 
     $response = $this->postJson('/frame_synthesis?speaker=3001', ['f0' => [], 'volume' => []]);
