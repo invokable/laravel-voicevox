@@ -48,12 +48,19 @@ test('engine import_user_dict endpoint returns 204', function () {
 });
 
 test('engine validate_kana endpoint returns bool', function () {
-    Voicevox::expects('baseUrl->validateKana')->andReturn(true);
-
-    $response = $this->postJson('/validate_kana?text=テスト');
+    $text = rawurlencode("ズ'ンダモン");
+    $response = $this->postJson("/validate_kana?text=$text");
 
     $response->assertOk()
         ->assertSee('true');
+});
+
+test('engine validate_kana endpoint returns 400 on invalid kana', function () {
+    $text = rawurlencode('テスト');
+    $response = $this->postJson("/validate_kana?text=$text");
+
+    $response->assertStatus(400)
+        ->assertJsonFragment(['error_name' => 'AccentNotFound']);
 });
 
 test('engine audio_query_from_preset endpoint returns audio query', function () {

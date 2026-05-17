@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Revolution\Voicevox\Engine\Http;
 
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Revolution\Voicevox\Exceptions\ParseKanaError;
 use Revolution\Voicevox\Support\KanaConverter;
 
 class ValidateKanaController
@@ -18,9 +18,13 @@ class ValidateKanaController
         try {
             KanaConverter::parse($text);
 
-            return response()->json(json_encode(true));
-        } catch (Exception $e) {
-
+            return response()->json(true);
+        } catch (ParseKanaError $e) {
+            return response()->json([
+                'text' => $e->errorText,
+                'error_name' => $e->errorName,
+                'error_args' => $e->errorArgs,
+            ], status: 400, options: JSON_UNESCAPED_UNICODE);
         }
     }
 }

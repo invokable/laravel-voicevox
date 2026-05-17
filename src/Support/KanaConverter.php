@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Revolution\Voicevox\Support;
 
-use InvalidArgumentException;
+use Revolution\Voicevox\Enums\ParseKanaErrorCode;
+use Revolution\Voicevox\Exceptions\ParseKanaError;
 
 /**
  * AquesTalk風記法カタカナのパース・生成。
@@ -274,7 +275,7 @@ class KanaConverter
             self::parse($text);
 
             return true;
-        } catch (InvalidArgumentException) {
+        } catch (ParseKanaError) {
             return false;
         }
     }
@@ -290,12 +291,12 @@ class KanaConverter
      *
      * @return array<int, array{moras: list<array{text: string, consonant: string|null, vowel: string}>, accent: int, pause: bool, interrogative: bool}>
      *
-     * @throws InvalidArgumentException
+     * @throws ParseKanaError
      */
     public static function parse(string $text): array
     {
         if ($text === '') {
-            throw new InvalidArgumentException('Empty text.');
+            throw new ParseKanaError(ParseKanaErrorCode::EmptyPhrase, ['position' => '1']);
         }
 
         $results = [];
@@ -308,7 +309,7 @@ class KanaConverter
                 $phrase = implode('', array_slice($chars, $phraseStart, $i - $phraseStart));
 
                 if ($phrase === '') {
-                    throw new InvalidArgumentException('Empty phrase at position '.(count($results) + 1).'.');
+                    throw new ParseKanaError(ParseKanaErrorCode::EmptyPhrase, ['position' => (string) (count($results) + 1)]);
                 }
 
                 $phraseStart = $i + 1;
@@ -317,7 +318,7 @@ class KanaConverter
                 $isInterrogative = str_contains($phrase, self::INTERROGATION_MARK);
                 if ($isInterrogative) {
                     if (mb_strpos($phrase, self::INTERROGATION_MARK) !== mb_strlen($phrase) - 1) {
-                        throw new InvalidArgumentException('Interrogation mark must be at end of phrase: '.$phrase);
+                        throw new ParseKanaError(ParseKanaErrorCode::InterrogationMarkNotAtEnd, ['text' => $phrase]);
                     }
                     $phrase = str_replace(self::INTERROGATION_MARK, '', $phrase);
                 }
@@ -338,7 +339,7 @@ class KanaConverter
      *
      * @return array{moras: list<array{text: string, consonant: string|null, vowel: string}>, accent: int, pause: bool, interrogative: bool}
      *
-     * @throws InvalidArgumentException
+     * @throws ParseKanaError
      */
     private static function parsePhrase(string $phrase): array
     {
@@ -354,10 +355,10 @@ class KanaConverter
             // 「`'` でアクセント位置」の実装
             if ($chars[$baseIndex] === self::ACCENT_SYMBOL) {
                 if (count($moras) === 0) {
-                    throw new InvalidArgumentException('Accent at top of phrase: '.$phrase);
+                    throw new ParseKanaError(ParseKanaErrorCode::AccentTop, ['text' => $phrase]);
                 }
                 if ($accentIndex !== null) {
-                    throw new InvalidArgumentException('Accent defined twice in phrase: '.$phrase);
+                    throw new ParseKanaError(ParseKanaErrorCode::AccentTwice, ['text' => $phrase]);
                 }
                 $accentIndex = count($moras);
                 $baseIndex++;
@@ -382,7 +383,7 @@ class KanaConverter
             }
 
             if ($matchedText === null) {
-                throw new InvalidArgumentException('Unknown text: '.$stack);
+                throw new ParseKanaError(ParseKanaErrorCode::UnknownText, ['text' => $stack]);
             }
 
             $moras[] = $kanaToMora[$matchedText];
@@ -390,7 +391,7 @@ class KanaConverter
         }
 
         if ($accentIndex === null) {
-            throw new InvalidArgumentException('No accent found in phrase: '.$phrase);
+            throw new ParseKanaError(ParseKanaErrorCode::AccentNotFound, ['text' => $phrase]);
         }
 
         return [

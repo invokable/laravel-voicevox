@@ -19,3 +19,4 @@
 | `/singers`        | ✅                  | ✅              | 公式のJSONと完全一致                                          |
 | `/speaker_info`   | ✅                  | ✅              | 公式のJSONと完全一致                                          |
 | `/singer_info`    | ✅                  | ✅              | 公式のJSONと完全一致                                          |
+| `/validate_kana`  | ✅                  | ❌              |                                                       |

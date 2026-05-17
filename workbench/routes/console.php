@@ -230,3 +230,10 @@ Artisan::command('voicevox:native:aquestalk', function () {
 
     $this->info($kana);
 })->purpose('AquesTalk');
+
+// vendor/bin/testbench voicevox:validate_kana
+Artisan::command('voicevox:validate_kana', function () {
+    $word = 'イロハ';
+
+    KanaConverter::parse($word);
+})->purpose('validate_kana');

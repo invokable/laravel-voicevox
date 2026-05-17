@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Revolution\Voicevox\Exceptions\ParseKanaError;
 use Revolution\Voicevox\Support\KanaConverter;
 
 describe('validate', function () {
@@ -110,11 +111,11 @@ describe('parse', function () {
 
     it('throws on empty string', function () {
         KanaConverter::parse('');
-    })->throws(InvalidArgumentException::class);
+    })->throws(ParseKanaError::class);
 
     it('throws on missing accent', function () {
         KanaConverter::parse('アイウ');
-    })->throws(InvalidArgumentException::class);
+    })->throws(ParseKanaError::class);
 });
 
 describe('create', function () {
