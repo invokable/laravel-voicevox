@@ -63,6 +63,60 @@ test('engine sing_frame_audio_query returns json', function () {
         ->assertJsonStructure(['f0', 'volume']);
 });
 
+test('engine sing_frame_f0 uses core and returns f0 array', function () {
+    Synthesizer::expects('createSingFrameAudioQuery')->andReturn(
+        json_encode(['f0' => [0.0, 440.0], 'volume' => [1.0, 1.0], 'phonemes' => []])
+    );
+
+    $response = $this->postJson('/sing_frame_f0?speaker=6000', [
+        'score' => ['notes' => []],
+        'frame_audio_query' => ['f0' => [], 'volume' => [], 'phonemes' => []],
+    ]);
+
+    $response->assertOk()
+        ->assertJson([0.0, 440.0]);
+});
+
+test('engine sing_frame_f0 falls back to client when core throws', function () {
+    Synthesizer::expects('createSingFrameAudioQuery')->andThrow(Exception::class);
+    Voicevox::expects('baseUrl->singFrameF0')->andReturn([0.0, 440.0]);
+
+    $response = $this->postJson('/sing_frame_f0?speaker=6000', [
+        'score' => ['notes' => []],
+        'frame_audio_query' => ['f0' => [], 'volume' => [], 'phonemes' => []],
+    ]);
+
+    $response->assertOk()
+        ->assertJson([0.0, 440.0]);
+});
+
+test('engine sing_frame_volume uses core and returns volume array', function () {
+    Synthesizer::expects('createSingFrameAudioQuery')->andReturn(
+        json_encode(['f0' => [0.0, 440.0], 'volume' => [0.0, 1.0], 'phonemes' => []])
+    );
+
+    $response = $this->postJson('/sing_frame_volume?speaker=6000', [
+        'score' => ['notes' => []],
+        'frame_audio_query' => ['f0' => [], 'volume' => [], 'phonemes' => []],
+    ]);
+
+    $response->assertOk()
+        ->assertJson([0.0, 1.0]);
+});
+
+test('engine sing_frame_volume falls back to client when core throws', function () {
+    Synthesizer::expects('createSingFrameAudioQuery')->andThrow(Exception::class);
+    Voicevox::expects('baseUrl->singFrameVolume')->andReturn([0.0, 1.0]);
+
+    $response = $this->postJson('/sing_frame_volume?speaker=6000', [
+        'score' => ['notes' => []],
+        'frame_audio_query' => ['f0' => [], 'volume' => [], 'phonemes' => []],
+    ]);
+
+    $response->assertOk()
+        ->assertJson([0.0, 1.0]);
+});
+
 test('engine frame_synthesis returns audio', function () {
     Synthesizer::expects('frameSynthesis')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->frameSynthesis')->andReturn('audio-bytes');
