@@ -4,21 +4,18 @@
 
 The VOICEVOX Engine is a Python/FastAPI HTTP server that acts as a bridge between the VOICEVOX Core neural inference library and end users. Building a native Laravel port requires replicating five major subsystems: a Japanese NLP text analysis pipeline, audio DSP processing, voice morphing, AquesTalk notation parsing, and character/library management. The primary blockers are the **OpenJTalk/MeCab dependency** (no PHP bindings exist) and the **WORLD vocoder** (required for voice morphing). Other subsystems are either already handled by the existing PHP FFI wrapper (`invokable/voicevox-core-php`) or portable to PHP with moderate effort.
 
-The current state of the Engine implementation in this repository is a **single stub controller** for `POST /audio_query` with its logic commented out, and zero tests. The recommended strategy is a hybrid approach: use the PHP FFI wrapper for all neural inference, call OpenJTalk as a subprocess, and delegate voice morphing to the Python engine.
+The current state of the Engine implementation in this repository has multiple controllers implemented: `/audio_query` is handled natively via the Core's high-level API, and `/accent_phrases` handles `is_kana=true` natively. The recommended strategy is a hybrid approach: use the PHP FFI wrapper for all neural inference, and delegate voice morphing to the Python engine.
 
 ---
 
 ## Current State of Engine Implementation
 
-Only one route and one controller stub exist:
-
 | File | Status |
 |------|--------|
-| `routes/voicevox.php` | 1 route: `POST /audio_query` (stub) |
-| `src/Engine/Http/AudioQueryController.php` | Logic commented out, no response |
-| Engine tests | None |
+| `src/Engine/Http/AudioQueryController.php` | Implemented natively via `Synthesizer::createAudioQuery()`. `enable_katakana_english` unsupported but fallback available |
+| `src/Engine/Http/AccentPhrasesController.php` | `is_kana=true` handled natively via `Synthesizer::createAccentPhrasesFromKana()`. `is_kana=false` proxies to fallback |
 
-The core synthesis call in `AudioQueryController` is commented out with a note: `enable_katakana_english` is an engine-level feature not present in the core library.[^1]
+`AudioQueryController` is now implemented using the Core's high-level API `createAudioQuery()`. Investigation of the [Rust source](https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core/src/lib.rs) confirmed that the high-level API produces equivalent results to the low-level pipeline.[^1] `enable_katakana_english` is an engine-specific feature absent from the Core, but can be covered operationally by pre-converting English to katakana via an LLM.[^3]
 
 ---
 
@@ -146,7 +143,7 @@ Key fields extracted: `phoneme` (p3), `mora_index` (a2), `accent_position` (f2),
 
 ## Challenge 4: AudioQuery Construction
 
-**Difficulty: 🟠 Hard (end-to-end)**
+**Difficulty: 🟢 Low (handled by Core's high-level API)**
 
 The `/audio_query` endpoint combines all three stages above:
 
@@ -154,9 +151,11 @@ The `/audio_query` endpoint combines all three stages above:
 2. `text_analyzer.full_context_labels_to_accent_phrases()` → AccentPhrase list (portable)
 3. Core `yukarin_s_forward` + `yukarin_sa_forward` → durations and pitch (PHP FFI covers this)
 
-The `/audio_query_from_preset` variant additionally reads preset YAML and merges its values into the query.
+While the official engine uses the low-level pipeline, investigation of the [Rust source code](https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core/src/lib.rs) confirmed that the Core's `createAudioQuery()` high-level API produces equivalent results. The Core handles all steps including OpenJTalk internally, so no separate OpenJTalk subprocess is required from the PHP side.
 
-**The bottleneck is always step 1** — you need OpenJTalk. The Core's `createAudioQuery()` C API method does all three steps internally but returns only the final `AudioQuery` JSON, not the intermediate `AccentPhrase` representation needed for query editing endpoints.
+**`enable_katakana_english`:** This engine-specific feature is not in the Core and is therefore unsupported. However, it can be covered operationally by pre-converting English to katakana via an LLM (e.g., `KanalizerAgent`). The controller natively processes when the Core is available, falling back to the official engine otherwise.
+
+**`/audio_query_from_preset`:** Requires reading preset YAML and merging its values into the query — preset management is engine-specific.
 
 ---
 
@@ -261,7 +260,7 @@ AquesTalk katakana → parse_kana() → AccentPhrase[] (pitch/length = 0)
 | Audio synthesis | `decode_forward` + soxr + soundfile | `Synthesizer::synthesis()` | ✅ Returns WAV directly |
 | Interrogative upspeak | `enable_interrogative_upspeak` | `synthesis(enableInterrogativeUpspeak:)` | ✅ Already available |
 
-**The entire `is_kana=true` pipeline is implementable with the existing PHP FFI.** The current `AccentPhrasesController` always proxies to the fallback URL, but when `is_kana=true` it can be switched to native processing.
+**The entire `is_kana=true` pipeline is implementable with the existing PHP FFI.** `AccentPhrasesController` now handles `is_kana=true` natively, and proxies to the fallback for `is_kana=false` (which requires OpenJTalk).
 
 The parser (`kana_converter.py`) handles:
 - Accent marks (`'`)
@@ -366,13 +365,13 @@ The singing synthesis pipeline is actually **easier** than talk synthesis becaus
 | Component | Difficulty | Key Blocker | PHP FFI Covers? |
 |-----------|-----------|-------------|----------------|
 | OpenJTalk text analysis | 🔴 Extreme | No PHP bindings | Partially (full synthesis, not AccentPhrase) |
-| `enable_katakana_english` | 🟡 Medium | Rust subprocess needed | No |
+| `enable_katakana_english` | 🟡 Medium | Engine-specific; LLM pre-conversion as workaround | No |
 | Full-context label parsing | 🟢 Low | Portable regex | N/A |
-| AudioQuery construction (end-to-end) | 🟠 Hard | Needs OpenJTalk | Partially |
+| AudioQuery construction (end-to-end) | 🟢 Low | Handled by Core's `createAudioQuery()` | Yes |
 | Query editing (`/mora_data` etc.) | 🟠 Hard | `/accent_phrases` needs NLP | Yes (3 of 4 endpoints) |
 | Voice morphing | 🔴 Extreme | WORLD vocoder | No |
 | connect_waves | 🟡 Medium | Needs ffmpeg exec | No |
-| AquesTalk parser | 🟡 Medium | Port notation parser | No |
+| AquesTalk parser | 🟢 Low | `is_kana=true` implemented (`createAccentPhrasesFromKana`) | Yes |
 | Character metadata | 🟢 Low | File I/O | No (data from Core metas) |
 | Library management | 🟡 Medium | ZIP validation logic | Partially (VoiceModelFile) |
 | Cancellable synthesis | 🟠 Hard | No PHP multiprocess | No |
@@ -391,14 +390,16 @@ Route all endpoints to the running Python VOICEVOX Engine via the existing HTTP 
 Implement natively (no subprocess):
 - `POST /synthesis` — `Synthesizer::synthesis()`
 - `POST /mora_data`, `/mora_length`, `/mora_pitch` — `Synthesizer::replaceMoraData()` etc.
+- `POST /audio_query` — `Synthesizer::createAudioQuery()` (`enable_katakana_english` unsupported)
+- `POST /accent_phrases?is_kana=true` — `Synthesizer::createAccentPhrasesFromKana()`
 - `POST /sing_frame_audio_query`, `/frame_synthesis` — `Synthesizer::createSingFrameAudioQuery()` + `frameSynthesis()`
 - `GET /speakers`, `/singer_info`, `/speaker_info` — build from `Synthesizer::metas()`
 
 ### Phase 3: Subprocess-Assisted Endpoints
 Implement using subprocess calls:
-- `POST /audio_query`, `/accent_phrases` — call pyopenjtalk via subprocess
+- `POST /accent_phrases` (`is_kana=false`) — call pyopenjtalk via subprocess
 - `POST /audio_query_from_kana` — port `parse_kana()` + use FFI synthesis
-- `enable_katakana_english=true` — call kanalizer Rust binary
+- `enable_katakana_english=true` — pre-convert English to katakana via LLM
 
 ### Defer or Always Proxy
 - `POST /synthesis_morphing` — too dependent on WORLD vocoder
@@ -440,9 +441,9 @@ Implement using subprocess calls:
 
 ## Footnotes
 
-[^1]: `src/Engine/Http/AudioQueryController.php:14-16` — `// コアにはenable_katakana_englishはないのでコアを使えば簡単にエンジンAPIが作れるわけではない。`
+[^1]: `src/Engine/Http/AudioQueryController.php` — now implemented using the Core's high-level API `Synthesizer::createAudioQuery()`. [Rust source](https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core/src/lib.rs) confirmed that the high-level API produces equivalent results to the low-level pipeline.
 [^2]: `voicevox_engine/voicevox_engine/tts_pipeline/njd_feature_processor.py:89-108`
-[^3]: `docs/engine.md` (this repository) — "最初の`/audio_query`からenable_katakana_englishはコアになくエンジンの独自実装"
+[^3]: `enable_katakana_english` is an engine-specific feature absent from the Core, but can be covered operationally by pre-converting English to katakana via an LLM. See `src/Ai/Agents/KanalizerAgent.php`.
 [^4]: `voicevox_engine/voicevox_engine/tts_pipeline/text_analyzer.py:91-121`
 [^5]: `voicevox_engine/voicevox_engine/morphing/morphing.py:116-203`
 [^6]: `voicevox_engine/voicevox_engine/metas/metas_store.py:151-170`

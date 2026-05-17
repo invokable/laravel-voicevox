@@ -6,7 +6,7 @@ VOICEVOXエンジンはPython/FastAPIで実装されたHTTPサーバーであり
 
 最大の障壁は **OpenJTalk/MeCabへの依存**（PHPバインディングが存在しない）と **WORLDボコーダー**（ボイスモーフィングに必要）の2点。それ以外のサブシステムは、既存のPHP FFIラッパー（`invokable/voicevox-core-php`）で対応済みか、中程度の工数でPHPに移植可能。
 
-現時点でのエンジン実装は**スタブコントローラー1つ**（ロジックはコメントアウト）のみで、テストは存在しない。推奨戦略は「ハイブリッドアプローチ」：すべての神経推論にPHP FFIラッパーを使い、OpenJTalkはサブプロセス経由で呼び出し、ボイスモーフィングはPythonエンジンに委譲する。
+現時点でのエンジン実装は複数のコントローラーが実装済みで、`/audio_query`はコアの高レベルAPIで対応済み、`/accent_phrases`はAquesTalk風記法（`is_kana=true`）をネイティブ処理で対応済み。推奨戦略は「ハイブリッドアプローチ」：すべての神経推論にPHP FFIラッパーを使い、ボイスモーフィングはPythonエンジンに委譲する。
 
 ---
 
@@ -14,11 +14,12 @@ VOICEVOXエンジンはPython/FastAPIで実装されたHTTPサーバーであり
 
 | ファイル | 状況 |
 |------|------|
-| `routes/voicevox.php` | ルート1件のみ: `POST /audio_query`（スタブ） |
-| `src/Engine/Http/AudioQueryController.php` | ロジックはコメントアウト、レスポンスなし |
-| エンジンテスト | ゼロ |
+| ファイル | 状況 |
+|------|------|
+| `src/Engine/Http/AudioQueryController.php` | `Synthesizer::createAudioQuery()`でネイティブ実装済み。`enable_katakana_english`は非対応だがフォールバックあり |
+| `src/Engine/Http/AccentPhrasesController.php` | `is_kana=true`時は`Synthesizer::createAccentPhrasesFromKana()`でネイティブ処理。`is_kana=false`はフォールバック |
 
-`AudioQueryController`のコアの合成呼び出しはコメントアウトされており、理由が記されている：`enable_katakana_english`はコアライブラリに存在しないエンジン独自の機能であるため、コアをそのまま使っただけでは実装できない。[^1]
+`AudioQueryController`はコアの高レベルAPI `createAudioQuery()` を使って実装済み。Rustのソースコードを確認した結果、高レベルAPIは低レベルパイプラインと同等の結果を返すことが判明した[^1]。`enable_katakana_english`はコアにないエンジン独自機能だが、LLMで事前にカタカナ変換することで運用カバーが可能。[^3]
 
 ---
 
@@ -146,7 +147,7 @@ result = re.search(
 
 ## 課題4: AudioQuery構築（/audio_query）
 
-**難易度: 🟠 難しい（エンドツーエンド）**
+**難易度: 🟢 低（コアの高レベルAPIで対応済み）**
 
 `/audio_query`エンドポイントは上記3つのステージをすべて組み合わせる:
 
@@ -154,7 +155,11 @@ result = re.search(
 2. `text_analyzer.full_context_labels_to_accent_phrases()` → AccentPhrase リスト（移植可能）
 3. コアの`yukarin_s_forward` + `yukarin_sa_forward` → 音素長とピッチ（PHP FFIが対応）
 
-**ボトルネックは常にステップ1** — OpenJTalkが必要。コアの`createAudioQuery()` C APIメソッドは3ステップを内部で全て行うが、クエリ編集エンドポイントに必要な中間的な`AccentPhrase`表現ではなく最終的な`AudioQuery` JSONのみを返す。
+公式エンジンは低レベルAPIを使っているが、[Rustソースコード](https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core/src/lib.rs)を調査した結果、コアの`createAudioQuery()` 高レベルAPIも同等の結果を返すことが確認できた。コアが内部でOpenJTalkを含む全ステップを処理するため、PHP側からOpenJTalkを別途呼び出す必要はない。
+
+**`enable_katakana_english`について:** コアに存在しないエンジン独自機能のため非対応。ただしVOICEVOXの前にLLMを挟んで英語をカタカナに変換する運用で十分カバーできる。このエンドポイントはコアが利用可能な場合はネイティブ処理し、利用不可の場合はフォールバック（公式エンジン）に委譲する。
+
+**`/audio_query_from_preset`について:** プリセットYAMLを読み込んで値をマージする追加処理が必要。プリセット管理はエンジン独自機能。
 
 ---
 
@@ -259,7 +264,7 @@ AquesTalk風カタカナ → parse_kana() → AccentPhrase[] (pitch/length=0)
 | 音声合成 | `decode_forward` + soxr + soundfile | `Synthesizer::synthesis()` | ✅ WAV直接返す |
 | 疑問文語尾処理 | `enable_interrogative_upspeak` | `synthesis(enableInterrogativeUpspeak:)` | ✅ 対応済み |
 
-**`is_kana=true` の全パイプラインは既存のPHP FFIで実装可能。** 現在の `AccentPhrasesController` は常にfallbackへプロキシしているが、`is_kana=true` 時はネイティブ処理に切り替えられる。
+**`is_kana=true` の全パイプラインは既存のPHP FFIで実装可能。** `AccentPhrasesController` は `is_kana=true` 時はネイティブ処理を行い、`is_kana=false`（OpenJTalkが必要）はfallbackへプロキシする。
 
 パーサー（`kana_converter.py`）が処理するもの:
 - アクセント記号（`'`）
@@ -361,13 +366,13 @@ PHP従来のリクエスト・レスポンスモデルでは、合成途中の�
 | コンポーネント | 難易度 | 主なブロッカー | PHP FFIで対応済み? |
 |--------------|--------|--------------|------------------|
 | OpenJTalkテキスト解析 | 🔴 最難関 | PHPバインディングなし | 部分的（完全合成のみ、AccentPhraseは不可） |
-| `enable_katakana_english` | 🟡 中 | Rustサブプロセスが必要 | いいえ |
+| `enable_katakana_english` | 🟡 中 | エンジン独自機能、LLMで運用カバー可 | いいえ |
 | フルコンテキストラベルパース | 🟢 低 | 正規表現で移植可能 | 該当なし |
-| AudioQuery構築（E2E） | 🟠 難 | OpenJTalkが必要 | 部分的 |
+| AudioQuery構築（E2E） | 🟢 低 | コアの高レベルAPIで対応済み | はい（createAudioQuery） |
 | クエリ編集（/mora_data等） | 🟠 難 | /accent_phrasesのみNLP依存 | はい（4つ中3つ） |
 | ボイスモーフィング | 🔴 最難関 | WORLDボコーダー | いいえ |
 | connect_waves | 🟡 中 | ffmpegのexecが必要 | いいえ |
-| AquesTalkパーサー | 🟡 中 | 記法パーサーの移植 | いいえ |
+| AquesTalkパーサー | 🟢 低 | is_kana=true対応済み（`createAccentPhrasesFromKana`） | はい |
 | キャラクターメタデータ | 🟢 低 | ファイルI/O | いいえ（Coreのmetasからデータ取得） |
 | ライブラリ管理 | 🟡 中 | ZIP検証ロジック | 部分的（VoiceModelFile） |
 | キャンセル可能な合成 | 🟠 難 | PHPのマルチプロセスなし | いいえ |
@@ -386,14 +391,16 @@ PHP従来のリクエスト・レスポンスモデルでは、合成途中の�
 サブプロセス不要でネイティブ実装:
 - `POST /synthesis` — `Synthesizer::synthesis()`
 - `POST /mora_data`、`/mora_length`、`/mora_pitch` — `Synthesizer::replaceMoraData()`等
+- `POST /audio_query` — `Synthesizer::createAudioQuery()`（`enable_katakana_english`のみ非対応）
+- `POST /accent_phrases?is_kana=true` — `Synthesizer::createAccentPhrasesFromKana()`
 - `POST /sing_frame_audio_query`、`/frame_synthesis` — `Synthesizer::createSingFrameAudioQuery()` + `frameSynthesis()`
 - `GET /speakers`、`/singer_info`、`/speaker_info` — `Synthesizer::metas()`から構築
 
 ### フェーズ3: サブプロセス支援エンドポイント
 サブプロセス呼び出しを使った実装:
-- `POST /audio_query`、`/accent_phrases` — pyopenjtalkをサブプロセスで呼ぶ
+- `POST /accent_phrases`（`is_kana=false`） — pyopenjtalkをサブプロセスで呼ぶ
 - `POST /audio_query_from_kana` — `parse_kana()`を移植 + FFIで合成
-- `enable_katakana_english=true` — kanalizerのRustバイナリを呼ぶ
+- `enable_katakana_english=true` — LLMによる事前変換で運用カバー
 
 ### 常にプロキシまたは後回し
 - `POST /synthesis_morphing` — WORLDボコーダーへの依存が大きすぎる
@@ -435,9 +442,9 @@ PHP従来のリクエスト・レスポンスモデルでは、合成途中の�
 
 ## 脚注
 
-[^1]: `src/Engine/Http/AudioQueryController.php:14-16` — `// コアにはenable_katakana_englishはないのでコアを使えば簡単にエンジンAPIが作れるわけではない。`
+[^1]: `src/Engine/Http/AudioQueryController.php` — コアの高レベルAPI `Synthesizer::createAudioQuery()` を使って実装済み。[Rustソース](https://github.com/VOICEVOX/voicevox_core/blob/main/crates/voicevox_core/src/lib.rs)確認により高レベルAPIと低レベルパイプラインは同等の結果を返すことが判明。
 [^2]: `voicevox_engine/voicevox_engine/tts_pipeline/njd_feature_processor.py:89-108`
-[^3]: `docs/engine.md`（本リポジトリ） — "最初の`/audio_query`からenable_katakana_englishはコアになくエンジンの独自実装。"
+[^3]: `enable_katakana_english`はコアにないエンジン独自機能だが、LLMで事前に英語をカタカナ変換することで運用カバーが可能。`src/Ai/Agents/KanalizerAgent.php`参照。
 [^4]: `voicevox_engine/voicevox_engine/tts_pipeline/text_analyzer.py:91-121`
 [^5]: `voicevox_engine/voicevox_engine/morphing/morphing.py:116-203`
 [^6]: `voicevox_engine/voicevox_engine/metas/metas_store.py:151-170`
