@@ -23,7 +23,7 @@ class Song
 
         $frameAudioQuery = json_decode(
             Synthesizer::createSingFrameAudioQuery(
-                $score->toJson(JSON_UNESCAPED_SLASHES),
+                json_encode($score),
                 (int) $teacher,
             ),
             true,

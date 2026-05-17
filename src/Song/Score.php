@@ -42,6 +42,6 @@ class Score implements Arrayable, Jsonable
 
     public function toJson($options = 0): string
     {
-        return Collection::make($this->toArray())->toPrettyJson($options);
+        return Collection::make($this->toArray())->toJson($options);
     }
 }

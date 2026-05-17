@@ -25,7 +25,7 @@ class SongAudioQuery
     public function generate(int|string $id): VoicevoxResponse
     {
         $audio = Synthesizer::frameSynthesis(
-            collect($this->frameAudioQuery)->toJson(JSON_UNESCAPED_SLASHES),
+            json_encode($this->frameAudioQuery),
             (int) $id,
         );
 
