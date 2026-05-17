@@ -4,6 +4,25 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 use Revolution\Voicevox\Engine\Http\AccentPhrasesController;
+use Revolution\Voicevox\Engine\Http\AliveController;
+use Revolution\Voicevox\Engine\Http\CancellableSynthesisController;
+use Revolution\Voicevox\Engine\Http\ConnectWavesController;
+use Revolution\Voicevox\Engine\Http\CoreVersionsController;
+use Revolution\Voicevox\Engine\Http\DownloadableLibrariesController;
+use Revolution\Voicevox\Engine\Http\FrameSynthesisController;
+use Revolution\Voicevox\Engine\Http\InitializeSpeakerController;
+use Revolution\Voicevox\Engine\Http\InstalledLibrariesController;
+use Revolution\Voicevox\Engine\Http\InstallLibraryController;
+use Revolution\Voicevox\Engine\Http\IsInitializedSpeakerController;
+use Revolution\Voicevox\Engine\Http\MorphableTargetsController;
+use Revolution\Voicevox\Engine\Http\MultiSynthesisController;
+use Revolution\Voicevox\Engine\Http\SettingController;
+use Revolution\Voicevox\Engine\Http\SingFrameAudioQueryController;
+use Revolution\Voicevox\Engine\Http\SingFrameF0Controller;
+use Revolution\Voicevox\Engine\Http\SingFrameVolumeController;
+use Revolution\Voicevox\Engine\Http\SupportedDevicesController;
+use Revolution\Voicevox\Engine\Http\SynthesisMorphingController;
+use Revolution\Voicevox\Engine\Http\UninstallLibraryController;
 use Revolution\Voicevox\Engine\Http\AddPresetController;
 use Revolution\Voicevox\Engine\Http\AddUserDictWordController;
 use Revolution\Voicevox\Engine\Http\AudioQueryController;
@@ -65,6 +84,32 @@ Route::get('/singer_info', SingerInfoController::class);
  * コアもフォールバックも不要で対応可能
  */
 Route::get('/version', VersionController::class);
+Route::get('/core_versions', CoreVersionsController::class);
+Route::get('/supported_devices', SupportedDevicesController::class);
+
+Route::post('/cancellable_synthesis', CancellableSynthesisController::class);
+Route::post('/multi_synthesis', MultiSynthesisController::class);
+Route::post('/connect_waves', ConnectWavesController::class);
+
+Route::post('/morphable_targets', MorphableTargetsController::class);
+Route::post('/synthesis_morphing', SynthesisMorphingController::class);
+
+Route::post('/sing_frame_audio_query', SingFrameAudioQueryController::class);
+Route::post('/sing_frame_f0', SingFrameF0Controller::class);
+Route::post('/sing_frame_volume', SingFrameVolumeController::class);
+Route::post('/frame_synthesis', FrameSynthesisController::class);
+
+Route::post('/initialize_speaker', InitializeSpeakerController::class);
+Route::get('/is_initialized_speaker', IsInitializedSpeakerController::class);
+
+Route::get('/downloadable_libraries', DownloadableLibrariesController::class);
+Route::get('/installed_libraries', InstalledLibrariesController::class);
+Route::post('/install_library/{library_uuid}', InstallLibraryController::class);
+Route::post('/uninstall_library/{library_uuid}', UninstallLibraryController::class);
+
+Route::match(['GET', 'POST'], '/setting', SettingController::class);
+
+Route::get('/', AliveController::class)->name('voicevox.alive');
 
 Route::get('/_resources/{hash}', ResourcesController::class)->name('voicevox.resources');
 Route::post('/validate_kana', ValidateKanaController::class);
