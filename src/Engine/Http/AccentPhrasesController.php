@@ -17,21 +17,25 @@ class AccentPhrasesController
     {
         $text = $request->string('text')->value();
         $id = $request->integer('speaker');
-        $isKana = $request->boolean('is_kana', true);
+        $isKana = $request->boolean('is_kana', false);
         $katakanaEnglish = $request->boolean('enable_katakana_english', true);
 
-        // AquesTalk風記法カタカナのみ対応
-        if ($isKana) {
-            try {
-                $accent_phrase = Synthesizer::createAccentPhrasesFromKana($text, $id);
-
-                return response()->json(
-                    json_decode($accent_phrase),
-                    options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
-                );
-            } catch (Throwable) {
-                // Fall back to Voicevox client if native core is unavailable
+        // enable_katakana_englishには非対応
+        try {
+            if ($isKana) {
+                $accent_phrases = json_decode(Synthesizer::createAccentPhrasesFromKana($text, $id));
+            } else {
+                // is_kana=false時はAudioQueryを作ってからaccent_phrasesを抽出
+                $audio_query = json_decode(Synthesizer::createAudioQuery($text, $id), true);
+                $accent_phrases = $audio_query['accent_phrases'];
             }
+
+            return response()->json(
+                $accent_phrases,
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+            );
+        } catch (Throwable) {
+            // Fall back to Voicevox client if native core is unavailable
         }
 
         try {
