@@ -50,7 +50,7 @@ test('engine delete_preset endpoint returns null', function () {
 });
 
 test('engine accent_phrases endpoint returns phrases', function () {
-    Synthesizer::expects('createAccentPhrasesFromKana')->andThrow(Exception::class);
+    Synthesizer::expects('createAudioQuery')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->accentPhrases')->andReturn([['moras' => []]]);
 
     $response = $this->postJson('/accent_phrases?text=テスト&speaker=1');
@@ -60,6 +60,7 @@ test('engine accent_phrases endpoint returns phrases', function () {
 });
 
 test('engine mora_data endpoint returns mora data', function () {
+    Synthesizer::expects('replaceMoraData')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->moraData')->andReturn([['moras' => [['vowel' => 'a']]]]);
 
     $response = $this->postJson('/mora_data?speaker=1', [['moras' => []]]);
@@ -68,6 +69,7 @@ test('engine mora_data endpoint returns mora data', function () {
 });
 
 test('engine mora_length endpoint returns mora length', function () {
+    Synthesizer::expects('replacePhonemeLength')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->moraLength')->andReturn([['moras' => [['vowel_length' => 0.1]]]]);
 
     $response = $this->postJson('/mora_length?speaker=1', [['moras' => []]]);
@@ -76,6 +78,7 @@ test('engine mora_length endpoint returns mora length', function () {
 });
 
 test('engine mora_pitch endpoint returns mora pitch', function () {
+    Synthesizer::expects('replaceMoraPitch')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->moraPitch')->andReturn([['moras' => [['pitch' => 5.0]]]]);
 
     $response = $this->postJson('/mora_pitch?speaker=1', [['moras' => []]]);
