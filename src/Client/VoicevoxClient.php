@@ -223,7 +223,7 @@ class VoicevoxClient
      * @throws RequestException
      * @throws ConnectionException
      */
-    public function talkFromPreset(string $text, int $presetId, bool $enableKatakanaEnglish = true): TalkAudioQuery
+    public function audioQueryFromPreset(string $text, int $presetId, bool $enableKatakanaEnglish = true): array
     {
         $response = $this->http()->withQueryParameters(array_filter([
             'text' => $text,
@@ -234,7 +234,20 @@ class VoicevoxClient
             ->post('audio_query_from_preset')
             ->throw();
 
-        return new TalkAudioQuery($response->json());
+        return $response->json();
+    }
+
+    /**
+     * Create Audio Query from Preset.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function talkFromPreset(string $text, int $presetId, bool $enableKatakanaEnglish = true): TalkAudioQuery
+    {
+        $audioQuery = $this->audioQueryFromPreset($text, $presetId, $enableKatakanaEnglish);
+
+        return new TalkAudioQuery($audioQuery);
     }
 
     /**

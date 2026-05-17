@@ -19,9 +19,7 @@ class AudioQueryFromPresetController
         $enableKatakanaEnglish = $request->boolean('enable_katakana_english', true);
 
         try {
-            $audioQuery = Voicevox::baseUrl(config('voicevox.engine.fallback_url'))
-                ->talkFromPreset($text, $presetId, $enableKatakanaEnglish)
-                ->audioQuery;
+            $audioQuery = Voicevox::baseUrl(config('voicevox.engine.fallback_url'))->audioQueryFromPreset($text, $presetId, $enableKatakanaEnglish);
 
             return response()->json(
                 $audioQuery,

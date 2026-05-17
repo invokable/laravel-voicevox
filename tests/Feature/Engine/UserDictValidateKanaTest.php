@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Revolution\Voicevox\Client\TalkAudioQuery;
 use Revolution\Voicevox\Voicevox;
 
 test('engine user_dict endpoint returns dict', function () {
@@ -65,8 +64,7 @@ test('engine validate_kana endpoint returns 400 on invalid kana', function () {
 
 test('engine audio_query_from_preset endpoint returns audio query', function () {
     $audioQuery = ['speedScale' => 1.0, 'pitchScale' => 0.0];
-    $talkQuery = new TalkAudioQuery($audioQuery);
-    Voicevox::expects('baseUrl->talkFromPreset')->andReturn($talkQuery);
+    Voicevox::expects('baseUrl->audioQueryFromPreset')->andReturn($audioQuery);
 
     $response = $this->postJson('/audio_query_from_preset?text=テスト&preset_id=1');
 
