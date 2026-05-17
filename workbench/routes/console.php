@@ -12,6 +12,7 @@ use Revolution\Voicevox\Client\TalkAudioQuery;
 use Revolution\Voicevox\Core\VoiceModelFile;
 use Revolution\Voicevox\Song\Note;
 use Revolution\Voicevox\Song\Score;
+use Revolution\Voicevox\Support\KanaConverter;
 use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Talk\TalkAudioQuery as NativeTalkAudioQuery;
 use Revolution\Voicevox\Voicevox;
@@ -174,11 +175,21 @@ Artisan::command('voicevox:ai:kana-agent', function () {
 
     $this->info($response->text);
 
+    if (! KanaConverter::validate($response->text)) {
+        $this->error('正常に変換できていません：'.$response->text);
+
+        return;
+    }
+
     // 上手く変換できるとは限らないので直接音声化は難しい。
     // カタカナ→人間が確認・修正→音声化
 
     // $word = "ララベ'ル/エイア'イ/エスディイケ'イオ/ツカ'ッテ/アケストオクフウキホウカタカナニ'/ヘンカンシマシタ'";
     $response = kana($response->text, id: 1)
+        ->tap(function (NativeTalkAudioQuery $talk) {
+            // audioQueryのkanaにコアによる変換結果が含まれているので下のkanalizer変換だけ行って通常のtalkを使った方がAquesTalk風記法カタカナへの変換は確実かもしれない。
+            dump($talk->audioQuery['kana'] ?? '');
+        })
         ->generate(id: 1);
 
     $path = $response->storeAs('native', 'kana-agent.wav');
