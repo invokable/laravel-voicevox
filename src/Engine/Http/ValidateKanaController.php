@@ -24,7 +24,7 @@ class ValidateKanaController
                 'text' => $e->errorText,
                 'error_name' => $e->errorName,
                 'error_args' => $e->errorArgs,
-            ], status: 400, options: JSON_UNESCAPED_UNICODE);
+            ], status: 400, options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
     }
 }
