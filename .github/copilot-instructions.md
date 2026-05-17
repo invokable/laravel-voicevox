@@ -268,6 +268,8 @@ engine_manifest.jsonはインストールなどの変換処理は挟まず公式
 `/audio_query_from_preset`次第で対応方法を検討。
 `/audio_query`が`enable_katakana_english`以外対応できたのでaudio_query_from_presetも可能かも。
 
+プリセット機能自体、デフォルトのAudioQueryを上書きするくらいの機能しかなさそう。tapで調整できるLaravelではなくても困らないので優先度は低くここは後回しにする。
+
 ### kanalizer
 
 エンジンAPIにある`enable_katakana_english`は英語をカタカナに変換する機能。  
