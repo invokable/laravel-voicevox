@@ -12,6 +12,9 @@
 | `/audio_query`    | ⚠️                 | ✅              | Laravelではenable_katakana_englishには非対応   |
 | `/accent_phrases` | ⚠️                 | ✅              | `is_kana`のAquesTalk風記法カタカナのみLaravelでも対応 |
 | `/synthesis`      | ✅                  | ✅              | コアで可能                                   |
+| `/mora_data`      | ✅                  | ✅              | コアで可能                                   |
+| `/mora_length`    | ✅                  | ✅              | コアで可能                                   |
+| `/mora_pitch`     | ✅                  | ✅              | コアで可能                                   |
 | `/speakers`       | ✅                  | ✅              | 公式のJSONと完全一致                            |
 | `/singers`        | ✅                  | ✅              | 公式のJSONと完全一致                            |
 | `/speaker_info`   | ✅                  | ✅              | 公式のJSONと完全一致                            |

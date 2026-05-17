@@ -6,6 +6,7 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -16,6 +17,15 @@ class MoraPitchController
     {
         $id = $request->integer('speaker');
         $accentPhrases = $request->all();
+
+        try {
+            return response()->json(
+                json_decode(Synthesizer::replaceMoraPitch(json_encode($accentPhrases), $id)),
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+            );
+        } catch (Throwable) {
+            // Fall back to Voicevox client if native core is unavailable
+        }
 
         try {
             return response()->json(
