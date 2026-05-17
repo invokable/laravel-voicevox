@@ -6,17 +6,18 @@
 - Laravelでは対応できないので最初からフォールバック
 - コアもフォールバックも不要
 
-| API               | Laravel（PHP版コアを使用） | 公式エンジンにフォールバック | 説明                                                    |
-|-------------------|--------------------|----------------|-------------------------------------------------------|
-| `/version`        | ✅                  | ❌              | `"0.25.2"`のようなバージョンを返すだけなのでLaravelのみで可能               |
-| `/audio_query`    | ⚠️                 | ✅              | Laravelではenable_katakana_englishには非対応                 |
-| `/accent_phrases` | ⚠️                 | ✅              | `is_kana`のtrue/false両対応。enable_katakana_englishには非対応。 |
-| `/synthesis`      | ✅                  | ✅              | コアで可能                                                 |
-| `/mora_data`      | ✅                  | ✅              | コアで可能                                                 |
-| `/mora_length`    | ✅                  | ✅              | コアで可能                                                 |
-| `/mora_pitch`     | ✅                  | ✅              | コアで可能                                                 |
-| `/speakers`       | ✅                  | ✅              | 公式のJSONと完全一致                                          |
-| `/singers`        | ✅                  | ✅              | 公式のJSONと完全一致                                          |
-| `/speaker_info`   | ✅                  | ✅              | 公式のJSONと完全一致                                          |
-| `/singer_info`    | ✅                  | ✅              | 公式のJSONと完全一致                                          |
-| `/validate_kana`  | ✅                  | ❌              |                                                       |
+| API                | Laravel（PHP版コアを使用） | 公式エンジンにフォールバック | 説明                                                    |
+|--------------------|--------------------|----------------|-------------------------------------------------------|
+| `/version`         | ✅                  | ❌              | `"0.25.2"`のようなバージョンを返すだけなのでLaravelのみで可能               |
+| `/audio_query`     | ⚠️                 | ✅              | Laravelではenable_katakana_englishには非対応                 |
+| `/accent_phrases`  | ⚠️                 | ✅              | `is_kana`のtrue/false両対応。enable_katakana_englishには非対応。 |
+| `/synthesis`       | ✅                  | ✅              | コアで可能                                                 |
+| `/mora_data`       | ✅                  | ✅              | コアで可能                                                 |
+| `/mora_length`     | ✅                  | ✅              | コアで可能                                                 |
+| `/mora_pitch`      | ✅                  | ✅              | コアで可能                                                 |
+| `/speakers`        | ✅                  | ✅              | 公式のJSONと完全一致                                          |
+| `/singers`         | ✅                  | ✅              | 公式のJSONと完全一致                                          |
+| `/speaker_info`    | ✅                  | ✅              | 公式のJSONと完全一致                                          |
+| `/singer_info`     | ✅                  | ✅              | 公式のJSONと完全一致                                          |
+| `/validate_kana`   | ✅                  | ❌              |                                                       |
+| `/engine_manifest` | ✅                  | ❌              |                                                       |

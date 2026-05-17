@@ -6,12 +6,10 @@ use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 
 test('engine engine_manifest endpoint returns manifest', function () {
-    Voicevox::expects('baseUrl->manifest')->andReturn(['name' => 'voicevox']);
-
     $response = $this->getJson('/engine_manifest');
 
     $response->assertOk()
-        ->assertJsonFragment(['name' => 'voicevox']);
+        ->assertJsonFragment(['uuid' => '513b0774-3428-4a1d-9d4e-a7fd5f32d0a7']);
 });
 
 test('engine presets endpoint returns presets', function () {
@@ -84,12 +82,4 @@ test('engine mora_pitch endpoint returns mora pitch', function () {
     $response = $this->postJson('/mora_pitch?speaker=1', [['moras' => []]]);
 
     $response->assertOk();
-});
-
-test('engine manifest returns 501 when fallback unavailable', function () {
-    Voicevox::expects('baseUrl->manifest')->andThrow(Exception::class);
-
-    $response = $this->getJson('/engine_manifest');
-
-    $response->assertStatus(501);
 });

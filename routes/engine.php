@@ -68,6 +68,4 @@ Route::get('/version', VersionController::class);
 
 Route::get('/_resources/{hash}', ResourcesController::class)->name('voicevox.resources');
 Route::post('/validate_kana', ValidateKanaController::class);
-
-// TODO
 Route::get('/engine_manifest', EngineManifestController::class);
