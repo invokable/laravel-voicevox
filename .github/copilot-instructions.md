@@ -283,6 +283,9 @@ Laravel AI SDK用のAquesTalk風記法カタカナ変換エージェントのサ
 KanalizerAgentの方が正常に動くけど漢字までひらがなにしているのでルールの調整は必要かも。
 `src/Ai/Agents/KanalizerAgent.php`
 
+AudioQuery内に`kana`が含まれてるのでコアを使う強引な方法でもAquesTalk風記法カタカナ化の実現は可能。
+`src/Engine/Katakana.php`
+
 ### 音声モデルファイル(.vvm)とスタイルIDの対応表
 
 コアではvvmを読み込んでからスタイルIDを指定して使う。エンジンAPIでは全モデルを読み込んでるのでスタイルIDだけで全部使える。全部読み込むと遅いのでconfigで設定できるようにする。  

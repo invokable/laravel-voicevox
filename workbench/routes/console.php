@@ -10,6 +10,7 @@ use Revolution\Voicevox\Ai\Agents\AquesTalkAgent;
 use Revolution\Voicevox\Ai\Agents\KanalizerAgent;
 use Revolution\Voicevox\Client\TalkAudioQuery;
 use Revolution\Voicevox\Core\VoiceModelFile;
+use Revolution\Voicevox\Engine\Katakana;
 use Revolution\Voicevox\Song\Note;
 use Revolution\Voicevox\Song\Score;
 use Revolution\Voicevox\Support\KanaConverter;
@@ -215,3 +216,17 @@ Artisan::command('voicevox:ai:kanalizer', function () {
     $path = $response->storeAs('native', 'kanalizer.wav');
     $this->info(Storage::path($path));
 })->purpose('kanalizer');
+
+// vendor/bin/testbench voicevox:native:aquestalk
+Artisan::command('voicevox:native:aquestalk', function () {
+    $word = 'コア機能を使ってカタカナに変換';
+    $kana = (new Katakana)->create($word);
+
+    if (! KanaConverter::validate($kana)) {
+        $this->error('正常に変換できていません：'.$kana);
+
+        return;
+    }
+
+    $this->info($kana);
+})->purpose('AquesTalk');
