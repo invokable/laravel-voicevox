@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Revolution\Voicevox\Engine\Http;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
