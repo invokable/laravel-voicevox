@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\VoicevoxResponse;
 
 test('engine cancellable_synthesis returns audio', function () {
     Voicevox::expects('baseUrl->cancellableSynthesis')->andReturn('audio-bytes');
@@ -13,7 +14,7 @@ test('engine cancellable_synthesis returns audio', function () {
 });
 
 test('engine multi_synthesis returns audio', function () {
-    $mock = Mockery::mock(\Revolution\Voicevox\VoicevoxResponse::class);
+    $mock = Mockery::mock(VoicevoxResponse::class);
     $mock->shouldReceive('content')->andReturn('audio-bytes');
     Voicevox::expects('baseUrl->multiSynthesis')->andReturn($mock);
 
@@ -23,7 +24,7 @@ test('engine multi_synthesis returns audio', function () {
 });
 
 test('engine connect_waves returns audio', function () {
-    $mock = Mockery::mock(\Revolution\Voicevox\VoicevoxResponse::class);
+    $mock = Mockery::mock(VoicevoxResponse::class);
     $mock->shouldReceive('content')->andReturn('audio-bytes');
     Voicevox::expects('baseUrl->connectWaves')->andReturn($mock);
 
@@ -42,7 +43,7 @@ test('engine morphable_targets returns json', function () {
 });
 
 test('engine synthesis_morphing returns audio', function () {
-    $mock = Mockery::mock(\Revolution\Voicevox\VoicevoxResponse::class);
+    $mock = Mockery::mock(VoicevoxResponse::class);
     $mock->shouldReceive('content')->andReturn('audio-bytes');
     Voicevox::expects('baseUrl->morphing')->andReturn($mock);
 
