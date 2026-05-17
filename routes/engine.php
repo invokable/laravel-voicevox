@@ -24,8 +24,7 @@ use Revolution\Voicevox\Engine\Http\VersionController;
 /**
  * Laravelでは難しいので常に公式エンジンにフォールバック
  */
-Route::post('/audio_query', AudioQueryController::class);
-// audio_query_from_presetが難しいのでプリセット機能ごと全部フォールバック
+// audio_query_from_preset次第
 Route::get('/presets', PresetsController::class);
 Route::post('/add_preset', AddPresetController::class);
 Route::post('/update_preset', UpdatePresetController::class);
@@ -34,6 +33,8 @@ Route::post('/delete_preset', DeletePresetController::class);
 /**
  * PHP版コアで対応可能。失敗時にフォールバックも行う。
  */
+// enable_katakana_englishには非対応
+Route::post('/audio_query', AudioQueryController::class);
 // is_kana=true時のみ対応
 Route::post('/accent_phrases', AccentPhrasesController::class);
 
