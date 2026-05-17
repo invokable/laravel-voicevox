@@ -9,7 +9,7 @@ use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-class AliveController
+class HomeController
 {
     public function __invoke(Request $request): Response
     {

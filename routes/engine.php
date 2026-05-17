@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Revolution\Voicevox\Engine\Http\AccentPhrasesController;
 use Revolution\Voicevox\Engine\Http\AddPresetController;
 use Revolution\Voicevox\Engine\Http\AddUserDictWordController;
-use Revolution\Voicevox\Engine\Http\AliveController;
+use Revolution\Voicevox\Engine\Http\HomeController;
 use Revolution\Voicevox\Engine\Http\AudioQueryController;
 use Revolution\Voicevox\Engine\Http\AudioQueryFromPresetController;
 use Revolution\Voicevox\Engine\Http\CancellableSynthesisController;
@@ -50,6 +50,12 @@ use Revolution\Voicevox\Engine\Http\VersionController;
 /**
  * Laravelでは難しいので常に公式エンジンにフォールバック
  */
+// 最難関なのでフォールバックのみ
+Route::post('/cancellable_synthesis', CancellableSynthesisController::class);
+Route::post('/connect_waves', ConnectWavesController::class);
+Route::post('/morphable_targets', MorphableTargetsController::class);
+Route::post('/synthesis_morphing', SynthesisMorphingController::class);
+
 // プリセットを共有できないので対応方法は未定
 Route::get('/presets', PresetsController::class);
 Route::post('/add_preset', AddPresetController::class);
@@ -72,6 +78,7 @@ Route::post('/audio_query', AudioQueryController::class);
 Route::post('/accent_phrases', AccentPhrasesController::class);
 
 Route::post('/synthesis', SynthesisController::class);
+Route::post('/multi_synthesis', MultiSynthesisController::class);
 Route::post('/mora_data', MoraDataController::class);
 Route::post('/mora_length', MoraLengthController::class);
 Route::post('/mora_pitch', MoraPitchController::class);
@@ -80,25 +87,11 @@ Route::get('/speaker_info', SpeakerInfoController::class);
 Route::get('/singers', SingersController::class);
 Route::get('/singer_info', SingerInfoController::class);
 
-/**
- * コアもフォールバックも不要で対応可能
- */
-Route::get('/version', VersionController::class);
-Route::get('/core_versions', CoreVersionsController::class);
-Route::get('/supported_devices', SupportedDevicesController::class);
-
-Route::post('/cancellable_synthesis', CancellableSynthesisController::class);
-Route::post('/multi_synthesis', MultiSynthesisController::class);
-Route::post('/connect_waves', ConnectWavesController::class);
-
-Route::post('/morphable_targets', MorphableTargetsController::class);
-Route::post('/synthesis_morphing', SynthesisMorphingController::class);
-
+// TODO
 Route::post('/sing_frame_audio_query', SingFrameAudioQueryController::class);
 Route::post('/sing_frame_f0', SingFrameF0Controller::class);
 Route::post('/sing_frame_volume', SingFrameVolumeController::class);
 Route::post('/frame_synthesis', FrameSynthesisController::class);
-
 Route::post('/initialize_speaker', InitializeSpeakerController::class);
 Route::get('/is_initialized_speaker', IsInitializedSpeakerController::class);
 
@@ -107,10 +100,20 @@ Route::get('/installed_libraries', InstalledLibrariesController::class);
 Route::post('/install_library/{library_uuid}', InstallLibraryController::class);
 Route::post('/uninstall_library/{library_uuid}', UninstallLibraryController::class);
 
-Route::match(['GET', 'POST'], '/setting', SettingController::class);
-
-Route::get('/', AliveController::class)->name('voicevox.alive');
-
+/**
+ * コアもフォールバックも不要で対応可能
+ */
+Route::get('/version', VersionController::class);
 Route::get('/_resources/{hash}', ResourcesController::class)->name('voicevox.resources');
 Route::post('/validate_kana', ValidateKanaController::class);
 Route::get('/engine_manifest', EngineManifestController::class);
+
+// TODO
+Route::get('/core_versions', CoreVersionsController::class);
+Route::get('/supported_devices', SupportedDevicesController::class);
+
+// TODO
+// Laravel版ではCORS設定は不要だけどユーザー辞書のインポート・エクスポートが設定ページにあるので独自に作成かも
+Route::match(['GET', 'POST'], '/setting', SettingController::class);
+// /settingと/docsへのリンクがあるウェルカムページ
+Route::get('/', HomeController::class)->name('voicevox.home');

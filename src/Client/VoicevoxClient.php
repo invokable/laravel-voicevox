@@ -525,9 +525,9 @@ class VoicevoxClient
     /**
      * Get engine settings.
      */
-    public function setting(): array
+    public function setting(): string
     {
-        return $this->http()->get('setting')->json();
+        return $this->http()->get('setting')->body();
     }
 
     /**
