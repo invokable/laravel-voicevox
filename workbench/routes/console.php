@@ -49,7 +49,7 @@ Artisan::command('voicevox:singers', function () {
 
 // vendor/bin/testbench voicevox:client:talk
 Artisan::command('voicevox:client:talk', function () {
-    $response = Voicevox::talk('ララベルが好きなのだ')
+    $response = Voicevox::talk('Laravelが好きなのだ')
         ->tap(function (TalkAudioQuery $talk) {
             $talk->audioQuery['speedScale'] = 1.2;
         })->generate();
