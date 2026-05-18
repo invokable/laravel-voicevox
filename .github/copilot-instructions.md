@@ -68,6 +68,14 @@ Agentic Workflows環境でも`setup-php`でPHPはインストールされてる�
 - voicevox_resource: resourcesのサブモジュール。公式エンジンでは[process_voicevox_resource.bash](../voicevox_engine/tools/process_voicevox_resource.bash) などで使用している。必要なファイルだけLaravel側にコピー。`/speaker_info'`や`/singer_info`で必要。
 - resources: voicevox_resourceもしくはGitHubからダウンロードしたキャラ情報。500MB以上のサイズなので別途インストール。
 
+## ドキュメント
+
+クライアントもネイティブもエンジンも機能が揃ってきたのでドキュメントを整備。
+README.mdは英語、README_jp.mdは日本語。
+docs/内に日本語のドキュメントをmarkdownで作成。
+
+ドキュメントサイトは別であるので英語版ドキュメントを含む詳細はそちらに掲載する。READMEとdocsを参考に日本語・英語で作る。AIが翻訳するのでdocsは日本語のみでいい。
+
 ## VOICEVOX クライアント
 
 想定している使い方は、
