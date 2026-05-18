@@ -6,15 +6,24 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Revolution\Voicevox\Engine\NativePresetStore;
 use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class AddPresetController
 {
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, NativePresetStore $store): JsonResponse
     {
         $preset = $request->all();
+
+        try {
+            $id = $store->add($preset);
+
+            return response()->json($id);
+        } catch (Throwable) {
+            // Fall back to official engine
+        }
 
         try {
             $id = Voicevox::baseUrl(config('voicevox.engine.fallback_url'))->addPreset($preset);
