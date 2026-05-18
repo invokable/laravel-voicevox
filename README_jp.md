@@ -23,7 +23,15 @@ Work In Progress.
 
 - PHP 8.3+
 - Laravel 12.x+
-- FFI: クライアント以外にはFFIを有効にしたPHPが必要です。Laravel Cloudを始め一般的なWebサーバーではほとんどが無効にされているのでこのパッケージはローカルCLIでの利用を前提にしています。
+- FFI: クライアント以外にはFFIを有効にしたPHPが必要です。
+
+Laravel Cloudを始め一般的なWebサーバーではほとんどが無効にされているのでこのパッケージは **ローカルCLI** での利用を前提にしています。
+
+Laravel版エンジンをローカルで起動するには`php.ini`でFFIを有効にします。
+
+```
+ffi.enable=true
+```
 
 ## Installation
 
@@ -61,13 +69,57 @@ VOICEVOX_CORE_PATH=/.../.local/voicevox_core/
 
 ### Client mode
 
-クライアントモードはVoicevox Facadeから使います。
+クライアントモードは **Voicevox** Facadeから使います。
+
+クライアント版は [公式VOICEVOXエンジン](https://github.com/VOICEVOX/voicevox_engine) にアクセスするので公式のREADMEを参考にDockerで起動してください。利用可能な環境ならGPU版も使えます。
+
+```shell
+docker pull voicevox/voicevox_engine:cpu-latest
+docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
+```
+
+テキスト音声合成。クライアント版は`enable_katakana_english`が有効なので英語からカタカナに自動変換されます。
+
+```php
+use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\Client\TalkAudioQuery;
+
+$response = Voicevox::talk('Laravelが好きなのだ', id: 1)
+              ->tap(function (TalkAudioQuery $talk) {
+                // tapで調整できます
+                $talk->audioQuery['speedScale'] = 1.2;
+              })->generate(id: 1);
+
+$response->storeAs('client', 'talk.wav');
+```
+
+歌声合成はScoreを作成してから合成します。`length`は **フレーム長** ですが分かりにくのでMIDIに慣れた方向けに`Note::len()`ヘルパーも用意しています。四分音符一つを480としてBGMと共に指定すればフレーム長が計算されます。
+
+```php
+use Revolution\Voicevox\Song\Note;
+use Revolution\Voicevox\Song\Score;
+use Revolution\Voicevox\Voicevox;
+
+$score = Score::make([
+    Note::make(length: 15), // 1音目は必ず休符
+    Note::make(length: Note::len(ticks: 480, bpm: 120), lyric: 'ド', key: 60),
+    Note::make(length: Note::len(480, 120), lyric: 'レ', key: 62),
+    Note::make(length: Note::len(960, 120), lyric: 'ミ', key: 64),
+    Note::make(length: 2), // 最後も短く無音を入れるとよい
+]);
+
+$response = Voicevox::song($score, teacher: 6000)->generate(id: 3001);
+
+$response->storeAs('client', 'song.wav');
+```
 
 ### Native mode
 
-ネイティブモードは`talk()`や`song()`のヘルパーから使います。
+ネイティブモードは`talk()`や`song()`のヘルパーから使います。  
+`Voicevox::`を削除する以外はなるべくクライアント版と同じ使い方になるようにしています。
 
-テキスト音声合成。ネイティブ版では`enable_katakana_english`がないので事前にAI(LLM)で英語からカタカナに変換するなどして運用でカバーしてください。
+テキスト音声合成。ネイティブ版では`enable_katakana_english`がないので事前にAI(LLM)で英語からカタカナに変換するなどして運用でカバーしてください。  
+TalkAudioQueryは同名ですがクライアント版とは別クラスです。
 
 ```php
 use Revolution\Voicevox\Talk\TalkAudioQuery
@@ -79,10 +131,10 @@ $response = talk('ララベルが好きなのだ', id: 1)
                $talk->audioQuery['speedScale'] = 1.2;
             })->generate(id: 1);
 
-$response->storeAs('talk.wav');
+$response->storeAs('native', 'talk.wav');
 ```
 
-歌声合成はScoreを作成してから合成します。`length`は **フレーム長** ですが分かりにくのでMIDIに慣れた方向けに`Note::len()`ヘルパーも用意しています。四分音符一つを480としてBGMと共に指定すればフレーム長が計算されます。
+歌声合成。ScoreとNoteは共通です。
 
 ```php
 use Revolution\Voicevox\Song\Note;
@@ -99,7 +151,7 @@ $score = Score::make([
 
 $response = song($score, teacher: 6000)->generate(id: 3001);
 
-$response->storeAs('song.wav');
+$response->storeAs('native', 'song.wav');
 ```
 
 ## Documentation
