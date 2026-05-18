@@ -93,7 +93,7 @@ $response = Voicevox::talk('Laravelが好きなのだ', id: 1)
 $response->storeAs('client', 'talk.wav');
 ```
 
-歌声合成はScoreを作成してから合成します。`length`は **フレーム長** ですが分かりにくのでMIDIに慣れた方向けに`Note::len()`ヘルパーも用意しています。四分音符一つを480としてBGMと共に指定すればフレーム長が計算されます。
+歌声合成はScoreを作成してから合成します。`length`は **フレーム長** ですが分かりにくのでMIDIに慣れた方向けに`Note::len($ticks, $bpm)`ヘルパーも用意しています。四分音符一つを480としてBGMと共に指定すればフレーム長が計算されます。
 
 ```php
 use Revolution\Voicevox\Song\Note;
@@ -102,9 +102,9 @@ use Revolution\Voicevox\Voicevox;
 
 $score = Score::make([
     Note::make(length: 15), // 1音目は必ず休符
-    Note::make(length: Note::len(ticks: 480, bpm: 120), lyric: 'ド', key: 60),
-    Note::make(length: Note::len(480, 120), lyric: 'レ', key: 62),
-    Note::make(length: Note::len(960, 120), lyric: 'ミ', key: 64),
+    Note::make(length: Note::len(ticks: 480, bpm: 120), lyric: 'ド', key: 60), // 1拍
+    Note::make(length: Note::len(480, 120), lyric: 'レ', key: 62), // 1拍
+    Note::make(length: Note::len(960, 120), lyric: 'ミ', key: 64), // 2拍。合計で1小節分。
     Note::make(length: 2), // 最後も短く無音を入れるとよい
 ]);
 
