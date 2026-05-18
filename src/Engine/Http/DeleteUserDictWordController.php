@@ -6,6 +6,7 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Revolution\Voicevox\Engine\NativeUserDict;
 use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -14,6 +15,14 @@ class DeleteUserDictWordController
 {
     public function __invoke(Request $request, string $word_uuid): JsonResponse
     {
+        try {
+            (new NativeUserDict())->removeWord($word_uuid);
+
+            return response()->json(null, Response::HTTP_NO_CONTENT);
+        } catch (Throwable) {
+            // Fall back to official engine
+        }
+
         try {
             Voicevox::baseUrl(config('voicevox.engine.fallback_url'))
                 ->deleteWord($word_uuid);

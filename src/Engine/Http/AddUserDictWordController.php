@@ -6,6 +6,7 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Revolution\Voicevox\Engine\NativeUserDict;
 use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -19,6 +20,17 @@ class AddUserDictWordController
         $accentType = $request->integer('accent_type');
         $wordType = $request->string('word_type')->value() ?: null;
         $priority = $request->has('priority') ? $request->integer('priority') : null;
+
+        try {
+            $uuid = (new NativeUserDict())->addWord($surface, $pronunciation, $accentType, $wordType, $priority);
+
+            return response()->json(
+                $uuid,
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+            );
+        } catch (Throwable) {
+            // Fall back to official engine
+        }
 
         try {
             $uuid = Voicevox::baseUrl(config('voicevox.engine.fallback_url'))
