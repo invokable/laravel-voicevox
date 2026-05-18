@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use Revolution\Voicevox\Engine\NativePresetStore;
 use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
+
+// ---- engine_manifest ----
 
 test('engine engine_manifest endpoint returns manifest', function () {
     $response = $this->getJson('/engine_manifest');
@@ -12,8 +15,12 @@ test('engine engine_manifest endpoint returns manifest', function () {
         ->assertJsonFragment(['uuid' => '513b0774-3428-4a1d-9d4e-a7fd5f32d0a7']);
 });
 
-test('engine presets endpoint returns presets', function () {
-    Voicevox::expects('baseUrl->presets')->andReturn([['id' => 1, 'name' => 'default']]);
+// ---- presets (native NativePresetStore) ----
+
+test('engine presets endpoint returns presets from store', function () {
+    $store = Mockery::mock(NativePresetStore::class);
+    $store->allows('all')->andReturn([['id' => 1, 'name' => 'default']]);
+    $this->app->instance(NativePresetStore::class, $store);
 
     $response = $this->getJson('/presets');
 
@@ -21,17 +28,34 @@ test('engine presets endpoint returns presets', function () {
         ->assertJsonFragment(['id' => 1]);
 });
 
-test('engine add_preset endpoint returns id', function () {
-    Voicevox::expects('baseUrl->addPreset')->andReturn(2);
+test('engine presets endpoint falls back to Voicevox when store throws', function () {
+    $store = Mockery::mock(NativePresetStore::class);
+    $store->allows('all')->andThrow(Exception::class);
+    $this->app->instance(NativePresetStore::class, $store);
+
+    Voicevox::expects('baseUrl->presets')->andReturn([['id' => 2, 'name' => 'fallback']]);
+
+    $response = $this->getJson('/presets');
+
+    $response->assertOk()
+        ->assertJsonFragment(['id' => 2]);
+});
+
+test('engine add_preset endpoint returns id from store', function () {
+    $store = Mockery::mock(NativePresetStore::class);
+    $store->allows('add')->andReturn(5);
+    $this->app->instance(NativePresetStore::class, $store);
 
     $response = $this->postJson('/add_preset', ['id' => 0, 'name' => 'new']);
 
     $response->assertOk()
-        ->assertSee(2);
+        ->assertSee(5);
 });
 
-test('engine update_preset endpoint returns id', function () {
-    Voicevox::expects('baseUrl->updatePreset')->andReturn(1);
+test('engine update_preset endpoint returns id from store', function () {
+    $store = Mockery::mock(NativePresetStore::class);
+    $store->allows('update')->andReturn(1);
+    $this->app->instance(NativePresetStore::class, $store);
 
     $response = $this->postJson('/update_preset', ['id' => 1, 'name' => 'updated']);
 
@@ -39,13 +63,55 @@ test('engine update_preset endpoint returns id', function () {
         ->assertSee(1);
 });
 
-test('engine delete_preset endpoint returns null', function () {
-    Voicevox::expects('baseUrl->deletePreset')->andReturn(null);
+test('engine delete_preset endpoint returns 204 from store', function () {
+    $store = Mockery::mock(NativePresetStore::class);
+    $store->allows('delete')->andReturn(null);
+    $this->app->instance(NativePresetStore::class, $store);
 
     $response = $this->postJson('/delete_preset?id=1');
 
-    $response->assertOk();
+    $response->assertNoContent();
 });
+
+test('engine audio_query_from_preset uses store preset and synthesizer', function () {
+    $preset = [
+        'id' => 1,
+        'name' => 'fast',
+        'style_id' => 3,
+        'speedScale' => 1.5,
+        'pitchScale' => 0.0,
+        'intonationScale' => 1.0,
+        'volumeScale' => 1.0,
+        'prePhonemeLength' => 0.1,
+        'postPhonemeLength' => 0.1,
+    ];
+    $store = Mockery::mock(NativePresetStore::class);
+    $store->allows('find')->with(1)->andReturn($preset);
+    $this->app->instance(NativePresetStore::class, $store);
+
+    $audioQuery = json_encode(['speedScale' => 1.0, 'pitchScale' => 0.0, 'accent_phrases' => []]);
+    Synthesizer::expects('createAudioQuery')->with('テスト', 3)->andReturn($audioQuery);
+
+    $response = $this->postJson('/audio_query_from_preset?text=テスト&preset_id=1');
+
+    $response->assertOk()
+        ->assertJsonFragment(['speedScale' => 1.5]);
+});
+
+test('engine audio_query_from_preset falls back when preset not found', function () {
+    $store = Mockery::mock(NativePresetStore::class);
+    $store->allows('find')->andReturn(null);
+    $this->app->instance(NativePresetStore::class, $store);
+
+    Voicevox::expects('baseUrl->audioQueryFromPreset')->andReturn(['speedScale' => 1.0]);
+
+    $response = $this->postJson('/audio_query_from_preset?text=テスト&preset_id=99');
+
+    $response->assertOk()
+        ->assertJsonFragment(['speedScale' => 1.0]);
+});
+
+// ---- accent_phrases / mora ----
 
 test('engine accent_phrases endpoint returns phrases', function () {
     Synthesizer::expects('createAudioQuery')->andThrow(Exception::class);
@@ -83,3 +149,4 @@ test('engine mora_pitch endpoint returns mora pitch', function () {
 
     $response->assertOk();
 });
+

@@ -35,11 +35,11 @@
 | `POST /connect_waves`             | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                                      |
 | `POST /morphable_targets`         | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                                      |
 | `POST /synthesis_morphing`        | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                                      |
-| `GET /presets`                    | ❌                  | ✅              | プリセットを公式エンジンと共有できないため。将来的にSQLite等で独自実装の可能性あり。                                              |
-| `POST /add_preset`                | ❌                  | ✅              | 同上                                                                                        |
-| `POST /update_preset`             | ❌                  | ✅              | 同上                                                                                        |
-| `POST /delete_preset`             | ❌                  | ✅              | 同上                                                                                        |
-| `POST /audio_query_from_preset`   | ❌                  | ✅              | プリセット機能に依存するためフォールバックのみ。                                                                  |
+| `GET /presets`                    | ✅                  | ✅              | `NativePresetStore`でJSONファイルに永続化。コアが使えない場合はフォールバック。                                              |
+| `POST /add_preset`                | ✅                  | ✅              | `NativePresetStore`でJSONファイルに永続化。コアが使えない場合はフォールバック。                                              |
+| `POST /update_preset`             | ✅                  | ✅              | `NativePresetStore`でJSONファイルに永続化。コアが使えない場合はフォールバック。                                              |
+| `POST /delete_preset`             | ✅                  | ✅              | `NativePresetStore`でJSONファイルに永続化。コアが使えない場合はフォールバック。                                              |
+| `POST /audio_query_from_preset`   | ✅                  | ✅              | `NativePresetStore`でプリセット取得後、コアの`createAudioQuery`でクエリ生成。プリセットが見つからない場合はフォールバック。                                                                  |
 | `POST /import_user_dict`          | ❌                  | ✅              | コアのUserDictはバイナリ形式で入出力するためJSON直接インポート不可。フォールバックのみ。                                         |
 | `POST /initialize_speaker`        | ❌                  | ✅              | コアはvvmロードで初期化済みのためAPIとして公開する必要がない。フォールバックのみ。                                               |
 | `GET /is_initialized_speaker`     | ❌                  | ✅              | 同上                                                                                        |
