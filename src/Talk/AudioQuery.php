@@ -6,6 +6,9 @@ namespace Revolution\Voicevox\Talk;
 
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * デフォルトAudioQuery。
+ */
 class AudioQuery implements Arrayable
 {
     public function __construct(
