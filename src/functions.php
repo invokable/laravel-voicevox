@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Revolution\Voicevox;
 
+use Revolution\Voicevox\Engine\NativePresetStore;
+use Revolution\Voicevox\Engine\NativeUserDict;
 use Revolution\Voicevox\Song\Score;
 use Revolution\Voicevox\Song\Song;
 use Revolution\Voicevox\Song\SongAudioQuery;
@@ -34,4 +36,14 @@ function kana(string $kana, int|string $id = 1): TalkAudioQuery
 function song(Score|array $score, int|string $teacher = 6000): SongAudioQuery
 {
     return Song::make()->song($score, $teacher);
+}
+
+function dict(): NativeUserDict
+{
+    return app(NativeUserDict::class);
+}
+
+function preset(): NativePresetStore
+{
+    return app(NativePresetStore::class);
 }

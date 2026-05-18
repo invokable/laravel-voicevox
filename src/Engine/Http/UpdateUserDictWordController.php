@@ -22,7 +22,7 @@ class UpdateUserDictWordController
         $priority = $request->has('priority') ? $request->integer('priority') : null;
 
         try {
-            (new NativeUserDict)->updateWord($word_uuid, $surface, $pronunciation, $accentType, $wordType, $priority);
+            app(NativeUserDict::class)->updateWord($word_uuid, $surface, $pronunciation, $accentType, $wordType, $priority);
 
             return response()->json(null, Response::HTTP_NO_CONTENT);
         } catch (Throwable) {

@@ -92,7 +92,8 @@ test('engine audio_query_from_preset uses store preset and synthesizer', functio
     $audioQuery = json_encode(['speedScale' => 1.0, 'pitchScale' => 0.0, 'accent_phrases' => []]);
     Synthesizer::expects('createAudioQuery')->with('テスト', 3)->andReturn($audioQuery);
 
-    $response = $this->postJson('/audio_query_from_preset?text=テスト&preset_id=1');
+    $text = rawurlencode('テスト');
+    $response = $this->postJson("/audio_query_from_preset?text=$text&preset_id=1");
 
     $response->assertOk()
         ->assertJsonFragment(['speedScale' => 1.5]);

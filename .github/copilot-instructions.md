@@ -276,7 +276,7 @@ engine_manifest.jsonはインストールなどの変換処理は挟まず公式
 OSごとに違うユーザーフォルダに`user_dict.json`。
 `voicevox_engine/voicevox_engine/user_dict/user_dict_manager.py`
 
-pyopenjtalkを使っていてLaravelでは難しいパターンなのでコアの機能だけを使った版。
+pyopenjtalkを使っていてLaravelでは難しいパターンなのでコアの機能だけを使った版。コアのデータはバイナリではなくただのjsonなのでインポートも対応できるはず。
 `src/Engine/NativeUserDict.php`
 
 ### プリセット機能

@@ -18,7 +18,9 @@ use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Talk\TalkAudioQuery as NativeTalkAudioQuery;
 use Revolution\Voicevox\Voicevox;
 
+use function Revolution\Voicevox\dict;
 use function Revolution\Voicevox\kana;
+use function Revolution\Voicevox\preset;
 use function Revolution\Voicevox\song;
 use function Revolution\Voicevox\talk;
 
@@ -237,3 +239,39 @@ Artisan::command('voicevox:validate_kana', function () {
 
     KanaConverter::parse($word);
 })->purpose('validate_kana');
+
+// vendor/bin/testbench voicevox:native:dict
+Artisan::command('voicevox:native:dict', function () {
+    $dict = dict()->add(
+        surface: 'Laravel',
+        pronunciation: 'ララベル',
+        accentType: 1,
+    );
+
+    $this->info($dict);
+
+    $all = dict()->all();
+    dump($all);
+})->purpose('dict');
+
+// vendor/bin/testbench voicevox:native:preset
+Artisan::command('voicevox:native:preset', function () {
+    $preset = [
+        'id' => 1,
+        'name' => 'fast',
+        'style_id' => 3,
+        'speedScale' => 1.5,
+        'pitchScale' => 0.0,
+        'intonationScale' => 1.0,
+        'volumeScale' => 1.0,
+        'prePhonemeLength' => 0.1,
+        'postPhonemeLength' => 0.1,
+    ];
+    $id = preset()->add($preset);
+
+    // idが重複している場合は自動的に増える
+    $this->info($id);
+
+    $all = preset()->all();
+    dump($all);
+})->purpose('preset');

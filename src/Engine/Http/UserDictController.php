@@ -17,7 +17,7 @@ class UserDictController
     {
         try {
             return response()->json(
-                (new NativeUserDict)->toArray(),
+                app(NativeUserDict::class)->toArray(),
                 options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
             );
         } catch (Throwable) {

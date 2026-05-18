@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
+use Revolution\Voicevox\Engine\NativeUserDict;
 use Revolution\Voicevox\Voicevox;
 
 test('engine user_dict endpoint returns dict', function () {
+    $this->mock(NativeUserDict::class, function ($mock) {
+        $mock->allows('toArray')->andThrow(Exception::class);
+    });
     Voicevox::expects('baseUrl->userDict')->andReturn(['uuid-1' => ['surface' => 'テスト']]);
 
     $response = $this->getJson('/user_dict');
@@ -14,6 +18,9 @@ test('engine user_dict endpoint returns dict', function () {
 });
 
 test('engine user_dict_word POST endpoint returns uuid', function () {
+    $this->mock(NativeUserDict::class, function ($mock) {
+        $mock->allows('addWord')->andThrow(Exception::class);
+    });
     Voicevox::expects('baseUrl->addWord')->andReturn('new-uuid');
 
     $response = $this->postJson('/user_dict_word?surface=テスト&pronunciation=テスト&accent_type=0');
@@ -23,6 +30,9 @@ test('engine user_dict_word POST endpoint returns uuid', function () {
 });
 
 test('engine user_dict_word PUT endpoint returns 204', function () {
+    $this->mock(NativeUserDict::class, function ($mock) {
+        $mock->allows('updateWord')->andThrow(Exception::class);
+    });
     Voicevox::expects('baseUrl->updateWord')->andReturn(null);
 
     $response = $this->putJson('/user_dict_word/some-uuid?surface=テスト&pronunciation=テスト&accent_type=0');
@@ -31,6 +41,9 @@ test('engine user_dict_word PUT endpoint returns 204', function () {
 });
 
 test('engine user_dict_word DELETE endpoint returns 204', function () {
+    $this->mock(NativeUserDict::class, function ($mock) {
+        $mock->allows('removeWord')->andThrow(Exception::class);
+    });
     Voicevox::expects('baseUrl->deleteWord')->andReturn(null);
 
     $response = $this->deleteJson('/user_dict_word/some-uuid');
@@ -73,6 +86,9 @@ test('engine audio_query_from_preset endpoint returns audio query', function () 
 });
 
 test('engine user_dict falls back to 501 when engine unavailable', function () {
+    $this->mock(NativeUserDict::class, function ($mock) {
+        $mock->allows('toArray')->andThrow(Exception::class);
+    });
     Voicevox::expects('baseUrl->userDict')->andThrow(Exception::class);
 
     $response = $this->getJson('/user_dict');

@@ -24,7 +24,7 @@ class NativeUserDict
     public function __construct()
     {
         $this->dict = new UserDict;
-        $this->path = storage_path('voicevox/user_dict');
+        $this->path = storage_path('voicevox/user_dict.json');
 
         if (file_exists($this->path)) {
             $this->dict->load($this->path);
@@ -39,6 +39,11 @@ class NativeUserDict
     public function toArray(): array
     {
         return json_decode($this->dict->toJson(), true) ?? [];
+    }
+
+    public function all(): array
+    {
+        return $this->toArray();
     }
 
     /**
@@ -58,6 +63,16 @@ class NativeUserDict
         return $uuid;
     }
 
+    public function add(
+        string $surface,
+        string $pronunciation,
+        int $accentType,
+        ?string $wordType = null,
+        ?int $priority = null,
+    ): string {
+        return $this->addWord($surface, $pronunciation, $accentType, $wordType, $priority);
+    }
+
     /**
      * Update an existing word by UUID.
      */
@@ -74,6 +89,17 @@ class NativeUserDict
         $this->save();
     }
 
+    public function update(
+        string $wordUuid,
+        string $surface,
+        string $pronunciation,
+        int $accentType,
+        ?string $wordType = null,
+        ?int $priority = null,
+    ): void {
+        $this->updateWord($wordUuid, $surface, $pronunciation, $accentType, $wordType, $priority);
+    }
+
     /**
      * Remove a word by UUID.
      */
@@ -81,6 +107,11 @@ class NativeUserDict
     {
         $this->dict->removeWord($wordUuid);
         $this->save();
+    }
+
+    public function delete(string $wordUuid): void
+    {
+        $this->removeWord($wordUuid);
     }
 
     private function save(): void
