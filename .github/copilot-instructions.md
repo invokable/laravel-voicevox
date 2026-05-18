@@ -4,7 +4,7 @@
 
 [VOICEVOX](https://github.com/VOICEVOX) for Laravel.
 
-全てローカルで動かす前提。Webサーバーとして動かすのは難しいので優先度は低い。
+全てローカルで動かす前提。Webサーバー上で動かすのは難しいので優先度は低い。
 
 GitHub Agentic Workflowsを使って少しずつ実装を進める。
 
