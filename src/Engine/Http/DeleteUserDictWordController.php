@@ -16,7 +16,7 @@ class DeleteUserDictWordController
     public function __invoke(Request $request, string $word_uuid): JsonResponse
     {
         try {
-            (new NativeUserDict())->removeWord($word_uuid);
+            (new NativeUserDict)->removeWord($word_uuid);
 
             return response()->json(null, Response::HTTP_NO_CONTENT);
         } catch (Throwable) {

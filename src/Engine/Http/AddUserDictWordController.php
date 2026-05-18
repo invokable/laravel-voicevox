@@ -22,7 +22,7 @@ class AddUserDictWordController
         $priority = $request->has('priority') ? $request->integer('priority') : null;
 
         try {
-            $uuid = (new NativeUserDict())->addWord($surface, $pronunciation, $accentType, $wordType, $priority);
+            $uuid = (new NativeUserDict)->addWord($surface, $pronunciation, $accentType, $wordType, $priority);
 
             return response()->json(
                 $uuid,

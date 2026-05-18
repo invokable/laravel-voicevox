@@ -23,7 +23,7 @@ class NativeUserDict
 
     public function __construct()
     {
-        $this->dict = new UserDict();
+        $this->dict = new UserDict;
         $this->path = storage_path('voicevox/user_dict');
 
         if (file_exists($this->path)) {
