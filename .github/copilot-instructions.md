@@ -279,12 +279,16 @@ OSごとに違うユーザーフォルダに`user_dict.json`。
 pyopenjtalkを使っていてLaravelでは難しいパターンなのでコアの機能だけを使った版。コアのデータはバイナリではなくただのjsonなのでインポートも対応できるはず。
 `src/Engine/NativeUserDict.php`
 
+ただし、ユーザー辞書機能ができてもこの辞書を使った音声合成ができない気がする。
+
 ### プリセット機能
 
 公式エンジンでは`presets.yaml`ファイルを使って管理。おそらくDocker内にしかない。Dockerの公式エンジンとLaravelではプリセット設定を共有できない。
 
 presets.jsonに保存する方法で独自実装。
 `src/Engine/NativePresetStore.php`
+
+プリセットは独自に作っても`/audio_query_from_preset`で使える。
 
 ### kanalizer
 
