@@ -270,13 +270,21 @@ vendor/bin/testbench voicevox:install
 engine_manifest.jsonはインストールなどの変換処理は挟まず公式を参考にLaravel用に作ればいいはず。
 `voicevox_engine/engine_manifest.json`
 
+### ユーザー辞書
+
+公式エンジンは`resources/default.csv`にデフォルト辞書。
+OSごとに違うユーザーフォルダに`user_dict.json`。
+`voicevox_engine/voicevox_engine/user_dict/user_dict_manager.py`
+
+pyopenjtalkを使っていてLaravelでは難しいパターンなのでコアの機能だけを使った版。
+`src/Engine/NativeUserDict.php`
+
 ### プリセット機能
 
-公式エンジンでは`presets.yaml`ファイルを使って管理。おそらくDocker内にしかない。Dockerの公式エンジンとLaravelではプリセット設定を共有できないので、SQLiteデータベースを使う完全に別実装でもいいかもしれない。
-`/audio_query_from_preset`次第で対応方法を検討。
-`/audio_query`が`enable_katakana_english`以外対応できたのでaudio_query_from_presetも可能かも。
+公式エンジンでは`presets.yaml`ファイルを使って管理。おそらくDocker内にしかない。Dockerの公式エンジンとLaravelではプリセット設定を共有できない。
 
-プリセット機能自体、デフォルトのAudioQueryを上書きするくらいの機能しかなさそう。tapで調整できるLaravelではなくても困らないので優先度は低くここは後回しにする。
+presets.jsonに保存する方法で独自実装。
+`src/Engine/NativePresetStore.php`
 
 ### kanalizer
 
@@ -306,7 +314,7 @@ https://github.com/VOICEVOX/voicevox_vvm
 - src/Talk/Talk.php: `Talk::make()->talk(text:)->generate()`。`Talk::fake()`でテスト用にモック。
 - src/Song/Song.php: `Song::make()->song(score:)->generate()`
 - src/Engine/: 他の機能は仮でEngine内に配置。
-- functions.php: `talk()`, `song()`。Talk、Songクラスは実際には関数から使う。Laravel AI SDKの`agent()`とやLaravel Promptsと同じ実装パターン。
+- functions.php: `talk()`, `song()`。Talk、Songクラスは実際には関数から使う。Laravel AI SDKの`agent()`やLaravel Promptsと同じ実装パターン。
 
 ```php
 use function Revolution\Voicevox\talk;
@@ -322,7 +330,7 @@ $response->storeAs('talk.wav');
 VoicevoxClientと同等の機能は一通り用意したいけど対応不可な機能も多い。`_`を使わない簡潔な関数名が理想。
 
 ```php
-use function Revolution\Voicevox\{talk, song, dict, kana};
+use function Revolution\Voicevox\{talk, kana, song, dict, preset};
 
 // コア機能のみなので英語からカタカナ変換がないなどエンジンAPIとは少し違う。
 // 事前にLLMでカタカナに変換すれば同じ結果。
@@ -337,10 +345,14 @@ dict()->all();
 dict()->add();
 dict()->update();
 dict()->delete();
-dict()->import();
-```
+// dict()->import();
 
-プリセットはコアにはなくエンジンの機能なのでなし。
+preset()->all();
+preset()->find();
+preset()->add();
+preset()->update();
+preset()->delete();
+```
 
 ## 将来的な計画
 
