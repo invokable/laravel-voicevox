@@ -26,10 +26,10 @@ $response = Voicevox::talk('Laravelが好きなのだ')->generate();
 $response->storeAs('client', 'talk.wav');
 ```
 
-## スピーカー ID の指定
+## スタイル ID の指定
 
 `talk()` と `generate()` の両方に話者のスタイル ID を指定できます。  
-`talk()` の `id` は `audio_query` 生成時のスピーカー、`generate()` の `id` は音声合成時のスピーカーです。  
+`talk()` の `id` は `audio_query` 生成時のスタイル、`generate()` の `id` は音声合成時のスタイルです。  
 通常は同じ ID を指定します。
 
 ```php
@@ -41,7 +41,7 @@ $response = Voicevox::talk('ずんだもんなのだ', id: 1)->generate(id: 1);
 $response->storeAs('client', 'talk.wav');
 ```
 
-利用可能なスピーカーの一覧は `speakers()` で取得できます。
+利用可能なスピーカーとスタイルの一覧は `speakers()` で取得できます。
 
 ```php
 $speakers = Voicevox::speakers();
