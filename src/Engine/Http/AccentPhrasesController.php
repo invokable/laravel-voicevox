@@ -25,9 +25,7 @@ class AccentPhrasesController
             if ($isKana) {
                 $accent_phrases = json_decode(Synthesizer::createAccentPhrasesFromKana($text, $id));
             } else {
-                // is_kana=false時はAudioQueryを作ってからaccent_phrasesを抽出
-                $audio_query = json_decode(Synthesizer::createAudioQuery($text, $id), true);
-                $accent_phrases = $audio_query['accent_phrases'] ?? [];
+                $accent_phrases = json_decode(Synthesizer::createAccentPhrases($text, $id), true);
             }
 
             return response()->json(
