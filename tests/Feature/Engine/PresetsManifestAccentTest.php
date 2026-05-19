@@ -115,7 +115,7 @@ test('engine audio_query_from_preset falls back when preset not found', function
 // ---- accent_phrases / mora ----
 
 test('engine accent_phrases endpoint returns phrases', function () {
-    Synthesizer::expects('createAudioQuery')->andThrow(Exception::class);
+    Synthesizer::expects('createAccentPhrases')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->accentPhrases')->andReturn([['moras' => []]]);
 
     $response = $this->postJson('/accent_phrases?text=テスト&speaker=1&is_kana=false');
