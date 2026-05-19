@@ -6,12 +6,16 @@ namespace Revolution\Voicevox\Client;
 
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;
 use Revolution\Voicevox\Voicevox;
 use Revolution\Voicevox\VoicevoxResponse;
 
 class TalkAudioQuery
 {
+    use Conditionable;
+    use Macroable;
     use Tappable;
     use WithHttp;
 
