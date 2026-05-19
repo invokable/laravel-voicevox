@@ -17,8 +17,6 @@ GitHub Agentic Workflowsを使って少しずつ実装を進める。
 VOICEVOXエンジンのAPIを呼び出すサードパーティ製のクライアントパッケージ。
 https://github.com/voicevox-client
 
-このプロジェクトでまず作るのはこれと同じVOICEVOXクライアントのLaravel版。
-
 ### OpenAPI
 
 - .github/openapi.json
