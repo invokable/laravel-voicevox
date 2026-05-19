@@ -11,9 +11,7 @@ use Revolution\Voicevox\Core\UserDict;
  * Persists the VOICEVOX core UserDict to storage so the engine endpoints
  * can serve user-dictionary requests without the official engine process.
  *
- * The dict is stored at storage_path('voicevox/user_dict') in the core's
- * native binary format (save/load round-trip).  toJson() is used only to
- * produce the API response JSON.
+ * The dict is stored at storage_path('voicevox/user_dict.json') as plain JSON.
  */
 class NativeUserDict
 {
@@ -112,6 +110,32 @@ class NativeUserDict
     public function delete(string $wordUuid): void
     {
         $this->removeWord($wordUuid);
+    }
+
+    /**
+     * Import words from another user dictionary JSON string.
+     * Existing words are preserved; imported words are merged in.
+     */
+    public function import(string $json): void
+    {
+        $tmp = tempnam(sys_get_temp_dir(), 'voicevox_dict_');
+        try {
+            file_put_contents($tmp, $json);
+            $other = new UserDict;
+            $other->load($tmp);
+            $this->dict->importDict($other);
+        } finally {
+            @unlink($tmp);
+        }
+        $this->save();
+    }
+
+    /**
+     * Return the current dictionary as a JSON string.
+     */
+    public function toJson(): string
+    {
+        return $this->dict->toJson();
     }
 
     private function save(): void
