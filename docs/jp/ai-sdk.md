@@ -131,7 +131,7 @@ $speakers = Voicevox::speakers();
 
 ### KanalizerAgent
 
-英語だけをカタカナに変換します。
+英語だけをカタカナに変換します。VOICEVOX公式の [kanalizer](https://github.com/VOICEVOX/kanalizer) の代用です。
 
 ```php
 use Revolution\Voicevox\Ai\Agents\KanalizerAgent;
