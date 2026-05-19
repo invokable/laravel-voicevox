@@ -12,7 +12,7 @@
 VOICEVOX_CORE_PATH=/path/to/voicevox_core/
 ```
 
-歌声モデルを使うには、`config/voicevox.php` の `core.vvms` に歌声用 `s0.vvm` が含まれていることを確認してください（デフォルトで含まれています）。
+歌声モデルを使うには、`config/voicevox.php` の `core.vvms` に歌声用 `s0.vvm` が含まれていることを確認してください（デフォルトで含まれています）。歌声用モデルは `s0.vvm` 一つしか存在しないので全てのスタイルIDを使用できます。
 
 ## Score と Note の作成
 
@@ -50,7 +50,7 @@ $score = Score::make([
     Note::make(length: 2),
 ]);
 
-// teacher: 歌声モデルのスタイル ID（6000 = ずんだもん歌声）
+// teacher: 歌声モデルのスタイル ID（6000 = 波音リツ）
 // generate(id:) : frame_synthesis で使うスタイル ID（3001 = ずんだもん あまあま）
 $response = song($score, teacher: 6000)->generate(id: 3001);
 

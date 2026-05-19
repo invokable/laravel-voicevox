@@ -60,7 +60,7 @@ $score = Score::make([
     Note::make(length: 2),
 ]);
 
-// teacher: 歌声モデルのスタイル ID（6000 = ずんだもん歌声）
+// teacher: 歌声モデルのスタイル ID（6000 = 波音リツ）
 // generate(id:) : frame_synthesis で使うスタイル ID（3001 = ずんだもん あまあま）
 $response = Voicevox::song($score, teacher: 6000)->generate(id: 3001);
 
@@ -69,7 +69,7 @@ $response->storeAs('client', 'song.wav');
 
 ### teacher と id の使い分け
 
-- **teacher**: `sing_frame_audio_query` で使うスタイル ID。種類が `sing` または `singing_teacher` のもの（例: 6000）。
+- **teacher**: `sing_frame_audio_query` で使うスタイル ID。種類が `sing` または `singing_teacher` のもの。現状は6000しか存在しないのでデフォルトで6000です。
 - **id（generate 引数）**: `frame_synthesis` で使うスタイル ID。種類が `sing` または `frame_decode` のもの（例: 3001）。
 
 利用可能な歌声スピーカーの一覧は `singers()` で取得できます。

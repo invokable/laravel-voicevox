@@ -5,7 +5,7 @@ Laravel 版エンジン API は、公式 VOICEVOX エンジンと互換性のあ
 ## 事前準備
 
 エンジン API の基本的なセットアップは [engine-talk.md](engine-talk.md) の手順と同じです。  
-歌声モデルを使うには `config/voicevox.php` の `core.vvms` に歌声用 `s0.vvm` が含まれていることを確認してください（デフォルトで含まれています）。
+歌声モデルを使うには `config/voicevox.php` の `core.vvms` に歌声用 `s0.vvm` が含まれていることを確認してください（デフォルトで含まれています）。歌声用モデルは `s0.vvm` 一つだけなので全てのスタイルIDを使用できます。
 
 ```dotenv
 VOICEVOX_CORE_PATH=/path/to/voicevox_core/
