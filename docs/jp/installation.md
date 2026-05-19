@@ -96,7 +96,8 @@ VOICEVOX_CORE_PATH=/path/to/voicevox_core/
 
 ### FFI の有効化
 
-ネイティブモードやエンジン API をローカルで使うには `php.ini` で FFI を有効にします。
+CLIでは最初から有効です。  
+ローカルでもウェブサーバー環境では無効なのでLaravel版エンジン API をローカルで使うには `php.ini` で FFI を有効にします。
 
 ```ini
 ffi.enable=true
