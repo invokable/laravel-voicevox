@@ -64,8 +64,8 @@ test('engine sing_frame_audio_query returns json', function () {
 });
 
 test('engine sing_frame_f0 uses core and returns f0 array', function () {
-    Synthesizer::expects('createSingFrameAudioQuery')->andReturn(
-        json_encode(['f0' => [0.0, 440.0], 'volume' => [1.0, 1.0], 'phonemes' => []])
+    Synthesizer::expects('createSingFrameF0')->andReturn(
+        json_encode([0.0, 440.0])
     );
 
     $response = $this->postJson('/sing_frame_f0?speaker=6000', [
@@ -78,7 +78,7 @@ test('engine sing_frame_f0 uses core and returns f0 array', function () {
 });
 
 test('engine sing_frame_f0 falls back to client when core throws', function () {
-    Synthesizer::expects('createSingFrameAudioQuery')->andThrow(Exception::class);
+    Synthesizer::expects('createSingFrameF0')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->singFrameF0')->andReturn([0.0, 440.0]);
 
     $response = $this->postJson('/sing_frame_f0?speaker=6000', [
@@ -91,8 +91,8 @@ test('engine sing_frame_f0 falls back to client when core throws', function () {
 });
 
 test('engine sing_frame_volume uses core and returns volume array', function () {
-    Synthesizer::expects('createSingFrameAudioQuery')->andReturn(
-        json_encode(['f0' => [0.0, 440.0], 'volume' => [0.0, 1.0], 'phonemes' => []])
+    Synthesizer::expects('createSingFrameVolume')->andReturn(
+        json_encode([0.0, 1.0])
     );
 
     $response = $this->postJson('/sing_frame_volume?speaker=6000', [
@@ -105,7 +105,7 @@ test('engine sing_frame_volume uses core and returns volume array', function () 
 });
 
 test('engine sing_frame_volume falls back to client when core throws', function () {
-    Synthesizer::expects('createSingFrameAudioQuery')->andThrow(Exception::class);
+    Synthesizer::expects('createSingFrameVolume')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->singFrameVolume')->andReturn([0.0, 1.0]);
 
     $response = $this->postJson('/sing_frame_volume?speaker=6000', [

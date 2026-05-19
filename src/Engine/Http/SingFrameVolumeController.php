@@ -17,15 +17,14 @@ class SingFrameVolumeController
     {
         $score = $request->array('score');
         $speaker = $request->integer('speaker', 6000);
+        $frameAudioQuery = $request->array('frame_audio_query');
 
         try {
-            $frameAudioQuery = json_decode(
-                Synthesizer::createSingFrameAudioQuery(json_encode($score), $speaker),
-                true,
-            );
-
             return response()->json(
-                $frameAudioQuery['volume'] ?? [],
+                json_decode(
+                    Synthesizer::createSingFrameVolume(json_encode($score), json_encode($frameAudioQuery), $speaker),
+                    true,
+                ),
                 options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
             );
         } catch (Throwable) {
@@ -33,8 +32,6 @@ class SingFrameVolumeController
         }
 
         try {
-            $frameAudioQuery = $request->array('frame_audio_query');
-
             return response()->json(
                 Voicevox::baseUrl(config('voicevox.engine.fallback_url'))->singFrameVolume($score, $frameAudioQuery, $speaker),
                 options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,

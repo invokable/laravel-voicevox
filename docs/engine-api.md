@@ -24,8 +24,8 @@
 | `GET /singer_info`                | ✅                  | ✅              | 公式のJSONと完全一致                                                                              |
 | `POST /sing_frame_audio_query`    | ✅                  | ✅              | コアで可能                                                                                     |
 | `POST /frame_synthesis`           | ✅                  | ✅              | コアで可能                                                                                     |
-| `POST /sing_frame_f0`             | ⚠️                 | ✅              | `createSingFrameAudioQuery`でf0を近似。手動変更済みphonemeには非対応                                      |
-| `POST /sing_frame_volume`         | ⚠️                 | ✅              | `createSingFrameAudioQuery`でvolumeを近似。変更後f0を入力できない制限あり。f0→volumeの順で更新する必要があるのでこの機能はほぼ非対応。 |
+| `POST /sing_frame_f0`             | ✅                  | ✅              | `createSingFrameF0`でコアが直接対応                                                                 |
+| `POST /sing_frame_volume`         | ✅                  | ✅              | `createSingFrameVolume`でコアが直接対応。f0→volumeの順で更新する必要があるのはコアの仕様。                              |
 | `GET /user_dict`                  | ✅                  | ✅              | `NativeUserDict`でコアのFFI経由。コアが使えない場合はフォールバック。                                              |
 | `POST /user_dict_word`            | ✅                  | ✅              | `NativeUserDict`でコアのFFI経由。コアが使えない場合はフォールバック。                                              |
 | `PUT /user_dict_word/{word_uuid}` | ✅                  | ✅              | `NativeUserDict`でコアのFFI経由。コアが使えない場合はフォールバック。                                              |
