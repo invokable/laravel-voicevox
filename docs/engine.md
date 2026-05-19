@@ -16,6 +16,5 @@ https://github.com/voicevox/kanalizer
 - morphing
 - connect_waves
 - cancellable_synthesis
-- sing_frame_f0, sing_frame_volume
 
 難しいのは公式エンジンが低レベルAPIを使っているからでコアの高レベルAPIを使えばある程度対応可能だった。
