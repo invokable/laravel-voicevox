@@ -154,7 +154,9 @@ $response = song($score, teacher: 6000)->generate(id: 3001);
 $response->storeAs('native', 'song.wav');
 ```
 
-## Documentation
+## ドキュメント
+
+- [日本語ドキュメント](https://kawax.biz/jp/packages/laravel-voicevox)
 
 ## 利用規約
 
