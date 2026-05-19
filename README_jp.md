@@ -25,9 +25,9 @@ Work In Progress.
 - Laravel 12.x+
 - FFI: クライアント以外にはFFIを有効にしたPHPが必要です。
 
-Laravel Cloudを始め一般的なWebサーバーではほとんどが無効にされているのでこのパッケージは **ローカルCLI** での利用を前提にしています。
+Laravel Cloudを含め一般的なWebサーバーではほとんどが無効にされているのでこのパッケージは **ローカルCLI** での利用を前提にしています。
 
-Laravel版エンジンをローカルで起動するには`php.ini`でFFIを有効にします。
+CLIでは最初から有効ですがローカルでもウェブサーバー環境では無効なので、Laravel版エンジンをローカルで起動するには`php.ini`でFFIを有効にします。
 
 ```
 ffi.enable=true
