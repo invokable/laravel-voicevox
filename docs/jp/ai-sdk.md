@@ -50,7 +50,7 @@ Storage::put('talk.wav', $response->content());
 
 ## ネイティブドライバー（`voicevox`）
 
-VOICEVOX CORE を直接呼び出して音声を生成します。FFI が必要です。
+VOICEVOX CORE を直接呼び出して音声を生成します。FFI が必要です。`config/voicevox.php` の `core.vvms` で読み込んでいるモデルのみ使用できます。
 
 ### 設定
 
@@ -117,7 +117,7 @@ Storage::put('talk.wav', $response->content());
 Audio::of('テスト')->voice('3')->generate('voicevox-client');
 ```
 
-利用可能なスピーカーとスタイル ID の一覧はクライアントの `speakers()` で確認できます。
+利用可能なスピーカーとスタイル ID の一覧は [voicevox_vvm](https://github.com/VOICEVOX/voicevox_vvm) もしくはクライアントの `speakers()` で確認できます。
 
 ```php
 use Revolution\Voicevox\Voicevox;
