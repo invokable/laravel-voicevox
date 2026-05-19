@@ -13,8 +13,9 @@ class SongAudioQuery
     use Tappable;
 
     public function __construct(
+        public array $score,
         public array $frameAudioQuery,
-        public int|string|null $teacher = null,
+        public int|string $teacher,
     ) {
         //
     }
@@ -30,5 +31,27 @@ class SongAudioQuery
         );
 
         return new VoicevoxResponse($audio);
+    }
+
+    /**
+     * Score変更後に、f0とvolumeを更新する。
+     */
+    public function sync(): self
+    {
+        return $this->updateF0()->updateVolume();
+    }
+
+    public function updateF0(): self
+    {
+        $this->frameAudioQuery['f0'] = Synthesizer::createSingFrameF0(json_encode($this->score), json_encode($this->frameAudioQuery), (int) $this->teacher);
+
+        return $this;
+    }
+
+    public function updateVolume(): self
+    {
+        $this->frameAudioQuery['volume'] = Synthesizer::createSingFrameVolume(json_encode($this->score), json_encode($this->frameAudioQuery), (int) $this->teacher);
+
+        return $this;
     }
 }

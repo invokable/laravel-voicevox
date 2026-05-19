@@ -169,6 +169,13 @@ $response = Voicevox::song($score, teacher: 6000) // sing_frame_audio_queryでfr
                 // 3. volumeを変更。必ずf0→volumeの順番で変更する。
                 $volume= Voicevox::singFrameVolume($song->score, $song->frameAudioQuery, $song->teacher);
                 $song->frameAudioQuery['volume'] = $volume;
+
+                // Voicevox::を見せない更新メソッド
+                $song->updateF0();
+                $song->updateVolume();
+
+                // さらにf0とvolumeの更新をまとめて行うsync()
+                $song->sync()
             })
             ->generate(id: 3001); // frame_synthesisで音声を生成
 
@@ -279,7 +286,8 @@ OSごとに違うユーザーフォルダに`user_dict.json`。
 pyopenjtalkを使っていてLaravelでは難しいパターンなのでコアの機能だけを使った版。コアのデータはバイナリではなくただのjsonなのでインポートも対応できるはず。
 `src/Engine/NativeUserDict.php`
 
-ただし、ユーザー辞書機能ができてもこの辞書を使った音声合成ができない気がする。
+ただし、ユーザー辞書機能ができてもこの辞書を使った音声合成ができない気がする。  
+コアのOpenJtalkに`useUserDict()`と`analyze()`があるのでここで使えるかも。
 
 ### プリセット機能
 
@@ -306,6 +314,12 @@ KanalizerAgentの方が正常に動くけど漢字までひらがなにしてい
 AudioQuery内に`kana`が含まれてるのでコアを使う強引な方法でもAquesTalk風記法カタカナ化の実現は可能。
 `src/Engine/Katakana.php`
 
+### ライブラリダウンロード・インストール機能
+
+これはOSごとに違うユーザー領域にダウンロードする機能。Laravel版では関係ないのでフォールバックのみ。
+
+公式エンジンの`get_save_dir()`を使ってる機能はほとんど無視になるはず。ユーザー辞書やプリセットのように軽いjsonならstorageを使用。
+
 ### 音声モデルファイル(.vvm)とスタイルIDの対応表
 
 コアではvvmを読み込んでからスタイルIDを指定して使う。エンジンAPIでは全モデルを読み込んでるのでスタイルIDだけで全部使える。全部読み込むと遅いのでconfigで設定できるようにする。  
@@ -325,6 +339,19 @@ use function Revolution\Voicevox\talk;
 
 $response = talk(text: 'ララベルが好きなのだ', id: 1)->generate();
 $response->storeAs('talk.wav');
+```
+
+```php
+use Revolution\Voicevox\Song\SongAudioQuery;
+use function Revolution\Voicevox\song;
+
+$response = song($score)
+              ->tap(function (SongAudioQuery $song) {
+                  $song->score; // scoreを変更後f0→volumeの順で更新する必要がある。
+                  $song->sync();
+              })->generate();
+
+$response->storeAs('song.wav');
 ```
 
 主要機能の`talk()`, `song()`はクライアントの`Voicevox::talk()`から`Voicevox::`を消せば移行できるようにしておく。他も全部揃えるのは難しい。

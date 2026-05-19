@@ -37,4 +37,26 @@ class SongAudioQuery
 
         return new VoicevoxResponse($audio);
     }
+
+    /**
+     * Score変更後に、f0とvolumeを更新する。
+     */
+    public function sync(): self
+    {
+        return $this->updateF0()->updateVolume();
+    }
+
+    public function updateF0(): self
+    {
+        $this->frameAudioQuery['f0'] = Voicevox::singFrameF0($this->score, $this->frameAudioQuery, (int) $this->teacher);
+
+        return $this;
+    }
+
+    public function updateVolume(): self
+    {
+        $this->frameAudioQuery['volume'] = Voicevox::singFrameVolume($this->score, $this->frameAudioQuery, (int) $this->teacher);
+
+        return $this;
+    }
 }

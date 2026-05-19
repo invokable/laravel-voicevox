@@ -29,6 +29,6 @@ class Song
             true,
         );
 
-        return new SongAudioQuery($frameAudioQuery, $teacher);
+        return new SongAudioQuery($score, $frameAudioQuery, $teacher);
     }
 }
