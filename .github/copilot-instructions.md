@@ -72,7 +72,7 @@ Agentic Workflows環境でも`setup-php`でPHPはインストールされてる�
 
 クライアントもネイティブもエンジンも機能が揃ってきたのでドキュメントを整備。
 README.mdは英語、README_jp.mdは日本語。
-docs/内に日本語のドキュメントをmarkdownで作成。
+docs/jp内に日本語のドキュメントをmarkdownで作成。
 
 ドキュメントサイトは別であるので英語版ドキュメントを含む詳細はそちらに掲載する。READMEとdocsを参考に日本語・英語で作る。AIが翻訳するのでdocsは日本語のみでいい。
 
