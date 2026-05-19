@@ -19,6 +19,17 @@ class SongAudioQuery
     use Tappable;
     use WithHttp;
 
+    /**
+     * @param  array{notes: array}  $score
+     * @param  array{
+     *     f0: array<int, float>,
+     *     volume: array<int, float>,
+     *     phonemes: array,
+     *     volumeScale: float,
+     *     outputSamplingRate: int,
+     *     outputStereo: bool,
+     * }  $frameAudioQuery
+     */
     public function __construct(
         public array $score,
         public array $frameAudioQuery,

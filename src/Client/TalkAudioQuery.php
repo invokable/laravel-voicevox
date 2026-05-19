@@ -19,6 +19,20 @@ class TalkAudioQuery
     use Tappable;
     use WithHttp;
 
+    /**
+     * @param  array{
+     *     accent_phrases: array,
+     *     speedScale: float,
+     *     pitchScale: float,
+     *     intonationScale: float,
+     *     volumeScale: float,
+     *     prePhonemeLength: float,
+     *     postPhonemeLength: float,
+     *     outputSamplingRate: int,
+     *     outputStereo: bool,
+     *     kana: string,
+     * }  $audioQuery
+     */
     public function __construct(
         public array $audioQuery,
         public int|string|null $id = null,
