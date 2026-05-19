@@ -124,3 +124,25 @@ use Revolution\Voicevox\Voicevox;
 
 $speakers = Voicevox::speakers();
 ```
+
+## エージェント
+
+ネイティブモードでは`enable_katakana_english`に対応していないので事前に英語カタカナ変換するLaravel AI SDKエージェントを用意しています。好みのAIプロバイダーで使用してください。
+
+### KanalizerAgent
+
+英語だけをカタカナに変換します。
+
+```php
+use Revolution\Voicevox\Ai\Agents\KanalizerAgent;
+use function Revolution\Voicevox\talk;
+
+$kana = KanalizerAgent::make()->prompt('KanalizerAgentで英語をカタカナに変換するのだ');
+// カナライザーエージェントで英語をカタカナに変換するのだ
+
+// AI(LLM)による変換は確実ではないので直接talk()に渡すよりは人間のチェックを挟んでください
+
+$response = talk($kana['kana'] ?? $kana->text, id: 1)->generate(id: 1);
+
+$response->storeAs('native', 'kanalizer.wav');
+```
