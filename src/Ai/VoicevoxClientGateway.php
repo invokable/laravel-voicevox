@@ -8,20 +8,19 @@ use Laravel\Ai\Contracts\Gateway\AudioGateway;
 use Laravel\Ai\Contracts\Providers\AudioProvider;
 use Laravel\Ai\Responses\AudioResponse;
 use Laravel\Ai\Responses\Data\Meta;
+use Revolution\Voicevox\Ai\Concerns\ResolvesVoiceId;
 use Revolution\Voicevox\Voicevox;
 
 class VoicevoxClientGateway implements AudioGateway
 {
+    use ResolvesVoiceId;
+
     /**
      * Generate audio from the given text using the VOICEVOX engine.
      *
      * The $voice parameter accepts a numeric string (VOICEVOX style ID)
-     * or the convenience aliases
-     * 'ずんだもん' (→ 1)
-     * '四国めたん' (→ 2)
-     * '春日部つむぎ'(→ 8)
-     * 'default-male' 白上虎太郎 (→ 12)
-     * 'default-female' 雨晴はう (→ 10)
+     * or the convenience aliases defined in {@see ResolvesVoiceId}.
+     * The engine base URL is taken from the provider's configured key.
      */
     public function generateAudio(
         AudioProvider $provider,
@@ -31,16 +30,11 @@ class VoicevoxClientGateway implements AudioGateway
         ?string $instructions = null,
         int $timeout = 30,
     ): AudioResponse {
-        $id = match ($voice) {
-            'ずんだもん' => 1,
-            '四国めたん' => 2,
-            '春日部つむぎ' => 8,
-            'default-male' => 12,
-            'default-female' => 10,
-            default => (int) $voice,
-        };
+        $id = $this->resolveVoiceId($voice);
 
-        $response = Voicevox::talk($text, $id)->generate($id);
+        $baseUrl = $provider->providerCredentials()['key'] ?? null;
+
+        $response = Voicevox::baseUrl($baseUrl)->talk($text, $id)->generate($id);
 
         return new AudioResponse(
             $response->toBase64(),
