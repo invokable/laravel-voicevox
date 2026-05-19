@@ -24,7 +24,7 @@ $response = talk('ネイティブ版なのだ', id: 1)->generate(id: 1);
 $response->storeAs('native', 'talk.wav');
 ```
 
-## スピーカー ID の指定
+## スタイル ID の指定
 
 `id` にはスタイル ID を指定します。読み込み済みの `.vvm` ファイルに含まれるスタイルのみ使用できます。
 
