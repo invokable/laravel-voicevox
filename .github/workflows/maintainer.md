@@ -45,6 +45,7 @@ safe-outputs:
         reviewers: [ kawax ]
         draft: true
         if-no-changes: warn
+        signed-commits: false
     add-comment:
         discussions: true
         max: 1
