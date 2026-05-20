@@ -9,7 +9,6 @@ use Laravel\Ai\Audio;
 use Revolution\Voicevox\Ai\Agents\AquesTalkAgent;
 use Revolution\Voicevox\Ai\Agents\KanalizerAgent;
 use Revolution\Voicevox\Client\TalkAudioQuery;
-use Revolution\Voicevox\Core\Onnxruntime;
 use Revolution\Voicevox\Core\OpenJtalk;
 use Revolution\Voicevox\Core\UserDict;
 use Revolution\Voicevox\Core\VoiceModelFile;
