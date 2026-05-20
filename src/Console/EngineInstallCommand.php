@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use ZipArchive;
 
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\spin;
+
 class EngineInstallCommand extends Command
 {
     protected $signature = 'voicevox:install';
@@ -21,7 +24,11 @@ class EngineInstallCommand extends Command
         File::deleteDirectories($this->characterInfoPath());
 
         $this->copyResources();
-        $this->cleanCharacterInfo();
+
+        spin(
+            fn () => $this->cleanCharacterInfo(),
+            'Cleaning character_info directory...',
+        );
 
         $this->call('voicevox:filemap', ['dir' => $this->characterInfoPath()]);
     }
@@ -44,14 +51,21 @@ class EngineInstallCommand extends Command
 
     protected function downloadFromGitHub(): void
     {
-        $this->info('Downloading voicevox_resource from GitHub...');
+        if (! confirm('voicevox_resource is not found as a submodule. Download from GitHub? (400MB+)', default: true)) {
+            $this->warn('Download cancelled.');
+
+            return;
+        }
 
         $url = 'https://github.com/VOICEVOX/voicevox_resource/archive/refs/heads/main.zip';
         $tmpZip = tempnam(sys_get_temp_dir(), 'voicevox_').'.zip';
         $tmpDir = sys_get_temp_dir().'/voicevox_extract_'.uniqid();
 
         try {
-            $response = Http::timeout(300)->withOptions(['sink' => $tmpZip])->get($url);
+            $response = spin(
+                fn () => Http::timeout(300)->withOptions(['sink' => $tmpZip])->get($url),
+                'Downloading voicevox_resource from GitHub...',
+            );
 
             if ($response->failed()) {
                 $this->error('Failed to download voicevox_resource from GitHub.');
@@ -108,8 +122,6 @@ class EngineInstallCommand extends Command
                 File::delete($file->getPathname());
             }
         }
-
-        $this->line('Cleaned character_info directory.');
     }
 
     private function characterInfoPath(): string
