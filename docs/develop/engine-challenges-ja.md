@@ -94,7 +94,7 @@ return pyopenjtalk.make_label(list(map(asdict, njd_features)))
 
 ### 何をしているか
 
-`enable_katakana_english`フラグがtrue（デフォルト）の場合、エンジンはMeCabラベル生成前に`kanalizer`を呼んで英語の未知語をカタカナ読みに変換する。これが`docs/engine.md`で最初のブロッカーとして指摘されている内容だ。[^3]
+`enable_katakana_english`フラグがtrue（デフォルト）の場合、エンジンはMeCabラベル生成前に`kanalizer`を呼んで英語の未知語をカタカナ読みに変換する。これが最初のブロッカーとして指摘されている内容だ。[^3]
 
 `kanalizer`は**純Rust製のSeq2Seqニューラルネットワーク**（`kanalizer-rs`）:
 - 双方向GRUエンコーダー＋GRUデコーダー＋マルチヘッドアテンション

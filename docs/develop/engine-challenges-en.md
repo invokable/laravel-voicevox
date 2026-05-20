@@ -92,7 +92,7 @@ return pyopenjtalk.make_label(list(map(asdict, njd_features)))
 
 ### What It Does
 
-When the `enable_katakana_english` flag is true (default), the engine invokes `kanalizer` to convert unknown English words to katakana pronunciation before MeCab label generation. This is the first blocker identified in `docs/engine.md`.[^3]
+When the `enable_katakana_english` flag is true (default), the engine invokes `kanalizer` to convert unknown English words to katakana pronunciation before MeCab label generation. This is the first blocker identified.[^3]
 
 `kanalizer` is a **seq2seq neural network** written in **pure Rust** (via `kanalizer-rs`):
 - GRU encoder-decoder with multi-head attention
