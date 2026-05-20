@@ -45,7 +45,7 @@
 | `GET /is_initialized_speaker`     | ❌                  | ✅              | 同上                                                                                                            |
 | `GET /core_versions`              | ❌                  | ✅              | コアバージョン一覧はエンジン固有の機能。フォールバックのみ。                                                                                |
 | `GET /supported_devices`          | ❌                  | ✅              | デバイス情報はエンジン固有の機能。フォールバックのみ。                                                                                   |
-| `GET /downloadable_libraries`     | ❌                  | ✅              | ライブラリ管理はエンジン固有の機能。フォールバックのみ。                                                                                  |
+| `GET /downloadable_libraries`     | ❌                  | ✅              | ライブラリ管理はエンジン固有の機能。フォールバックのみ。対応不要。                                                                             |
 | `GET /installed_libraries`        | ❌                  | ✅              | 同上                                                                                                            |
 | `POST /install_library/{uuid}`    | ❌                  | ✅              | 同上                                                                                                            |
 | `POST /uninstall_library/{uuid}`  | ❌                  | ✅              | 同上                                                                                                            |
