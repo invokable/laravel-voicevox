@@ -90,3 +90,21 @@ test('voicevox ai provider resolves other character aliases', function () {
     Audio::of('テスト')->voice('波音リツ')->generate('voicevox-client');
     Http::assertSent(fn ($req) => str_contains($req->url(), 'speaker=9'));
 });
+
+test('voicevox ai provider resolves hisohiso aliases', function () {
+    Http::fake([
+        'http://127.0.0.1:50021/audio_query*' => Http::response(['speedScale' => 1.0]),
+        'http://127.0.0.1:50021/synthesis*' => Http::response('fake-wav-bytes'),
+    ]);
+
+    Audio::of('テスト')->voice('ずんだもん/ヒソヒソ')->generate('voicevox-client');
+    Http::assertSent(fn ($req) => str_contains($req->url(), 'speaker=38'));
+
+    Http::fake([
+        'http://127.0.0.1:50021/audio_query*' => Http::response(['speedScale' => 1.0]),
+        'http://127.0.0.1:50021/synthesis*' => Http::response('fake-wav-bytes'),
+    ]);
+
+    Audio::of('テスト')->voice('四国めたん/ヒソヒソ')->generate('voicevox-client');
+    Http::assertSent(fn ($req) => str_contains($req->url(), 'speaker=37'));
+});
