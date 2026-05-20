@@ -7,6 +7,9 @@ namespace Revolution\Voicevox\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
+use function Laravel\Prompts\error;
+use function Laravel\Prompts\info;
+
 class GenerateFilemapCommand extends Command
 {
     protected $signature = 'voicevox:filemap
@@ -23,7 +26,7 @@ class GenerateFilemapCommand extends Command
         $dir = $this->argument('dir') ?? __DIR__.'/../../resources/character_info';
 
         if (! File::isDirectory($dir)) {
-            $this->error("{$dir} はディレクトリではありません");
+            error("{$dir} はディレクトリではありません");
 
             return self::FAILURE;
         }
@@ -35,7 +38,7 @@ class GenerateFilemapCommand extends Command
         $savePath = rtrim($dir, '/').'/filemap.json';
         File::put($savePath, json_encode($pathToHash, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
-        $this->line('Generated filemap.json with '.count($pathToHash)." entries → {$savePath}");
+        info('Generated filemap.json with '.count($pathToHash)." entries → {$savePath}");
 
         return self::SUCCESS;
     }
