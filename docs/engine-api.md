@@ -31,7 +31,7 @@
 | `PUT /user_dict_word/{word_uuid}` | ✅                  | ✅              | `NativeUserDict`でコアのFFI経由。コアが使えない場合はフォールバック。                                                                  |
 | `DELETE /user_dict_word/{uuid}`   | ✅                  | ✅              | `NativeUserDict`でコアのFFI経由。コアが使えない場合はフォールバック。                                                                  |
 | `POST /cancellable_synthesis`     | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。公式でもデフォルト無効なので対応不要。                                                                       |
-| `POST /multi_synthesis`           | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                                                          |
+| `POST /multi_synthesis`           | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。公式エンジンではzipで複数ファイルをレスポンス。synthesisを複数回実装してzip化なら可能かもしれない。                                 |
 | `POST /connect_waves`             | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                                                          |
 | `POST /morphable_targets`         | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                                                          |
 | `POST /synthesis_morphing`        | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                                                          |
