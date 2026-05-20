@@ -4,6 +4,7 @@
 
 - 先にLaravelで実行してエラーなら公式エンジンにフォールバック
 - Laravelでは対応できないので最初からフォールバック
+- ユーザー辞書やプリセットのように公式エンジンと共有できないのでフォールバックはしてるけど同じようには動作しないパターン
 - コアもフォールバックも不要
 
 | API                               | Laravel（PHP版コアを使用） | 公式エンジンにフォールバック | 説明                                                                                                            |
@@ -26,7 +27,7 @@
 | `POST /frame_synthesis`           | ✅                  | ✅              | コアで可能                                                                                                         |
 | `POST /sing_frame_f0`             | ✅                  | ✅              | `createSingFrameF0`でコアが直接対応                                                                                   |
 | `POST /sing_frame_volume`         | ✅                  | ✅              | `createSingFrameVolume`でコアが直接対応。f0→volumeの順で更新する必要があるのはコアの仕様。                                                 |
-| `GET /user_dict`                  | ✅                  | ✅              | `NativeUserDict`でコアのFFI経由。コアが使えない場合はフォールバック。                                                                  |
+| `GET /user_dict`                  | ✅                  | ✅              | `NativeUserDict`でコアのFFI経由。コアが使えない場合はフォールバック。公式エンジンとデータは共有されない。                                                |
 | `POST /user_dict_word`            | ✅                  | ✅              | `NativeUserDict`でコアのFFI経由。コアが使えない場合はフォールバック。                                                                  |
 | `PUT /user_dict_word/{word_uuid}` | ✅                  | ✅              | `NativeUserDict`でコアのFFI経由。コアが使えない場合はフォールバック。                                                                  |
 | `DELETE /user_dict_word/{uuid}`   | ✅                  | ✅              | `NativeUserDict`でコアのFFI経由。コアが使えない場合はフォールバック。                                                                  |
@@ -35,7 +36,7 @@
 | `POST /connect_waves`             | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                                                          |
 | `POST /morphable_targets`         | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                                                          |
 | `POST /synthesis_morphing`        | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                                                          |
-| `GET /presets`                    | ✅                  | ✅              | `NativePresetStore`でJSONファイルに永続化。コアが使えない場合はフォールバック。                                                           |
+| `GET /presets`                    | ✅                  | ✅              | `NativePresetStore`でJSONファイルに永続化。コアが使えない場合はフォールバック。公式エンジンとデータは共有されない。                                         |
 | `POST /add_preset`                | ✅                  | ✅              | `NativePresetStore`でJSONファイルに永続化。コアが使えない場合はフォールバック。                                                           |
 | `POST /update_preset`             | ✅                  | ✅              | `NativePresetStore`でJSONファイルに永続化。コアが使えない場合はフォールバック。                                                           |
 | `POST /delete_preset`             | ✅                  | ✅              | `NativePresetStore`でJSONファイルに永続化。コアが使えない場合はフォールバック。                                                           |
