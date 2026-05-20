@@ -1,4 +1,4 @@
-## VOICEVOX コア
+# VOICEVOX コア
 
 PHP版のFFIラッパーが作れたので他も可能な範囲で実装していく。
 https://github.com/invokable/voicevox-core-php

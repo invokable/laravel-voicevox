@@ -1,4 +1,4 @@
-## VOICEVOX クライアント
+# VOICEVOX クライアント
 
 想定している使い方は、
 公式のVOICEVOXエンジンをDockerで動かしてウェブサーバーを起動、LaravelのHttpクライアントで`http://127.0.0.1:50021`にリクエストを送信。
