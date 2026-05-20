@@ -53,6 +53,8 @@ vendor/bin/testbench voicevox:install
 engine_manifest.jsonはインストールなどの変換処理は挟まず公式を参考にLaravel用に作ればいいはず。
 `voicevox_engine/engine_manifest.json`
 
+VVPPファイルとして配布するなら`engine_manifest.json`はプロジェクト直下だけど配布はしないだろうから仮で`resources/engine_manifest.json`に配置。
+
 ### ユーザー辞書
 
 公式エンジンは`resources/default.csv`にデフォルト辞書。
