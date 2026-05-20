@@ -255,12 +255,15 @@ Artisan::command('voicevox:native:dict', function () {
 
     $all = dict()->all();
     dump($all);
+
+    // VoicevoxServiceProviderでユーザー辞書を読み込んでいるので普通の使い方で適用される
+    $talk = talk('Laravel');
+    dump($talk->audioQuery['kana']); // "ラ'ラベル"
 })->purpose('dict');
 
 // vendor/bin/testbench voicevox:native:dict-talk
 Artisan::command('voicevox:native:dict-talk', function () {
     // コアの機能を使ってユーザー辞書を有効にしてテキストからaccent_phrases→audio_queryの作成。
-    // 実行自体は成功したのでこれをLaravelで使いやすいように組み込む必要がある。
 
     $dict = new UserDict;
     $path = storage_path('voicevox/user_dict.json');

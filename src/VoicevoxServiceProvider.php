@@ -15,6 +15,7 @@ use Revolution\Voicevox\Core\Enums\AccelerationMode;
 use Revolution\Voicevox\Core\Onnxruntime;
 use Revolution\Voicevox\Core\OpenJtalk;
 use Revolution\Voicevox\Core\Synthesizer;
+use Revolution\Voicevox\Core\UserDict;
 use Revolution\Voicevox\Core\VoiceModelFile;
 
 class VoicevoxServiceProvider extends ServiceProvider
@@ -42,6 +43,13 @@ class VoicevoxServiceProvider extends ServiceProvider
             // 初期化
             $onnxruntime = Onnxruntime::loadOnce($onnxruntimeFilename);
             $openJtalk = new OpenJtalk($dictDir);
+            $user_dict_path = config('voicevox.core.user_dict');
+            if (filled($user_dict_path) && File::exists($user_dict_path)) {
+                // ユーザー辞書
+                $userDict = new UserDict;
+                $userDict->load($user_dict_path);
+                $openJtalk->useUserDict($userDict);
+            }
             $synthesizer = new Synthesizer($onnxruntime, $openJtalk, AccelerationMode::Auto);
 
             // 音声モデルの読み込み

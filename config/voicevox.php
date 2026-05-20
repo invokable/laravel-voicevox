@@ -38,6 +38,16 @@ return [
         'models' => env('VOICEVOX_CORE_MODELS_PATH', 'models/vvms'),
 
         /**
+         * ユーザー辞書のパス。
+         */
+        'user_dict' => env('VOICEVOX_CORE_USER_DICT_PATH', storage_path('voicevox/user_dict.json')),
+
+        /**
+         * プリセットのパス。
+         */
+        'presets' => env('VOICEVOX_CORE_PRESETS_PATH', storage_path('voicevox/presets.json')),
+
+        /**
          * 起動時に読み込むモデルの配列。[]なら全モデルを読み込み、ただしかなり遅くなるのでデフォルトは0.vvmと歌声用のs0.vvmとAI SDKのデフォルト男性音声用の9.vvmのみ。
          *
          * ['0.vvm', '1.vvm']

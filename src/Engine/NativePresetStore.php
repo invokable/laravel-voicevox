@@ -23,7 +23,7 @@ class NativePresetStore
 
     public function __construct(?string $path = null)
     {
-        $this->path = $path ?? storage_path('voicevox/presets.json');
+        $this->path = $path ?? config('voicevox.core.presets');
         $this->presets = $this->load();
     }
 
