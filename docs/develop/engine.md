@@ -64,7 +64,7 @@ OSごとに違うユーザーフォルダに`user_dict.json`。
 pyopenjtalkを使っていてLaravelでは難しいパターンなのでコアの機能だけを使った版。コアのデータはバイナリではなくただのjsonなのでインポートも対応できるはず。
 `src/Engine/NativeUserDict.php`
 
-コアの機能を使ってユーザー辞書を有効にしてテキストからaccent_phrases→audio_queryの作成は成功。  
+コアの機能を使ってユーザー辞書を有効にしてテキストからaccent_phrases→audio_queryの作成は成功。ServiceProviderで初期化時に読み込んでおけば常に有効化できそう。  
 workbench/routes/console.phpの`voicevox:native:dict-talk`
 
 ### プリセット機能
