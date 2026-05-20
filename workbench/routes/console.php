@@ -9,7 +9,11 @@ use Laravel\Ai\Audio;
 use Revolution\Voicevox\Ai\Agents\AquesTalkAgent;
 use Revolution\Voicevox\Ai\Agents\KanalizerAgent;
 use Revolution\Voicevox\Client\TalkAudioQuery;
+use Revolution\Voicevox\Core\Onnxruntime;
+use Revolution\Voicevox\Core\OpenJtalk;
+use Revolution\Voicevox\Core\UserDict;
 use Revolution\Voicevox\Core\VoiceModelFile;
+use Revolution\Voicevox\Core\VoicevoxCore;
 use Revolution\Voicevox\Engine\Katakana;
 use Revolution\Voicevox\Song\Note;
 use Revolution\Voicevox\Song\Score;
@@ -253,6 +257,31 @@ Artisan::command('voicevox:native:dict', function () {
     $all = dict()->all();
     dump($all);
 })->purpose('dict');
+
+// vendor/bin/testbench voicevox:native:dict-talk
+Artisan::command('voicevox:native:dict-talk', function () {
+    // コアの機能を使ってユーザー辞書を有効にしてテキストからaccent_phrases→audio_queryの作成。
+    // 実行自体は成功したのでこれをLaravelで使いやすいように組み込む必要がある。
+
+    $dict = new UserDict;
+    $path = storage_path('voicevox/user_dict.json');
+
+    if (file_exists($path)) {
+        $dict->load($path);
+    }
+
+    $coreDir = rtrim(config('voicevox.core.path', ''), '/').'/';
+    $dictDir = $coreDir.trim(config('voicevox.core.dict', 'dict/open_jtalk_dic_utf_8-1.11'), '/').'/';
+
+    $openjtalk = new OpenJtalk($dictDir);
+    $openjtalk->useUserDict($dict);
+
+    $accent_phrases = $openjtalk->analyze('Laravel');
+    $this->info($accent_phrases);
+
+    $audio_query = VoicevoxCore::audioQueryCreateFromAccentPhrases($accent_phrases);
+    $this->info($audio_query);
+})->purpose('analyze text using user dict');
 
 // vendor/bin/testbench voicevox:native:preset
 Artisan::command('voicevox:native:preset', function () {
