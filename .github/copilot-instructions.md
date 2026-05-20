@@ -82,6 +82,6 @@ Agentic Workflows向けの次に行う作業の方向性をここで指示しま
 
 - [ ] クライアント、ネイティブ、エンジンAPIまで主要な機能は実装できてきた。エンジンAPIはフォールバックのみでネイティブ対応できてない機能が少し残っている。他にも実装できそうな機能があれば実装する。
 - [ ] docs/jp/内にユーザー向けの日本語ドキュメントを作成していく。
-- [ ] EngineInstallCommand.php を [Laravel Prompts](https://laravel.com/docs/13.x/prompts) を使うコードに変更。GitHubからのダウンロードはzipで400MB以上なので`confirm()`で確認を入れる。ダウンロード中はspinもしくはtaskで表示。
+- [x] EngineInstallCommand.php を [Laravel Prompts](https://laravel.com/docs/13.x/prompts) を使うコードに変更。GitHubからのダウンロードはzipで400MB以上なので`confirm()`で確認を入れる。ダウンロード中はspinもしくはtaskで表示。
 - [x] AI SDKへのソング機能実装は不要。
 - [x] README.mdはAWからは変更が制限されているので更新は不要。
