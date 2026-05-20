@@ -84,3 +84,4 @@ Agentic Workflows向けの次に行う作業の方向性をここで指示しま
 - [ ] docs/jp/内にユーザー向けの日本語ドキュメントを作成していく。
 - [ ] EngineInstallCommand.php を [Laravel Prompts](https://laravel.com/docs/13.x/prompts) を使うコードに変更。GitHubからのダウンロードは400MB以上なので`confirm()`で確認を入れる。ダウンロード中はspinもしくはtaskで表示。
 - [x] AI SDKへのソング機能実装は不要。
+- [x] README.mdはAWからは変更が制限されているので更新は不要。
