@@ -52,23 +52,20 @@ use Revolution\Voicevox\Engine\Http\VersionController;
  */
 // 最難関なのでフォールバックのみ
 Route::post('/cancellable_synthesis', CancellableSynthesisController::class);
-Route::post('/connect_waves', ConnectWavesController::class);
 Route::post('/morphable_targets', MorphableTargetsController::class);
 Route::post('/synthesis_morphing', SynthesisMorphingController::class);
 
-// プリセットを共有できないので対応方法は未定
-Route::get('/presets', PresetsController::class);
-Route::post('/add_preset', AddPresetController::class);
-Route::post('/update_preset', UpdatePresetController::class);
-Route::post('/delete_preset', DeletePresetController::class);
-Route::post('/audio_query_from_preset', AudioQueryFromPresetController::class);
+// 対応不要
+Route::post('/initialize_speaker', InitializeSpeakerController::class);
+Route::get('/is_initialized_speaker', IsInitializedSpeakerController::class);
+Route::get('/downloadable_libraries', DownloadableLibrariesController::class);
+Route::get('/installed_libraries', InstalledLibrariesController::class);
+Route::post('/install_library/{library_uuid}', InstallLibraryController::class);
+Route::post('/uninstall_library/{library_uuid}', UninstallLibraryController::class);
 
 // TODO
-Route::get('/user_dict', UserDictController::class);
-Route::post('/user_dict_word', AddUserDictWordController::class);
-Route::put('/user_dict_word/{word_uuid}', UpdateUserDictWordController::class);
-Route::delete('/user_dict_word/{word_uuid}', DeleteUserDictWordController::class);
 Route::post('/import_user_dict', ImportUserDictController::class);
+Route::post('/connect_waves', ConnectWavesController::class);
 
 /**
  * PHP版コアで対応可能。失敗時にフォールバックも行う。
@@ -91,14 +88,16 @@ Route::post('/sing_frame_f0', SingFrameF0Controller::class);
 Route::post('/sing_frame_volume', SingFrameVolumeController::class);
 Route::post('/frame_synthesis', FrameSynthesisController::class);
 
-// TODO
-Route::post('/initialize_speaker', InitializeSpeakerController::class);
-Route::get('/is_initialized_speaker', IsInitializedSpeakerController::class);
-
-Route::get('/downloadable_libraries', DownloadableLibrariesController::class);
-Route::get('/installed_libraries', InstalledLibrariesController::class);
-Route::post('/install_library/{library_uuid}', InstallLibraryController::class);
-Route::post('/uninstall_library/{library_uuid}', UninstallLibraryController::class);
+// 公式エンジンとデータは共有できない
+Route::get('/presets', PresetsController::class);
+Route::post('/add_preset', AddPresetController::class);
+Route::post('/update_preset', UpdatePresetController::class);
+Route::post('/delete_preset', DeletePresetController::class);
+Route::post('/audio_query_from_preset', AudioQueryFromPresetController::class);
+Route::get('/user_dict', UserDictController::class);
+Route::post('/user_dict_word', AddUserDictWordController::class);
+Route::put('/user_dict_word/{word_uuid}', UpdateUserDictWordController::class);
+Route::delete('/user_dict_word/{word_uuid}', DeleteUserDictWordController::class);
 
 /**
  * コアもフォールバックも不要で対応可能
