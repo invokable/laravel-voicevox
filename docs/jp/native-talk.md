@@ -72,8 +72,6 @@ $response = kana("ネイティブ'バンナ/ノダ'", id: 1)->generate(id: 1);
 $response->storeAs('native', 'kana.wav');
 ```
 
-AquesTalk 風記法の詳細は [VOICEVOX 公式ドキュメント](https://github.com/VOICEVOX/voicevox_engine/blob/master/docs/kana_parser.md) を参照してください。
-
 ### LLM によるカナ変換
 
 Laravel AI SDK のエージェントを使って、日本語テキストを AquesTalk 風記法カタカナに変換することもできます。
