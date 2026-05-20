@@ -99,6 +99,10 @@ Route::post('/user_dict_word', AddUserDictWordController::class);
 Route::put('/user_dict_word/{word_uuid}', UpdateUserDictWordController::class);
 Route::delete('/user_dict_word/{word_uuid}', DeleteUserDictWordController::class);
 
+// TODO
+Route::get('/core_versions', CoreVersionsController::class);
+Route::get('/supported_devices', SupportedDevicesController::class);
+
 /**
  * コアもフォールバックも不要で対応可能
  */
@@ -106,10 +110,6 @@ Route::get('/version', VersionController::class);
 Route::get('/_resources/{hash}', ResourcesController::class)->name('voicevox.resources');
 Route::post('/validate_kana', ValidateKanaController::class);
 Route::get('/engine_manifest', EngineManifestController::class);
-
-// TODO
-Route::get('/core_versions', CoreVersionsController::class);
-Route::get('/supported_devices', SupportedDevicesController::class);
 
 // TODO
 // Laravel版ではCORS設定は不要だけどユーザー辞書のインポート・エクスポートが設定ページにあるので独自に作成かも
