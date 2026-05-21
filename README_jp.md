@@ -163,8 +163,8 @@ $response->storeAs('native', 'song.wav');
 
 ## 利用規約
 
-VOICEVOXと音声ライブラリの利用規約に従う必要があります。
+作成された音声を利用する際は、VOICEVOXと各音声ライブラリの利用規約に従う必要があります。
 
-## Licence
+## License
 
 MIT
