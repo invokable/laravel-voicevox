@@ -159,7 +159,8 @@ $response->storeAs('native', 'song.wav');
 
 ## Documentation
 
-- [Japanese documentation](https://kawax.biz/jp/packages/laravel-voicevox)
+- [English](https://kawax.biz/en/packages/laravel-voicevox)
+- [Japanese](https://kawax.biz/jp/packages/laravel-voicevox)
 
 ## Terms of Use
 
