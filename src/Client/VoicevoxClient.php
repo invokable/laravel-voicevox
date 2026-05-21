@@ -12,6 +12,7 @@ use Revolution\Voicevox\Client\Concerns\HasSong;
 use Revolution\Voicevox\Client\Concerns\HasTalk;
 use Revolution\Voicevox\Client\Concerns\HasUserDict;
 use Revolution\Voicevox\Client\Concerns\Unsupported;
+use Revolution\Voicevox\Client\Concerns\WithHttp;
 
 class VoicevoxClient
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Revolution\Voicevox\Client;
+namespace Revolution\Voicevox\Client\Concerns;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
