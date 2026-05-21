@@ -13,16 +13,18 @@ Work In Progress.
 This package brings [VOICEVOX](https://github.com/VOICEVOX), a Japanese TTS / singing synthesis ecosystem, to Laravel.
 You can use both client mode (official VOICEVOX Engine over HTTP) and native mode (direct synthesis through PHP FFI + VOICEVOX Core) with a Laravel-style API.
 
+Since VOICEVOX only supports Japanese, you must first translate the text from English to Japanese using an AI/LLM or similar tool before using this package for speech synthesis.
+
 VOICEVOX is widely used in Japan, and many well-known "Zundamon" voice clips are created with it.
 
-| Feature | Supported | Description |
-|---|---|---|
-| VOICEVOX Client | ✅ | Client for the official VOICEVOX Engine API. Works without FFI. |
-| VOICEVOX Core | ✅ | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) wraps VOICEVOX Core dynamic libraries through FFI. |
-| Laravel style | ✅ | Uses a Laravel-friendly API for voicevox-core-php features. |
-| Laravel AI SDK Integration | ✅ | Supported from Laravel AI SDK Audio in both client and native modes. |
-| VOICEVOX Engine | ⚠️ | Laravel-compatible Engine API implemented with PHP Core, with fallback to official engine for non-portable features. |
-| VOICEVOX Editor | ❌ | Not supported. |
+| Feature                    | Supported | Description                                                                                                            |
+|----------------------------|-----------|------------------------------------------------------------------------------------------------------------------------|
+| VOICEVOX Client            | ✅         | Client for the official VOICEVOX Engine API. Works without FFI.                                                        |
+| VOICEVOX Core              | ✅         | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) wraps VOICEVOX Core dynamic libraries through FFI. |
+| Laravel style              | ✅         | Uses a Laravel-friendly API for voicevox-core-php features.                                                            |
+| Laravel AI SDK Integration | ✅         | Supported from Laravel AI SDK Audio in both client and native modes.                                                   |
+| VOICEVOX Engine            | ⚠️        | Provides a VOICEVOX-compatible API inside Laravel, with fallback to the official engine for unsupported parts.         |
+| VOICEVOX Editor            | ❌         | 	The Editor itself is out of scope for this package.                                                                   |
 
 ## Requirements
 
