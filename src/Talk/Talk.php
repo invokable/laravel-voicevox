@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Revolution\Voicevox\Talk;
 
 use InvalidArgumentException;
+use Revolution\Voicevox\Engine\NativePresetStore;
 use Revolution\Voicevox\Synthesizer;
-
-use function Revolution\Voicevox\preset;
 
 class Talk
 {
@@ -59,7 +58,7 @@ class Talk
      */
     public function preset(string $text, int $presetId): TalkAudioQuery
     {
-        $preset = preset()->find($presetId);
+        $preset = app(NativePresetStore::class)->find($presetId);
 
         if (empty($preset)) {
             throw new InvalidArgumentException('Preset not found');
