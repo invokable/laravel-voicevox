@@ -281,7 +281,7 @@ Artisan::command('voicevox:native:dict-talk', function () {
     $accent_phrases = $openjtalk->analyze('Laravel');
     $this->info($accent_phrases);
 
-    $audio_query = VoicevoxCore::audioQueryCreateFromAccentPhrases($accent_phrases);
+    $audio_query = app(VoicevoxCore::class)->audioQueryCreateFromAccentPhrases($accent_phrases);
     $this->info($audio_query);
 })->purpose('analyze text using user dict');
 

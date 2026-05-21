@@ -7,7 +7,6 @@ namespace Revolution\Voicevox\Engine\Http;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Revolution\Voicevox\Engine\NativeUserDict;
-use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -23,15 +22,6 @@ class UpdateUserDictWordController
 
         try {
             app(NativeUserDict::class)->updateWord($word_uuid, $surface, $pronunciation, $accentType, $wordType, $priority);
-
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        } catch (Throwable) {
-            // Fall back to official engine
-        }
-
-        try {
-            Voicevox::baseUrl(config('voicevox.engine.fallback_url'))
-                ->updateWord($word_uuid, $surface, $pronunciation, $accentType, $wordType, $priority);
 
             return response()->json(null, Response::HTTP_NO_CONTENT);
         } catch (Throwable) {

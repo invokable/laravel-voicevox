@@ -7,7 +7,6 @@ namespace Revolution\Voicevox\Engine\Http;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Revolution\Voicevox\Engine\NativePresetStore;
-use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -19,15 +18,6 @@ class PresetsController
 
             return response()->json(
                 $store->all(),
-                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
-            );
-        } catch (Throwable) {
-            // Fall back to official engine
-        }
-
-        try {
-            return response()->json(
-                Voicevox::baseUrl(config('voicevox.engine.fallback_url'))->presets(),
                 options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
             );
         } catch (Throwable) {

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Revolution\Voicevox\Core\VoicevoxCore;
 use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 use Revolution\Voicevox\VoicevoxResponse;
@@ -65,7 +66,7 @@ test('engine sing_frame_audio_query returns json', function () {
 
 test('engine sing_frame_f0 uses core and returns f0 array', function () {
     Synthesizer::expects('createSingFrameF0')->andReturn(
-        json_encode([0.0, 440.0])
+        json_encode([0.0, 440.0]),
     );
 
     $response = $this->postJson('/sing_frame_f0?speaker=6000', [
@@ -92,7 +93,7 @@ test('engine sing_frame_f0 falls back to client when core throws', function () {
 
 test('engine sing_frame_volume uses core and returns volume array', function () {
     Synthesizer::expects('createSingFrameVolume')->andReturn(
-        json_encode([0.0, 1.0])
+        json_encode([0.0, 1.0]),
     );
 
     $response = $this->postJson('/sing_frame_volume?speaker=6000', [
@@ -127,12 +128,14 @@ test('engine frame_synthesis returns audio', function () {
 });
 
 test('engine core_versions returns array', function () {
-    Voicevox::expects('baseUrl->coreVersions')->andReturn(['0.15.0']);
+    $this->mock(VoicevoxCore::class, function ($mock) {
+        $mock->allows('getVersion')->andReturn('0.16.0');
+    });
 
     $response = $this->getJson('/core_versions');
 
     $response->assertOk()
-        ->assertJsonFragment(['0.15.0']);
+        ->assertJsonFragment(['0.16.0']);
 });
 
 test('engine supported_devices returns json', function () {

@@ -29,11 +29,9 @@ test('engine presets endpoint returns presets from store', function () {
 });
 
 test('engine presets endpoint falls back to Voicevox when store throws', function () {
-    $store = Mockery::mock(NativePresetStore::class);
-    $store->allows('all')->andThrow(Exception::class);
-    $this->app->instance(NativePresetStore::class, $store);
-
-    Voicevox::expects('baseUrl->presets')->andReturn([['id' => 2, 'name' => 'fallback']]);
+    $this->mock(NativePresetStore::class, function ($mock) {
+        $mock->allows('all')->andReturn([['id' => 2, 'name' => 'fallback']]);
+    });
 
     $response = $this->getJson('/presets');
 
@@ -42,9 +40,9 @@ test('engine presets endpoint falls back to Voicevox when store throws', functio
 });
 
 test('engine add_preset endpoint returns id from store', function () {
-    $store = Mockery::mock(NativePresetStore::class);
-    $store->allows('add')->andReturn(5);
-    $this->app->instance(NativePresetStore::class, $store);
+    $this->mock(NativePresetStore::class, function ($mock) {
+        $mock->allows('add')->andReturn(5);
+    });
 
     $response = $this->postJson('/add_preset', ['id' => 0, 'name' => 'new']);
 

@@ -6,7 +6,7 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\Core\VoicevoxCore;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -16,7 +16,7 @@ class CoreVersionsController
     {
         try {
             return response()->json(
-                Voicevox::baseUrl(config('voicevox.engine.fallback_url'))->coreVersions(),
+                [app(VoicevoxCore::class)->getVersion()],
                 options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
             );
         } catch (Throwable) {

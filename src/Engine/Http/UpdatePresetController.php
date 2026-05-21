@@ -7,7 +7,6 @@ namespace Revolution\Voicevox\Engine\Http;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Revolution\Voicevox\Engine\NativePresetStore;
-use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -19,14 +18,6 @@ class UpdatePresetController
 
         try {
             $id = $store->update($preset);
-
-            return response()->json($id);
-        } catch (Throwable) {
-            // Fall back to official engine
-        }
-
-        try {
-            $id = Voicevox::baseUrl(config('voicevox.engine.fallback_url'))->updatePreset($preset);
 
             return response()->json($id);
         } catch (Throwable) {
