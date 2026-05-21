@@ -15,7 +15,7 @@ use Revolution\Voicevox\Core\UserDict;
  */
 class NativeUserDict
 {
-    private readonly UserDict $dict;
+    private UserDict $dict;
 
     private readonly string $path;
 
@@ -116,14 +116,18 @@ class NativeUserDict
      * Import words from another user dictionary JSON string.
      * Existing words are preserved; imported words are merged in.
      */
-    public function import(string $json): void
+    public function import(string $json, bool $override = false): void
     {
         $tmp = tempnam(sys_get_temp_dir(), 'voicevox_dict_');
         try {
             file_put_contents($tmp, $json);
             $other = new UserDict;
             $other->load($tmp);
-            $this->dict->importDict($other);
+            if ($override) {
+                $this->dict = $other;
+            } else {
+                $this->dict->importDict($other);
+            }
         } finally {
             @unlink($tmp);
         }

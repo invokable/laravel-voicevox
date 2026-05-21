@@ -4,7 +4,7 @@
 
 ## 概要
 
-Laravel-VOICEVOX のユーザー辞書機能は、VOICEVOX Core の UserDict を利用したネイティブ実装です。辞書データは JSON 形式で `storage/voicevox/user_dict.json` に永続化されます。
+Laravel VOICEVOX のユーザー辞書機能は、VOICEVOX Core の UserDict を利用したネイティブ実装です。辞書データは JSON 形式で `storage/voicevox/user_dict.json` に永続化されます。
 
 公式 VOICEVOX エンジンとは独立したストレージを使用するため、Laravel 側で登録した単語は公式エンジン側には反映されません（その逆も同様です）。
 
@@ -26,22 +26,20 @@ return [
 
 ### 単語の追加
 
-`NativeUserDict` クラスの `add()` または `addWord()` メソッドで単語を登録できます。
+`dict()` ヘルパーの `add()` メソッドで単語を登録できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativeUserDict;
-
-$dict = new NativeUserDict();
+use function Revolution\Voicevox\dict;
 
 // 表記、読み（カタカナ）、アクセント型を指定
-$uuid = $dict->add(
+$uuid = dict()->add(
     surface: 'Laravel',
     pronunciation: 'ララベル',
     accentType: 0,
 );
 
-// UUID が返ってくる
-// 例: "550e8400-e29b-41d4-a716-446655440000"
+// "-"なしのUUID が返ってくる。user_dict.jsonでは"-"あり。
+// 例: "550e8400e29b41d4a716446655440000"
 ```
 
 #### パラメータ
@@ -64,14 +62,12 @@ $uuid = $dict->add(
 
 ### 単語の更新
 
-登録済みの単語を更新するには `update()` または `updateWord()` メソッドを使います。
+登録済みの単語を更新するには `update()` メソッドを使います。
 
 ```php
-use Revolution\Voicevox\Engine\NativeUserDict;
+use function Revolution\Voicevox\dict;
 
-$dict = new NativeUserDict();
-
-$dict->update(
+dict()->update(
     wordUuid: '550e8400-e29b-41d4-a716-446655440000',
     surface: 'Laravel',
     pronunciation: 'ラレベル',
@@ -81,14 +77,12 @@ $dict->update(
 
 ### 単語の削除
 
-単語を削除するには `delete()` または `removeWord()` メソッドを使います。
+単語を削除するには `delete()` メソッドを使います。
 
 ```php
-use Revolution\Voicevox\Engine\NativeUserDict;
+use function Revolution\Voicevox\dict;
 
-$dict = new NativeUserDict();
-
-$dict->delete('550e8400-e29b-41d4-a716-446655440000');
+dict()->delete('550e8400-e29b-41d4-a716-446655440000');
 ```
 
 ### 全単語の取得
@@ -96,13 +90,11 @@ $dict->delete('550e8400-e29b-41d4-a716-446655440000');
 登録されているすべての単語を取得できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativeUserDict;
+use function Revolution\Voicevox\dict;
 
-$dict = new NativeUserDict();
-
-$words = $dict->all();
+$words = dict()->all();
 // または
-$words = $dict->toArray();
+$words = dict()->toArray();
 
 /*
 [
@@ -120,16 +112,17 @@ $words = $dict->toArray();
 
 ### 辞書のインポート
 
-他の VOICEVOX ユーザー辞書からデータをインポートできます。既存の単語は保持され、インポートされた単語が追加されます。
+他の VOICEVOX ユーザー辞書からデータをインポートできます。`override: false`（デフォルト）なら既存の単語は保持され、インポートされた単語が追加されます。
 
 ```php
-use Revolution\Voicevox\Engine\NativeUserDict;
-
-$dict = new NativeUserDict();
+use function Revolution\Voicevox\dict;
 
 // JSON 文字列でインポート
 $json = file_get_contents('other_user_dict.json');
-$dict->import($json);
+dict()->import($json, override: false);
+
+// override: trueなら上書き
+dict()->import($json, override: true);
 ```
 
 ### 辞書のエクスポート
@@ -137,11 +130,9 @@ $dict->import($json);
 辞書全体を JSON 文字列として取得できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativeUserDict;
+use function Revolution\Voicevox\dict;
 
-$dict = new NativeUserDict();
-
-$json = $dict->toJson();
+$json = dict()->toJson();
 
 // ファイルに保存
 file_put_contents('exported_dict.json', $json);
@@ -149,7 +140,7 @@ file_put_contents('exported_dict.json', $json);
 
 ## Engine API 経由でのアクセス
 
-Laravel-VOICEVOX のエンジン API を起動している場合、HTTP 経由でもユーザー辞書を操作できます。
+Laravel VOICEVOX のエンジン API を起動している場合、HTTP 経由でもユーザー辞書を操作できます。公式エンジンにフォールバックせずネイティブの辞書を使用します。
 
 ### 全単語の取得
 
@@ -190,12 +181,10 @@ curl -X POST "http://localhost:8000/import_user_dict?override=false" \
 ### 固有名詞の登録
 
 ```php
-use Revolution\Voicevox\Engine\NativeUserDict;
-
-$dict = new NativeUserDict();
+use function Revolution\Voicevox\dict;
 
 // 人名
-$dict->add(
+dict()->add(
     surface: '田中太郎',
     pronunciation: 'タナカタロウ',
     accentType: 4,
@@ -203,7 +192,7 @@ $dict->add(
 );
 
 // 地名
-$dict->add(
+dict()->add(
     surface: '秋葉原',
     pronunciation: 'アキハバラ',
     accentType: 3,
@@ -211,7 +200,7 @@ $dict->add(
 );
 
 // 企業名
-$dict->add(
+dict()->add(
     surface: '株式会社サンプル',
     pronunciation: 'カブシキガイシャサンプル',
     accentType: 0,
@@ -222,25 +211,23 @@ $dict->add(
 ### 専門用語の登録
 
 ```php
-use Revolution\Voicevox\Engine\NativeUserDict;
-
-$dict = new NativeUserDict();
+use function Revolution\Voicevox\dict;
 
 // IT 用語
-$dict->add(
+dict()->add(
     surface: 'API',
     pronunciation: 'エーピーアイ',
     accentType: 0,
 );
 
-$dict->add(
+dict()->add(
     surface: 'Webhook',
     pronunciation: 'ウェブフック',
     accentType: 3,
 );
 
 // 医療用語
-$dict->add(
+dict()->add(
     surface: 'カルテ',
     pronunciation: 'カルテ',
     accentType: 1,
@@ -252,11 +239,9 @@ $dict->add(
 ユーザー辞書に登録した単語は、音声合成時に自動的に参照されます。
 
 ```php
-use Revolution\Voicevox\Engine\NativeUserDict;
-use function Revolution\Voicevox\talk;
+use function Revolution\Voicevox\{dict, talk};
 
-$dict = new NativeUserDict();
-$dict->add(
+dict()->add(
     surface: 'Laravel',
     pronunciation: 'ララベル',
     accentType: 0,

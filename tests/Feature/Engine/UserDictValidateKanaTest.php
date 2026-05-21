@@ -48,7 +48,9 @@ test('engine user_dict_word DELETE endpoint returns 204', function () {
 });
 
 test('engine import_user_dict endpoint returns 204', function () {
-    Voicevox::expects('baseUrl->importUserDict')->andReturn(null);
+    $this->mock(NativeUserDict::class, function ($mock) {
+        $mock->allows('import')->andReturn(null);
+    });
 
     $response = $this->postJson('/import_user_dict?override=false', []);
 

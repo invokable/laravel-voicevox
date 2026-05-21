@@ -261,6 +261,24 @@ Artisan::command('voicevox:native:dict', function () {
     dump($talk->audioQuery['kana']); // "ラ'ラベル"
 })->purpose('dict');
 
+// vendor/bin/testbench voicevox:native:dict-import
+Artisan::command('voicevox:native:dict-import', function () {
+    dict()->add(
+        surface: 'Laravel',
+        pronunciation: 'ララベル',
+        accentType: 1,
+    );
+
+    $all = dict()->all();
+    dump($all);
+
+    $key = array_key_last($all);
+    dict()->import(json_encode([$key => $all[$key] ?? []]), override: true);
+
+    $all = dict()->all();
+    dump($all);
+})->purpose('dict import');
+
 // vendor/bin/testbench voicevox:native:dict-talk
 Artisan::command('voicevox:native:dict-talk', function () {
     // コアの機能を使ってユーザー辞書を有効にしてテキストからaccent_phrases→audio_queryの作成。

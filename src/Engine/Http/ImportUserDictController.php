@@ -6,7 +6,7 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\Engine\NativeUserDict;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -18,8 +18,7 @@ class ImportUserDictController
         $words = $request->json()->all();
 
         try {
-            Voicevox::baseUrl(config('voicevox.engine.fallback_url'))
-                ->importUserDict($words, $override);
+            app(NativeUserDict::class)->import(json_encode($words), $override);
 
             return response()->json(null, Response::HTTP_NO_CONTENT);
         } catch (Throwable) {
