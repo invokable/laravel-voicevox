@@ -10,6 +10,9 @@ Work In Progress.
 
 ## Overview
 
+Laravelから音声合成エンジンVOICEVOXを扱うためのパッケージです。  
+HTTP経由で公式エンジンに接続するクライアントモードと、VOICEVOX Core for PHPを組み合わせてPHP FFIから直接合成するネイティブモードを同じLaravelスタイルで扱えます。
+
 | Feature          | Supported | Description                                                                                                         |
 |------------------|-----------|---------------------------------------------------------------------------------------------------------------------|
 | VOICEVOX Client  | ✅         | 公式のVOICEVOXエンジンAPIにアクセスするクライアント。FFIなしでも動きます。                                                                        | 
