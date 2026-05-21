@@ -97,17 +97,14 @@ test('engine audio_query_from_preset uses store preset and synthesizer', functio
         ->assertJsonFragment(['speedScale' => 1.5]);
 });
 
-test('engine audio_query_from_preset falls back when preset not found', function () {
+test('engine audio_query_from_preset returns 501 when preset not found', function () {
     $store = Mockery::mock(NativePresetStore::class);
     $store->allows('find')->andReturn(null);
     $this->app->instance(NativePresetStore::class, $store);
 
-    Voicevox::expects('baseUrl->audioQueryFromPreset')->andReturn(['speedScale' => 1.0]);
-
     $response = $this->postJson('/audio_query_from_preset?text=テスト&preset_id=99');
 
-    $response->assertOk()
-        ->assertJsonFragment(['speedScale' => 1.0]);
+    $response->assertStatus(501);
 });
 
 // ---- accent_phrases / mora ----
