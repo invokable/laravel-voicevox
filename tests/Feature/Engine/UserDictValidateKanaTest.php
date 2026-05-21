@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 use Revolution\Voicevox\Engine\NativeUserDict;
-use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\Talk\Talk;
+use Revolution\Voicevox\Talk\TalkAudioQuery;
 
 test('engine user_dict endpoint returns dict', function () {
     $this->mock(NativeUserDict::class, function ($mock) {
@@ -75,7 +76,9 @@ test('engine validate_kana endpoint returns 400 on invalid kana', function () {
 
 test('engine audio_query_from_preset endpoint returns audio query', function () {
     $audioQuery = ['speedScale' => 1.0, 'pitchScale' => 0.0];
-    Voicevox::expects('baseUrl->audioQueryFromPreset')->andReturn($audioQuery);
+    $this->mock(Talk::class, function ($mock) use ($audioQuery) {
+        $mock->allows('preset')->andReturn(new TalkAudioQuery(audioQuery: $audioQuery));
+    });
 
     $response = $this->postJson('/audio_query_from_preset?text=テスト&preset_id=1');
 
