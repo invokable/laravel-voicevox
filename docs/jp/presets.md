@@ -4,7 +4,7 @@
 
 ## 概要
 
-Laravel-VOICEVOX のプリセット機能は、VOICEVOX Core を利用したネイティブ実装です。プリセットデータは JSON 形式で `storage/voicevox/presets.json` に永続化されます。
+Laravel VOICEVOX のプリセット機能は、VOICEVOX Core を利用したネイティブ実装です。プリセットデータは JSON 形式で `storage/voicevox/presets.json` に永続化されます。
 
 公式 VOICEVOX エンジンとは独立したストレージを使用するため、Laravel 側で作成したプリセットは公式エンジン側には反映されません（その逆も同様です）。
 
@@ -45,14 +45,12 @@ return [
 
 ### プリセットの作成
 
-`NativePresetStore` クラスの `add()` メソッドでプリセットを作成できます。
+`preset()` ヘルパーの `add()` メソッドでプリセットを作成できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativePresetStore;
+use function Revolution\Voicevox\preset;
 
-$store = new NativePresetStore();
-
-$id = $store->add([
+$id = preset()->add([
     'id' => 0, // 0 を指定すると自動採番される
     'name' => 'ゆっくり丁寧',
     'speaker_uuid' => '7ffcb7ce-00ec-4bdc-82cd-45a8889e43ff',
@@ -74,11 +72,9 @@ echo $id; // 例: 1
 登録されているすべてのプリセットを取得できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativePresetStore;
+use function Revolution\Voicevox\preset;
 
-$store = new NativePresetStore();
-
-$presets = $store->all();
+$presets = preset()->all();
 
 /*
 [
@@ -100,11 +96,9 @@ $presets = $store->all();
 ID を指定してプリセットを取得できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativePresetStore;
+use function Revolution\Voicevox\preset;
 
-$store = new NativePresetStore();
-
-$preset = $store->find(1);
+$preset = preset()->find(1);
 
 if ($preset !== null) {
     echo $preset['name']; // "ゆっくり丁寧"
@@ -116,11 +110,9 @@ if ($preset !== null) {
 既存のプリセットを更新できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativePresetStore;
+use function Revolution\Voicevox\preset;
 
-$store = new NativePresetStore();
-
-$store->update([
+preset()->update([
     'id' => 1,
     'name' => 'ゆっくりはっきり',
     'speaker_uuid' => '7ffcb7ce-00ec-4bdc-82cd-45a8889e43ff',
@@ -139,11 +131,9 @@ $store->update([
 プリセットを削除できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativePresetStore;
+use function Revolution\Voicevox\preset;
 
-$store = new NativePresetStore();
-
-$store->delete(1);
+preset()->delete(1);
 ```
 
 ## プリセットを使った音声合成
@@ -152,7 +142,7 @@ $store->delete(1);
 
 ### Engine API 経由でのアクセス
 
-Laravel-VOICEVOX のエンジン API を起動している場合、HTTP 経由でプリセットを操作できます。
+Laravel VOICEVOX のエンジン API を起動している場合、HTTP 経由でプリセットを操作できます。
 
 #### 全プリセットの取得
 
@@ -219,11 +209,9 @@ curl -X POST "http://localhost:8000/audio_query_from_preset?text=こんにちは
 #### ナレーション用
 
 ```php
-use Revolution\Voicevox\Engine\NativePresetStore;
+use function Revolution\Voicevox\preset;
 
-$store = new NativePresetStore();
-
-$store->add([
+preset()->add([
     'id' => 0,
     'name' => 'ナレーション',
     'speaker_uuid' => '7ffcb7ce-00ec-4bdc-82cd-45a8889e43ff',
@@ -240,7 +228,7 @@ $store->add([
 #### 感情表現豊かな読み上げ
 
 ```php
-$store->add([
+preset()->add([
     'id' => 0,
     'name' => '感情豊か',
     'speaker_uuid' => '7ffcb7ce-00ec-4bdc-82cd-45a8889e43ff',
@@ -257,7 +245,7 @@ $store->add([
 #### アナウンス用
 
 ```php
-$store->add([
+preset()->add([
     'id' => 0,
     'name' => 'アナウンス',
     'speaker_uuid' => '7ffcb7ce-00ec-4bdc-82cd-45a8889e43ff',
@@ -274,7 +262,7 @@ $store->add([
 #### 早口トーク用
 
 ```php
-$store->add([
+preset()->add([
     'id' => 0,
     'name' => '早口',
     'speaker_uuid' => '7ffcb7ce-00ec-4bdc-82cd-45a8889e43ff',
@@ -293,12 +281,10 @@ $store->add([
 複数のキャラクター用にプリセットを作成して管理できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativePresetStore;
-
-$store = new NativePresetStore();
+use function Revolution\Voicevox\preset;
 
 // ずんだもん用
-$store->add([
+preset()->add([
     'id' => 0,
     'name' => 'ずんだもん標準',
     'speaker_uuid' => '388f246b-8c41-4ac1-8e2d-5d79f3ff56d9',
@@ -312,7 +298,7 @@ $store->add([
 ]);
 
 // 四国めたん用
-$store->add([
+preset()->add([
     'id' => 0,
     'name' => '四国めたん標準',
     'speaker_uuid' => '7ffcb7ce-00ec-4bdc-82cd-45a8889e43ff',
