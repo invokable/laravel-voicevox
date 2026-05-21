@@ -440,8 +440,7 @@ class VoicevoxClient
      * Synthesize multiple audio queries in batch.
      *
      * @param  array<array>  $audioQueries
-     *
-     * @return VoicevoxResponse  zip file containing the synthesized audio files
+     * @return VoicevoxResponse zip file containing the synthesized audio files
      *
      * @throws RequestException
      * @throws ConnectionException
