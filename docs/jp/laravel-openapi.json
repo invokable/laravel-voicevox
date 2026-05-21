@@ -1263,7 +1263,7 @@
                     "音声合成"
                 ],
                 "summary": "2種類のスタイルでモーフィングした音声を合成する",
-                "description": "指定された2種類のスタイルで音声を合成、指定した割合でモーフィングした音声を得ます。\n\nモーフィングの割合は`morph_rate`で指定でき、0.0でベースのスタイル、1.0でターゲットのスタイルに近づきます。",
+                "description": "指定された2種類のスタイルで音声を合成、指定した割合でモーフィングした音声を得ます。\n\nモーフィングの割合は`morph_rate`で指定でき、0.0でベースのスタイル、1.0でターゲットのスタイルに近づきます。\n\n**Laravel実装状況**: ❌ コアに相当機能なし（フォールバックのみ）",
                 "operationId": "_synthesis_morphing",
                 "parameters": [
                     {
@@ -1358,7 +1358,7 @@
                     "その他"
                 ],
                 "summary": "Get Presets",
-                "description": "エンジンが保持しているプリセットの設定を返します。",
+                "description": "エンジンが保持しているプリセットの設定を返します。\n\n**Laravel実装状況**: ✅ NativePresetStoreでJSONファイルに永続化（フォールバック不要）",
                 "operationId": "get_presets",
                 "responses": {
                     "200": {
@@ -1864,7 +1864,7 @@
                     "ユーザー辞書"
                 ],
                 "summary": "Get User Dict Words",
-                "description": "ユーザー辞書に登録されている単語の一覧を返します。\n\n単語の表層形(surface)は正規化済みの物を返します。",
+                "description": "ユーザー辞書に登録されている単語の一覧を返します。\n\n単語の表層形(surface)は正規化済みの物を返します。\n\n**Laravel実装状況**: ✅ NativeUserDictでJSONファイルに永続化（フォールバック不要）",
                 "operationId": "get_user_dict_words",
                 "responses": {
                     "200": {
@@ -1890,7 +1890,7 @@
                     "ユーザー辞書"
                 ],
                 "summary": "Add User Dict Word",
-                "description": "ユーザー辞書に言葉を追加します。",
+                "description": "ユーザー辞書に言葉を追加します。\n\n**Laravel実装状況**: ✅ NativeUserDictでJSONファイルに永続化（フォールバック不要）",
                 "operationId": "add_user_dict_word",
                 "parameters": [
                     {
@@ -1981,7 +1981,7 @@
                     "ユーザー辞書"
                 ],
                 "summary": "Rewrite User Dict Word",
-                "description": "ユーザー辞書に登録されている言葉を更新します。",
+                "description": "ユーザー辞書に登録されている言葉を更新します。\n\n**Laravel実装状況**: ✅ NativeUserDictでJSONファイルに永続化（フォールバック不要）",
                 "operationId": "rewrite_user_dict_word",
                 "parameters": [
                     {
@@ -2073,7 +2073,7 @@
                     "ユーザー辞書"
                 ],
                 "summary": "Delete User Dict Word",
-                "description": "ユーザー辞書に登録されている言葉を削除します。",
+                "description": "ユーザー辞書に登録されている言葉を削除します。\n\n**Laravel実装状況**: ✅ NativeUserDictでJSONファイルに永続化（フォールバック不要）",
                 "operationId": "delete_user_dict_word",
                 "parameters": [
                     {
@@ -2111,7 +2111,7 @@
                     "ユーザー辞書"
                 ],
                 "summary": "Import User Dict Words",
-                "description": "他のユーザー辞書をインポートします。",
+                "description": "他のユーザー辞書をインポートします。\n\n**Laravel実装状況**: ✅ NativeUserDictでJSONファイルに永続化（フォールバック不要）",
                 "operationId": "import_user_dict_words",
                 "parameters": [
                     {
@@ -2235,7 +2235,7 @@
                     "設定"
                 ],
                 "summary": "Setting Get",
-                "description": "設定ページを返します。",
+                "description": "設定ページを返します。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックのみ）",
                 "operationId": "setting_get",
                 "responses": {
                     "200": {
@@ -2248,7 +2248,7 @@
                     "設定"
                 ],
                 "summary": "Setting Post",
-                "description": "設定を更新します。",
+                "description": "設定を更新します。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックのみ）",
                 "operationId": "setting_post",
                 "requestBody": {
                     "content": {
