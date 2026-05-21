@@ -441,6 +441,8 @@ class VoicevoxClient
      *
      * @param  array<array>  $audioQueries
      *
+     * @return VoicevoxResponse  zip file containing the synthesized audio files
+     *
      * @throws RequestException
      * @throws ConnectionException
      */
