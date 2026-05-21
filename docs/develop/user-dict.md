@@ -36,7 +36,7 @@ $dict = dict()->all();
 dict()->add(
     surface: 'Laravel', // 辞書に登録する単語
     pronunciation: 'ララベル', // カタカナでの読み方
-    accentType: 1, // アクセント核位置、整数
+    accentType: 0, // アクセント核位置、整数
 );
 ```
 
