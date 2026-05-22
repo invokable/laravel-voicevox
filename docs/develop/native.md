@@ -57,3 +57,17 @@ preset()->add();
 preset()->update();
 preset()->delete();
 ```
+
+### Testing
+
+`Talk::fake()`で実現したかったけど実装忘れのまま。
+
+これでモックできるのでひとまずはこの方法。
+
+```php
+use Revolution\Voicevox\Talk\Talk;
+
+$this->mock(Talk::class, function ($mock) {
+    $mock->allows('talk->generate')->andReturn('wav');
+});
+```
