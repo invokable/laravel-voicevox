@@ -1,0 +1,102 @@
+name: integration tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  VOICEVOX_CORE_VERSION: 0.16.4
+  VOICEVOX_MODELS_VERSION: 0.16.0
+  VOICEVOX_ONNXRUNTIME_VERSION: voicevox_onnxruntime-1.17.3
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    name: PHP integration
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          extensions: ffi, mbstring
+          coverage: xdebug
+          ini-values: ffi.enable=1
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Download VOICEVOX Core Linux runtime
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          asset='download-linux-x64'
+          archive_dir="$PWD/.artifacts"
+          runtime_dir="$PWD/.voicevox-runtime/voicevox_core"
+
+          mkdir -p "$archive_dir"
+          gh release download "$VOICEVOX_CORE_VERSION" \
+            --repo VOICEVOX/voicevox_core \
+            --pattern "$asset" \
+            --dir "$archive_dir"
+
+          chmod +x "$archive_dir/$asset"
+
+          echo y | "$archive_dir/$asset" \
+            --output "$runtime_dir" \
+            --devices cpu \
+            --c-api-version "$VOICEVOX_CORE_VERSION" \
+            --onnxruntime-version "$VOICEVOX_ONNXRUNTIME_VERSION" \
+            --models-version "$VOICEVOX_MODELS_VERSION" \
+            --models-pattern 0.vvm
+
+          root="$runtime_dir"
+
+          require_file() {
+            if [ ! -f "$1" ]; then
+              echo "::error title=VOICEVOX runtime::Missing file: $1"
+              find "$root" -maxdepth 3 | sort
+              exit 1
+            fi
+          }
+
+          require_dir() {
+            if [ ! -d "$1" ]; then
+              echo "::error title=VOICEVOX runtime::Missing directory: $1"
+              find "$root" -maxdepth 3 | sort
+              exit 1
+            fi
+          }
+
+          require_file "$root/c_api/lib/libvoicevox_core.so"
+          require_dir "$root/onnxruntime/lib"
+          require_dir "$root/dict"
+          require_file "$root/models/vvms/0.vvm"
+
+          {
+            echo "VOICEVOX_CORE_TEST_ROOT=$root"
+            echo "VOICEVOX_CORE_PATH=$root"
+            echo "VOICEVOX_CORE_LIB_PATH=$root/c_api/lib/libvoicevox_core.so"
+            echo "LD_LIBRARY_PATH=$root/c_api/lib:$root/onnxruntime/lib:$root/additional_libraries${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          } >> "$GITHUB_ENV"
+
+      - name: Execute integration tests
+        run: composer run test:integration
+
+      - name: Code Coverage
+        uses: qltysh/qlty-action/coverage@v2
+        with:
+          oidc: true
+          files: build/logs/clover.xml
