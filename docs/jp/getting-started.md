@@ -24,15 +24,15 @@ Laravel で VOICEVOX の音声合成機能を使うためのパッケージで�
 
 **基本的な使い方**:
 ```php
-use Revolution\Voicevox\Facades\Voicevox;
+use Revolution\Voicevox\Voicevox;
 
-// 音声合成（ずんだもん、スタイルID: 3）
-$response = Voicevox::talk('こんにちは、Laravel です。', speaker: 3);
-$response->save('output.wav');
+// 音声合成（ずんだもん、スタイルID: 1）
+$response = Voicevox::talk('こんにちは、Laravel です。', id: 1)->generate(id: 1);
+$response->storeAs('output.wav');
 
 // 歌声合成
-$response = Voicevox::song($score, speaker: 3);
-$response->save('song.wav');
+$response = Voicevox::song($score)->generate(id: 3001);
+$response->storeAs('song.wav');
 ```
 
 詳細: [クライアントモード - トーク](client-talk.md) / [クライアントモード - ソング](client-song.md)
@@ -55,12 +55,12 @@ use function Revolution\Voicevox\talk;
 use function Revolution\Voicevox\song;
 
 // 音声合成（ヘルパー関数を使用）
-$response = talk('こんにちは、Laravel です。', speaker: 3);
-$response->save('output.wav');
+$response = talk('こんにちは、Laravel です。', id: 1)->generate(id: 1);
+$response->storeAs('output.wav');
 
 // 歌声合成
-$response = song($score, speaker: 3);
-$response->save('song.wav');
+$response = song($score)->generate(id: 3001);
+$response->storeAs('song.wav');
 ```
 
 詳細: [ネイティブモード - トーク](native-talk.md) / [ネイティブモード - ソング](native-song.md)
@@ -78,14 +78,8 @@ $response->save('song.wav');
 - VOICEVOX 公式クライアントとの連携
 
 **基本的な使い方**:
-```php
-// routes/api.php
-use Revolution\Voicevox\Facades\VoicevoxEngine;
 
-VoicevoxEngine::routes();
-```
-
-これで `/api/voicevox/audio_query`、`/api/voicevox/synthesis` などの公式互換 API が有効になります。
+エンジンAPIルートはデフォルトで有効で `/audio_query`、`/synthesis` などの公式互換 API が使えます。
 
 詳細: [エンジンAPIモード - トーク](engine-talk.md) / [エンジンAPIモード - ソング](engine-song.md)
 
@@ -116,7 +110,8 @@ composer require revolution/laravel-voicevox revolution/voicevox-core-php
 ### 2. Docker で公式エンジン起動（クライアントモードの場合）
 
 ```bash
-docker run -d -p 50021:50021 voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+docker pull voicevox/voicevox_engine:cpu-latest
+docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
 ```
 
 ### 3. 音声合成を試す
@@ -124,10 +119,10 @@ docker run -d -p 50021:50021 voicevox/voicevox_engine:cpu-ubuntu20.04-latest
 #### クライアントモード
 
 ```php
-use Revolution\Voicevox\Facades\Voicevox;
+use Revolution\Voicevox\Voicevox;
 
-$response = Voicevox::talk('こんにちは、Laravel です。', speaker: 3);
-$response->save(storage_path('app/output.wav'));
+$response = Voicevox::talk('こんにちは、Laravel です。', id: 1)->generate(id: 1);
+$response->storeAs('output.wav');
 ```
 
 #### ネイティブモード
@@ -135,8 +130,8 @@ $response->save(storage_path('app/output.wav'));
 ```php
 use function Revolution\Voicevox\talk;
 
-$response = talk('こんにちは、Laravel です。', speaker: 3);
-$response->save(storage_path('app/output.wav'));
+$response = talk('こんにちは、Laravel です。', id: 1)->generate(id: 1);
+$response->storeAs('output.wav');
 ```
 
 ## 主要な機能
@@ -146,16 +141,21 @@ $response->save(storage_path('app/output.wav'));
 テキストから音声を生成します。
 
 ```php
-// 基本的な音声合成
-$response = Voicevox::talk('こんにちは', speaker: 3);
+use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\Client\TalkAudioQuery;
 
-// 感情パラメータ調整
-$response = Voicevox::talk('こんにちは', speaker: 3, query: [
-    'speedScale' => 1.2,      // 速度（1.0 = 標準）
-    'pitchScale' => 0.05,     // ピッチ
-    'intonationScale' => 1.5, // イントネーション
-    'volumeScale' => 1.0,     // 音量
-]);
+// 基本的な音声合成
+$response = Voicevox::talk('こんにちは', id: 1)->generate(id: 1);
+
+// パラメータ調整
+$response = Voicevox::talk('こんにちは', id: 1)
+    ->tap(function (TalkAudioQuery $talk) {
+        $talk->audioQuery['speedScale'] = 1.2;// 速度（1.0 = 標準）
+        $talk->audioQuery['pitchScale'] = 0.05;// ピッチ
+        $talk->audioQuery['intonationScale'] = 1.5;// イントネーション
+        $talk->audioQuery['volumeScale'] = 1.0;// 音量
+    })
+    ->generate(id: 1);
 ```
 
 ### 歌声合成（ソング）
@@ -163,18 +163,20 @@ $response = Voicevox::talk('こんにちは', speaker: 3, query: [
 楽譜データから歌声を生成します。
 
 ```php
-use Revolution\Voicevox\Data\Score;
-use Revolution\Voicevox\Data\Note;
+use Revolution\Voicevox\Voicevox;
+use Revolution\Voicevox\Song\Score;
+use Revolution\Voicevox\Song\Note;
 
-$score = Score::from([
-    'notes' => [
-        Note::from(['key' => 60, 'lyric' => 'ら']),
-        Note::from(['key' => 62, 'lyric' => 'ら']),
-    ],
+$score = Score::make([
+    Note::make(length: 15),
+    Note::make(length: Note::len(ticks: 480, bpm: 120), lyric: 'ド', key: 60),
+    Note::make(length: Note::len(480, 120), lyric: 'レ', key: 62),
+    Note::make(length: Note::len(960, 120), lyric: 'ミ', key: 64),
+    Note::make(length: 2),
 ]);
 
-$response = Voicevox::song($score, speaker: 6000);
-$response->save('song.wav');
+$response = Voicevox::song($score)->generate(id: 3001);
+$response->storeAs('song.wav');
 ```
 
 ### ユーザー辞書
@@ -182,15 +184,13 @@ $response->save('song.wav');
 固有名詞や専門用語の読み方を登録できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativeUserDict;
+use function Revolution\Voicevox\dict;
 
-$dict = app(NativeUserDict::class);
-
-$uuid = $dict->add([
-    'surface' => 'Laravel',
-    'pronunciation' => 'ララベル',
-    'accent_type' => 3,
-]);
+$uuid = dict()->add(
+    surface: 'Laravel',
+    pronunciation: 'ララベル',
+    accent_type: 3,
+);
 ```
 
 詳細: [ユーザー辞書](user-dict.md)
@@ -200,17 +200,19 @@ $uuid = $dict->add([
 よく使う音声パラメータをプリセットとして保存できます。
 
 ```php
-use Revolution\Voicevox\Engine\NativePresetStore;
+use function Revolution\Voicevox\preset;
 
-$store = app(NativePresetStore::class);
-
-$id = $store->create([
-    'name' => 'ナレーション用',
-    'style_id' => 3,
-    'speedScale' => 1.1,
+$id = preset()->add([
+    'id' => 0, // 0 を指定すると自動採番される
+    'name' => 'ゆっくり丁寧',
+    'speaker_uuid' => '7ffcb7ce-00ec-4bdc-82cd-45a8889e43ff',
+    'style_id' => 1,
+    'speedScale' => 0.8,
     'pitchScale' => 0.0,
     'intonationScale' => 1.2,
     'volumeScale' => 1.0,
+    'prePhonemeLength' => 0.1,
+    'postPhonemeLength' => 0.1,
 ]);
 ```
 
@@ -221,53 +223,16 @@ $id = $store->create([
 Laravel AI SDK を使った統一インターフェースで音声合成できます。
 
 ```php
-use Laravel\Ai\Facades\Audio;
+use Laravel\Ai\Audio;
 
 $audio = Audio::of('こんにちは、Laravel です。')
     ->voice('ずんだもん')
     ->generate();
 
-$audio->save('output.wav');
+$audio->storeAs('output.wav');
 ```
 
 詳細: [AI SDK 連携](ai-sdk.md)
-
-## キャラクターとスタイル ID
-
-VOICEVOX では、キャラクターごとに複数のスタイル（話し方のバリエーション）があります。
-
-### 主要なキャラクター
-
-| キャラクター | スタイル | スタイルID |
-|--------------|----------|------------|
-| ずんだもん | ノーマル | 3 |
-| ずんだもん | あまあま | 1 |
-| ずんだもん | ツンツン | 7 |
-| ずんだもん | セクシー | 5 |
-| ずんだもん | ささやき | 22 |
-| ずんだもん | ヒソヒソ | 38 |
-| 四国めたん | ノーマル | 2 |
-| 四国めたん | あまあま | 0 |
-| 四国めたん | ツンツン | 6 |
-| 四国めたん | セクシー | 4 |
-| 四国めたん | ヒソヒソ | 37 |
-| 春日部つむぎ | ノーマル | 8 |
-
-### スタイル ID の確認方法
-
-```php
-use Revolution\Voicevox\Facades\Voicevox;
-
-// 利用可能な全スピーカーを取得
-$speakers = Voicevox::speakers();
-
-foreach ($speakers as $speaker) {
-    echo $speaker['name'] . "\n";
-    foreach ($speaker['styles'] as $style) {
-        echo "  - {$style['name']}: {$style['id']}\n";
-    }
-}
-```
 
 ## 次のステップ
 
@@ -278,44 +243,3 @@ foreach ($speakers as $speaker) {
 - [AI SDK 連携](ai-sdk.md) - Laravel AI SDK を使った統一インターフェース
 - [ユーザー辞書](user-dict.md) - 固有名詞の読み方登録
 - [プリセット](presets.md) - 音声パラメータの保存と再利用
-
-## トラブルシューティング
-
-### FFI が使えない
-
-クライアントモードのみを使用するか、FFI を有効にした PHP をインストールしてください。
-
-```bash
-# FFI の有効化確認
-php -r "var_dump(extension_loaded('ffi'));"
-```
-
-### Docker エンジンに接続できない
-
-Docker コンテナが起動しているか確認してください。
-
-```bash
-docker ps | grep voicevox
-curl http://127.0.0.1:50021/version
-```
-
-### 音声が生成されない
-
-- スタイル ID が正しいか確認
-- VOICEVOX CORE ライブラリがインストールされているか確認
-- ログを確認（`storage/logs/laravel.log`）
-
-より詳しいトラブルシューティングについては、各機能の詳細ドキュメントを参照してください。
-
-## ライセンスと利用規約
-
-VOICEVOX の音声合成エンジンおよび各キャラクターには利用規約があります。商用利用の可否やクレジット表記の要否は、各キャラクターごとに異なります。
-
-詳細は [VOICEVOX 公式サイト](https://voicevox.hiroshiba.jp/) を参照してください。
-
-## リンク
-
-- [GitHub リポジトリ](https://github.com/invokable/laravel-voicevox)
-- [VOICEVOX 公式](https://voicevox.hiroshiba.jp/)
-- [VOICEVOX Engine](https://github.com/VOICEVOX/voicevox_engine)
-- [VOICEVOX Core](https://github.com/VOICEVOX/voicevox_core)
