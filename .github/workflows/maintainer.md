@@ -2,9 +2,9 @@
 name: VOICEVOX メンテナー
 description: VOICEVOXパッケージのメンテナンスと機能追加を自律的に行い、作業記録をDiscussion #1に記録する。
 on:
-    schedule: 
-      - cron: daily around 17:00 utc+9
-      - cron: daily around 4:00 utc+9
+#    schedule: 
+#      - cron: daily around 17:00 utc+9
+#      - cron: daily around 4:00 utc+9
     workflow_dispatch:
 
 steps:
