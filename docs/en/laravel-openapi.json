@@ -83,7 +83,7 @@
                     "Query Creation"
                 ],
                 "summary": "Create query for speech synthesis using preset",
-                "description": "Get initial values for speech synthesis query. The query obtained here can be used directly for speech synthesis. Refer to `Schemas` for the meaning of each value.\n\n**Laravel Implementation Status**: ✅ Supported via NativePresetStore and Core's createAudioQuery (no fallback needed)",
+                "description": "Get initial values for speech synthesis query. The query obtained here can be used directly for speech synthesis. Refer to `Schemas` for the meaning of each value.\n\n**Laravel Implementation Status**: ⚠️ Supported via NativePresetStore and Core's createAudioQuery. Laravel does not support enable_katakana_english. (no fallback needed)",
                 "operationId": "audio_query_from_preset",
                 "parameters": [
                     {
@@ -2283,7 +2283,7 @@
                     "Other"
                 ],
                 "summary": "Get Portal Page",
-                "description": "ポータルページを返します。",
+                "description": "ポータルページを返します。\n\n**Laravel Implementation Status**: ❌ Engine-specific feature (fallback only)",
                 "operationId": "get_portal_page",
                 "responses": {
                     "200": {
