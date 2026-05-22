@@ -45,7 +45,8 @@ VOICEVOX_URL=http://127.0.0.1:50021
 **Docker での公式エンジン起動例**:
 
 ```bash
-docker run -d -p 50021:50021 voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+docker pull voicevox/voicevox_engine:cpu-latest
+docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
 ```
 
 #### `client.core_version`
@@ -221,47 +222,11 @@ VOICEVOX_CORE_PRESETS_PATH=/path/to/custom/presets.json
     'vvms' => [],
 ],
 
-// ずんだもんと四国めたんのみ
+// 歌唱用のみ
 'core' => [
-    'vvms' => ['0.vvm', '1.vvm'],
+    'vvms' => ['s0.vvm'],
 ],
 ```
-
-**モデル一覧**:
-
-| ファイル名 | キャラクター |
-|------------|--------------|
-| `0.vvm` | 四国めたん（話声） |
-| `1.vvm` | ずんだもん（話声） |
-| `2.vvm` | 春日部つむぎ |
-| `3.vvm` | 雨晴はう |
-| `4.vvm` | 波音リツ |
-| `5.vvm` | 玄野武宏 |
-| `6.vvm` | 白上虎太郎 |
-| `7.vvm` | 青山龍星 |
-| `8.vvm` | 冥鳴ひまり |
-| `9.vvm` | 九州そら |
-| `s0.vvm` | 四国めたん（歌声） |
-| `s1.vvm` | ずんだもん（歌声） |
-
-**デフォルトの選択理由**:
-- `0.vvm`: 四国めたん（AI SDK のデフォルト女性音声）
-- `9.vvm`: 九州そら（AI SDK のデフォルト男性音声）
-- `s0.vvm`: 四国めたん（歌声）
-
-**パフォーマンスへの影響**:
-
-```bash
-# 3モデルのみ読み込み（デフォルト）
-起動時間: 約 3-5 秒
-
-# 全モデル読み込み
-起動時間: 約 20-30 秒
-```
-
-**推奨設定**:
-- 開発環境: 使用するキャラクターのみ指定して高速起動
-- 本番環境: 必要なモデルのみ指定してメモリ節約
 
 ### エンジンAPIモード設定
 
@@ -319,8 +284,6 @@ VOICEVOX_ENGINE_FALLBACK_URL=http://127.0.0.1:50021
 - `/manage_library` (ライブラリ管理)
 - その他、VOICEVOX CORE に相当機能がないエンドポイント
 
-詳細: [エンジンAPI対応表](../engine-api.md)
-
 #### `engine.fallback_error`
 
 **タイプ**: `string`  
@@ -335,131 +298,3 @@ VOICEVOX_ENGINE_FALLBACK_URL=http://127.0.0.1:50021
     'fallback_error' => 'The Laravel version of the engine does not support this endpoint. Please use the official engine instead.',
 ],
 ```
-
-## 環境別設定例
-
-### 開発環境（Docker + クライアントモード）
-
-```env
-# .env
-VOICEVOX_URL=http://127.0.0.1:50021
-```
-
-```bash
-# Docker で公式エンジン起動
-docker run -d -p 50021:50021 voicevox/voicevox_engine:cpu-ubuntu20.04-latest
-```
-
-### 本番環境（ネイティブモード）
-
-```env
-# .env
-VOICEVOX_CORE_PATH=/home/username/.local/voicevox_core/
-VOICEVOX_CORE_USER_DICT_PATH=/var/www/html/storage/voicevox/user_dict.json
-VOICEVOX_CORE_PRESETS_PATH=/var/www/html/storage/voicevox/presets.json
-```
-
-```php
-// config/voicevox.php
-'core' => [
-    'vvms' => ['0.vvm', '1.vvm'], // 使用するモデルのみ読み込み
-],
-```
-
-### エンジンAPIモード（Laravel がエンジン）
-
-```env
-# .env
-VOICEVOX_CORE_PATH=/home/username/.local/voicevox_core/
-VOICEVOX_ENGINE_FALLBACK_URL=http://127.0.0.1:50021
-```
-
-```php
-// routes/api.php
-use Revolution\Voicevox\Facades\VoicevoxEngine;
-
-VoicevoxEngine::routes();
-```
-
-## トラブルシューティング
-
-### `core.path` が見つからない
-
-**エラー**: `VOICEVOX CORE library not found`
-
-**解決策**:
-
-1. VOICEVOX CORE が正しくインストールされているか確認
-
-```bash
-ls -la ~/.local/voicevox_core/
-```
-
-2. `.env` のパスが正しいか確認
-
-```env
-VOICEVOX_CORE_PATH=/Users/username/.local/voicevox_core/
-```
-
-3. パスの末尾に `/` があるか確認（必須）
-
-### モデルの読み込みが遅い
-
-**症状**: 起動に 30 秒以上かかる
-
-**解決策**:
-
-`core.vvms` で必要なモデルのみ指定する
-
-```php
-'core' => [
-    'vvms' => ['0.vvm'], // 四国めたんのみ
-],
-```
-
-### クライアントモードで接続できない
-
-**エラー**: `Connection refused`
-
-**解決策**:
-
-1. Docker コンテナが起動しているか確認
-
-```bash
-docker ps | grep voicevox
-```
-
-2. エンジンが起動しているか確認
-
-```bash
-curl http://127.0.0.1:50021/version
-```
-
-3. `VOICEVOX_URL` が正しいか確認
-
-```env
-VOICEVOX_URL=http://127.0.0.1:50021
-```
-
-### ユーザー辞書が保存されない
-
-**エラー**: `Permission denied`
-
-**解決策**:
-
-ストレージディレクトリに書き込み権限があるか確認
-
-```bash
-mkdir -p storage/voicevox
-chmod -R 775 storage/voicevox
-```
-
-## 関連ドキュメント
-
-- [はじめに](getting-started.md)
-- [インストールと設定](installation.md)
-- [クライアントモード - トーク](client-talk.md)
-- [ネイティブモード - トーク](native-talk.md)
-- [エンジンAPIモード - トーク](engine-talk.md)
-- [ユーザー辞書](user-dict.md)
-- [プリセット](presets.md)
