@@ -83,7 +83,7 @@ Agentic Workflows向けの次に行う作業の方向性をここで指示しま
 - [x] クライアント、ネイティブ、エンジンAPIまで主要な機能は実装できてきた。エンジンAPIはフォールバックのみでネイティブ対応できてない機能が少し残っているけどなくても困らないのでほぼ完了。
 - [ ] `tests/Integration/`内の動的ライブラリ込みの統合テストを増やす。Agentic Workflows環境では実行できないGitHub Actions専用なのでなぜか通常テストも実行できてないここでのタスクにはちょうどいい。
 - [x] docs/jp/内にユーザー向けの日本語ドキュメントを作成していく。GitHub用のドキュメントは十分なので完了。続きはドキュメントサイトで作成。
-- [ ] Laravel版エンジンAPI用に`docs/jp/laravel-openapi.json`を調整。`docs/en/laravel-openapi.json`は英語に翻訳。別のドキュメントサイトは`openapi.json`からAPIページを作成できるのでそれ用。基本的にはそのままでdescriptionにLaravelでの対応状況を説明。`docs/en/laravel-openapi.json`に日本語が残ってるので英語に翻訳、英語での説明が難しい場合は短く省略していい。
+- [x] Laravel版エンジンAPI用に`docs/jp/laravel-openapi.json`を調整。`docs/en/laravel-openapi.json`は英語に翻訳。別のドキュメントサイトは`openapi.json`からAPIページを作成できるのでそれ用。基本的にはそのままでdescriptionにLaravelでの対応状況を説明。`docs/en/laravel-openapi.json`に日本語が残ってるので英語に翻訳、英語での説明が難しい場合は短く省略していい。
 - [x] Laravel版エンジンAPI用に`resources/engine_manifest.json`を調整。VOICEVOX公式はマルチエンジンを想定して非対応機能があっても大丈夫なようにしている。最低限`/audio_query`と`/synthesis`さえ対応していればVOICEVOXエンジン。
 - [x] EngineInstallCommand.php を [Laravel Prompts](https://laravel.com/docs/13.x/prompts) を使うコードに変更。GitHubからのダウンロードはzipで400MB以上なので`confirm()`で確認を入れる。ダウンロード中はspinもしくはtaskで表示。
 - [x] AI SDKへのソング機能実装は不要。
