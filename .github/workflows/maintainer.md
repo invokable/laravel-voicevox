@@ -7,17 +7,17 @@ on:
 #      - cron: daily around 4:00 utc+9
     workflow_dispatch:
 
-steps:
-    -   name: PHP環境のセットアップ
-        uses: shivammathur/setup-php@2.37.1
-        with:
-            php-version: 8.5
-            extensions: mbstring, dom, phar
-            coverage: xdebug
-    -   name: Composerの依存関係インストール
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
-    -   name: PHPバージョン確認
-        run: php -v
+jobs:
+    setup:
+        steps:
+            -   name: Set up PHP
+                uses: shivammathur/setup-php@2.37.1
+                with:
+                    php-version: 8.5
+                    extensions: mbstring, dom, phar
+                    coverage: xdebug
+            -   name: Install Composer dependencies
+                run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
 permissions:
     contents: read
