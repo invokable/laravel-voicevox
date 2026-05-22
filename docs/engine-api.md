@@ -35,7 +35,7 @@
 | `POST /cancellable_synthesis`     | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。公式でもデフォルト無効なので対応不要。                                       |
 | `POST /multi_synthesis`           | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。公式エンジンではzipで複数ファイルをレスポンス。synthesisを複数回実装してzip化なら可能かもしれない。 |
 | `POST /connect_waves`             | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                          |
-| `POST /morphable_targets`         | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                          |
+| `POST /morphable_targets`         | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。supported_featuresを見れば対応は可能だけどこれだけ対応しても意味がないので非対応。        |
 | `POST /synthesis_morphing`        | ❌                  | ✅              | コアに相当機能なし。フォールバックのみ。                                                          |
 | `GET /presets`                    | ✅                  | ❌              | `NativePresetStore`でJSONファイルに永続化。公式エンジンとデータを共有しておらずフォールバックは無意味なのでLaravelのみ。   |
 | `POST /add_preset`                | ✅                  | ❌              | 同上                                                                            |
