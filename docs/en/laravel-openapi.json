@@ -249,6 +249,7 @@
                     "Query Editing"
                 ],
                 "summary": "アクセント句から音素の長さと音高を得る",
+                "description": "\n\n**Laravel Implementation Status**: ✅ Fully supported by Core (fallback implemented)",
                 "operationId": "mora_data",
                 "parameters": [
                     {
@@ -309,8 +310,7 @@
                             }
                         }
                     }
-                },
-                "description": "\n\n**Laravel Implementation Status**: ✅ Fully supported by Core (fallback implemented)"
+                }
             }
         },
         "/mora_length": {
@@ -319,6 +319,7 @@
                     "Query Editing"
                 ],
                 "summary": "アクセント句から音素の長さを得る",
+                "description": "\n\n**Laravel Implementation Status**: ✅ Fully supported by Core (fallback implemented)",
                 "operationId": "mora_length",
                 "parameters": [
                     {
@@ -379,8 +380,7 @@
                             }
                         }
                     }
-                },
-                "description": "\n\n**Laravel Implementation Status**: ✅ Fully supported by Core (fallback implemented)"
+                }
             }
         },
         "/mora_pitch": {
@@ -389,6 +389,7 @@
                     "Query Editing"
                 ],
                 "summary": "Get pitch from accent phrases",
+                "description": "\n\n**Laravel Implementation Status**: ✅ Fully supported by Core (fallback implemented)",
                 "operationId": "mora_pitch",
                 "parameters": [
                     {
@@ -449,8 +450,7 @@
                             }
                         }
                     }
-                },
-                "description": "\n\n**Laravel Implementation Status**: ✅ Fully supported by Core (fallback implemented)"
+                }
             }
         },
         "/synthesis": {
@@ -459,6 +459,7 @@
                     "Speech Synthesis"
                 ],
                 "summary": "Speech Synthesisする",
+                "description": "\n\n**Laravel Implementation Status**: ✅ Fully supported by Core (fallback implemented)",
                 "operationId": "synthesis",
                 "parameters": [
                     {
@@ -524,8 +525,7 @@
                             }
                         }
                     }
-                },
-                "description": "\n\n**Laravel Implementation Status**: ✅ Fully supported by Core (fallback implemented)"
+                }
             }
         },
         "/cancellable_synthesis": {
@@ -534,6 +534,7 @@
                     "Speech Synthesis"
                 ],
                 "summary": "Speech Synthesisする（キャンセル可能）",
+                "description": "\n\n**Laravel Implementation Status**: ❌ No equivalent feature in Core (fallback only, disabled by default in official engine)",
                 "operationId": "cancellable_synthesis",
                 "parameters": [
                     {
@@ -597,8 +598,7 @@
                             }
                         }
                     }
-                },
-                "description": "\n\n**Laravel Implementation Status**: ❌ No equivalent feature in Core (fallback only, disabled by default in official engine)"
+                }
             }
         },
         "/multi_synthesis": {
@@ -607,6 +607,7 @@
                     "Speech Synthesis"
                 ],
                 "summary": "Synthesize multiple speeches at once",
+                "description": "\n\n**Laravel Implementation Status**: ❌ No equivalent feature in Core (fallback only)",
                 "operationId": "multi_synthesis",
                 "parameters": [
                     {
@@ -676,8 +677,7 @@
                             }
                         }
                     }
-                },
-                "description": "\n\n**Laravel Implementation Status**: ❌ No equivalent feature in Core (fallback only)"
+                }
             }
         },
         "/sing_frame_audio_query": {
