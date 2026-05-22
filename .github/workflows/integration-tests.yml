@@ -60,7 +60,7 @@ jobs:
             --c-api-version "$VOICEVOX_CORE_VERSION" \
             --onnxruntime-version "$VOICEVOX_ONNXRUNTIME_VERSION" \
             --models-version "$VOICEVOX_MODELS_VERSION" \
-            --models-pattern 0.vvm 9.vvm s0.vvm
+            --models-pattern 0.vvm
 
           root="$runtime_dir"
 
