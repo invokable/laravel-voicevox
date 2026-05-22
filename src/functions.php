@@ -17,7 +17,7 @@ use Revolution\Voicevox\Talk\TalkAudioQuery;
  */
 function talk(string $text, int|string $id = 1): TalkAudioQuery
 {
-    return Talk::make()->talk($text, $id);
+    return app(Talk::class)->talk($text, $id);
 }
 
 /**
@@ -25,7 +25,7 @@ function talk(string $text, int|string $id = 1): TalkAudioQuery
  */
 function kana(string $kana, int|string $id = 1): TalkAudioQuery
 {
-    return Talk::make()->kana($kana, $id);
+    return app(Talk::class)->kana($kana, $id);
 }
 
 /**
@@ -35,7 +35,7 @@ function kana(string $kana, int|string $id = 1): TalkAudioQuery
  */
 function song(Score|array $score, int|string $teacher = 6000): SongAudioQuery
 {
-    return Song::make()->song($score, $teacher);
+    return app(Song::class)->song($score, $teacher);
 }
 
 function dict(): NativeUserDict
