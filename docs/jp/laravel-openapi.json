@@ -83,7 +83,7 @@
                     "クエリ作成"
                 ],
                 "summary": "音声合成用のクエリをプリセットを用いて作成する",
-                "description": "音声合成用のクエリの初期値を得ます。ここで得られたクエリはそのまま音声合成に利用できます。各値の意味は`Schemas`を参照してください。\n\n**Laravel実装状況**: ✅ NativePresetStoreとコアのcreateAudioQueryで対応（フォールバック不要）",
+                "description": "音声合成用のクエリの初期値を得ます。ここで得られたクエリはそのまま音声合成に利用できます。各値の意味は`Schemas`を参照してください。\n\n**Laravel実装状況**: ⚠️ NativePresetStoreとコアのcreateAudioQueryで対応。enable_katakana_english非対応（プリセットデータを共有してないのでフォールバックなし）",
                 "operationId": "audio_query_from_preset",
                 "parameters": [
                     {
@@ -2283,7 +2283,7 @@
                     "その他"
                 ],
                 "summary": "Get Portal Page",
-                "description": "ポータルページを返します。",
+                "description": "ポータルページを返します。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックのみ）",
                 "operationId": "get_portal_page",
                 "responses": {
                     "200": {
