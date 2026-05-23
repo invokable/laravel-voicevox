@@ -47,72 +47,74 @@ use Revolution\Voicevox\Engine\Http\UserDictController;
 use Revolution\Voicevox\Engine\Http\ValidateKanaController;
 use Revolution\Voicevox\Engine\Http\VersionController;
 
-/**
- * Laravelでは難しいので常に公式エンジンにフォールバック
- */
-// 最難関なのでフォールバックのみ
-Route::post('/cancellable_synthesis', CancellableSynthesisController::class);
-Route::post('/morphable_targets', MorphableTargetsController::class);
-Route::post('/synthesis_morphing', SynthesisMorphingController::class);
+Route::name('voicevox.engine.')->group(function () {
+    /**
+     * Laravelでは難しいので常に公式エンジンにフォールバック
+     */
+    // 最難関なのでフォールバックのみ
+    Route::post('/cancellable_synthesis', CancellableSynthesisController::class)->name('cancellable_synthesis');
+    Route::post('/morphable_targets', MorphableTargetsController::class)->name('morphable_targets');
+    Route::post('/synthesis_morphing', SynthesisMorphingController::class)->name('synthesis_morphing');
 
-// 対応不要
-Route::post('/initialize_speaker', InitializeSpeakerController::class);
-Route::get('/is_initialized_speaker', IsInitializedSpeakerController::class);
-Route::get('/downloadable_libraries', DownloadableLibrariesController::class);
-Route::get('/installed_libraries', InstalledLibrariesController::class);
-Route::post('/install_library/{library_uuid}', InstallLibraryController::class);
-Route::post('/uninstall_library/{library_uuid}', UninstallLibraryController::class);
+    // 対応不要
+    Route::post('/initialize_speaker', InitializeSpeakerController::class)->name('initialize_speaker');
+    Route::get('/is_initialized_speaker', IsInitializedSpeakerController::class)->name('is_initialized_speaker');
+    Route::get('/downloadable_libraries', DownloadableLibrariesController::class)->name('downloadable_libraries');
+    Route::get('/installed_libraries', InstalledLibrariesController::class)->name('installed_libraries');
+    Route::post('/install_library/{library_uuid}', InstallLibraryController::class)->name('install_library');
+    Route::post('/uninstall_library/{library_uuid}', UninstallLibraryController::class)->name('uninstall_library');
 
-// TODO
-Route::post('/import_user_dict', ImportUserDictController::class);
-Route::post('/connect_waves', ConnectWavesController::class);
+    // TODO
+    Route::post('/import_user_dict', ImportUserDictController::class)->name('import_user_dict');
+    Route::post('/connect_waves', ConnectWavesController::class)->name('connect_waves');
 
-/**
- * PHP版コアで対応可能。失敗時にフォールバックも行う。
- */
-// enable_katakana_englishには非対応
-Route::post('/audio_query', AudioQueryController::class);
-Route::post('/accent_phrases', AccentPhrasesController::class);
+    /**
+     * PHP版コアで対応可能。失敗時にフォールバックも行う。
+     */
+    // enable_katakana_englishには非対応
+    Route::post('/audio_query', AudioQueryController::class)->name('audio_query');
+    Route::post('/accent_phrases', AccentPhrasesController::class)->name('accent_phrases');
 
-Route::post('/synthesis', SynthesisController::class);
-Route::post('/multi_synthesis', MultiSynthesisController::class);
-Route::post('/mora_data', MoraDataController::class);
-Route::post('/mora_length', MoraLengthController::class);
-Route::post('/mora_pitch', MoraPitchController::class);
-Route::get('/speakers', SpeakersController::class);
-Route::get('/speaker_info', SpeakerInfoController::class);
-Route::get('/singers', SingersController::class);
-Route::get('/singer_info', SingerInfoController::class);
-Route::post('/sing_frame_audio_query', SingFrameAudioQueryController::class);
-Route::post('/sing_frame_f0', SingFrameF0Controller::class);
-Route::post('/sing_frame_volume', SingFrameVolumeController::class);
-Route::post('/frame_synthesis', FrameSynthesisController::class);
+    Route::post('/synthesis', SynthesisController::class)->name('synthesis');
+    Route::post('/multi_synthesis', MultiSynthesisController::class)->name('multi_synthesis');
+    Route::post('/mora_data', MoraDataController::class)->name('mora_data');
+    Route::post('/mora_length', MoraLengthController::class)->name('mora_length');
+    Route::post('/mora_pitch', MoraPitchController::class)->name('mora_pitch');
+    Route::get('/speakers', SpeakersController::class)->name('speakers');
+    Route::get('/speaker_info', SpeakerInfoController::class)->name('speaker_info');
+    Route::get('/singers', SingersController::class)->name('singers');
+    Route::get('/singer_info', SingerInfoController::class)->name('singer_info');
+    Route::post('/sing_frame_audio_query', SingFrameAudioQueryController::class)->name('sing_frame_audio_query');
+    Route::post('/sing_frame_f0', SingFrameF0Controller::class)->name('sing_frame_f0');
+    Route::post('/sing_frame_volume', SingFrameVolumeController::class)->name('sing_frame_volume');
+    Route::post('/frame_synthesis', FrameSynthesisController::class)->name('frame_synthesis');
 
-// 公式エンジンとデータは共有できない
-Route::get('/presets', PresetsController::class);
-Route::post('/add_preset', AddPresetController::class);
-Route::post('/update_preset', UpdatePresetController::class);
-Route::post('/delete_preset', DeletePresetController::class);
-Route::post('/audio_query_from_preset', AudioQueryFromPresetController::class);
-Route::get('/user_dict', UserDictController::class);
-Route::post('/user_dict_word', AddUserDictWordController::class);
-Route::put('/user_dict_word/{word_uuid}', UpdateUserDictWordController::class);
-Route::delete('/user_dict_word/{word_uuid}', DeleteUserDictWordController::class);
+    // 公式エンジンとデータは共有できない
+    Route::get('/presets', PresetsController::class)->name('presets');
+    Route::post('/add_preset', AddPresetController::class)->name('add_preset');
+    Route::post('/update_preset', UpdatePresetController::class)->name('update_preset');
+    Route::post('/delete_preset', DeletePresetController::class)->name('delete_preset');
+    Route::post('/audio_query_from_preset', AudioQueryFromPresetController::class)->name('audio_query_from_preset');
+    Route::get('/user_dict', UserDictController::class)->name('user_dict');
+    Route::post('/user_dict_word', AddUserDictWordController::class)->name('add_user_dict_word');
+    Route::put('/user_dict_word/{word_uuid}', UpdateUserDictWordController::class)->name('update_user_dict_word');
+    Route::delete('/user_dict_word/{word_uuid}', DeleteUserDictWordController::class)->name('delete_user_dict_word');
 
-// TODO
-Route::get('/core_versions', CoreVersionsController::class);
-Route::get('/supported_devices', SupportedDevicesController::class);
+    // TODO
+    Route::get('/core_versions', CoreVersionsController::class)->name('core_versions');
+    Route::get('/supported_devices', SupportedDevicesController::class)->name('supported_devices');
 
-/**
- * コアもフォールバックも不要で対応可能
- */
-Route::get('/version', VersionController::class);
-Route::get('/_resources/{hash}', ResourcesController::class)->name('voicevox.resources');
-Route::post('/validate_kana', ValidateKanaController::class);
-Route::get('/engine_manifest', EngineManifestController::class);
+    /**
+     * コアもフォールバックも不要で対応可能
+     */
+    Route::get('/version', VersionController::class)->name('version');
+    Route::get('/_resources/{hash}', ResourcesController::class)->name('resources');
+    Route::post('/validate_kana', ValidateKanaController::class)->name('validate_kana');
+    Route::get('/engine_manifest', EngineManifestController::class)->name('engine_manifest');
 
-// TODO
-// Laravel版ではCORS設定は不要だけどユーザー辞書のインポート・エクスポートが設定ページにあるので独自に作成かも
-Route::match(['GET', 'POST'], '/setting', SettingController::class);
-// /settingと/docsへのリンクがあるウェルカムページ
-Route::get('/', HomeController::class)->name('voicevox.home');
+    // TODO
+    // Laravel版ではCORS設定は不要だけどユーザー辞書のインポート・エクスポートが設定ページにあるので独自に作成かも
+    Route::match(['GET', 'POST'], '/setting', SettingController::class)->name('setting');
+    // /settingと/docsへのリンクがあるウェルカムページ
+    Route::get('/', HomeController::class)->name('home');
+});
