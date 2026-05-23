@@ -13,14 +13,16 @@ class Score implements Arrayable, Jsonable
     /**
      * 楽譜情報。
      *
-     * @param  array<Note>  $notes  音符のリスト。1音目は必ず休符。
+     * @param  array<Note|array>  $notes  音符のリスト。1音目は必ず休符。
      */
     public function __construct(
         public array $notes,
     ) {
         // ConvertEmptyStringsToNullミドルウェアによってlyricがnullになることがあるのでここで対処
         $this->notes = Collection::make($this->notes)
-            ->map(fn ($note) => Note::make(length: $note['length'] ?? 100, lyric: $note['lyric'] ?? '', key: $note['key'] ?? null, id: $note['id'] ?? null))
+            ->map(function ($note) {
+                return $note instanceof Note ? $note : Note::make(length: $note['length'] ?? 100, lyric: $note['lyric'] ?? '', key: $note['key'] ?? null, id: $note['id'] ?? null);
+            })
             ->toArray();
     }
 
