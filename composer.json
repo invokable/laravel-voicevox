@@ -82,7 +82,7 @@
         "serve": [
             "Composer\\Config::disableProcessTimeout",
             "@build",
-            "@php vendor/bin/testbench serve --ansi"
+            "@php vendor/bin/testbench serve --port=50513 --ansi"
         ],
         "boost": "vendor/bin/testbench boost:install --no-interaction --ansi"
     }

@@ -5,7 +5,7 @@
     "uuid": "513b0774-3428-4a1d-9d4e-a7fd5f32d0a7",
     "version": "999.999.999",
     "url": "https://github.com/invokable/laravel-voicevox",
-    "command": "php artisan serve",
+    "command": "run.sh",
     "port": 50513,
     "icon": "resources/engine_manifest_assets/icon.png",
     "default_sampling_rate": 24000,
