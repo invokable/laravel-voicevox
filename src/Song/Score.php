@@ -21,7 +21,7 @@ class Score implements Arrayable, Jsonable
         // ConvertEmptyStringsToNullミドルウェアによってlyricがnullになることがあるのでここで対処
         $this->notes = Collection::make($this->notes)
             ->map(function ($note) {
-                return $note instanceof Note ? $note : Note::make(length: $note['length'] ?? 100, lyric: $note['lyric'] ?? '', key: $note['key'] ?? null, id: $note['id'] ?? null);
+                return $note instanceof Note ? $note : Note::make(length: $note['frame_length'] ?? 100, lyric: $note['lyric'] ?? '', key: $note['key'] ?? null, id: $note['id'] ?? null);
             })
             ->toArray();
     }
