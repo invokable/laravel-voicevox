@@ -429,5 +429,5 @@ foreach ($speakers as $speaker) {
 または Engine API 経由で：
 
 ```bash
-curl http://localhost:8000/speakers
+curl http://localhost:50513/speakers
 ```

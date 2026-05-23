@@ -1,6 +1,6 @@
 # エンジン API モード：トーク（テキスト音声合成）
 
-Laravel 版エンジン API は、公式 VOICEVOX エンジンと互換性のある HTTP API を Laravel アプリ内に組み込みます。`php artisan serve` でサーバーを起動するだけで、公式エンジンと同じエンドポイントが使えます。
+Laravel 版エンジン API は、公式 VOICEVOX エンジンと互換性のある HTTP API を Laravel アプリ内に組み込みます。`php artisan serve --port=50513` でサーバーを起動するだけで、公式エンジンと同じエンドポイントが使えます。
 
 ## 事前準備
 
@@ -49,7 +49,7 @@ php artisan serve --port=50513
 ### 1. audio_query の作成
 
 ```shell
-curl -s -X POST "http://127.0.0.1:8000/audio_query?speaker=1&text=ララベルが好きなのだ" \
+curl -s -X POST "http://127.0.0.1:50513/audio_query?speaker=1&text=ララベルが好きなのだ" \
   -H "Content-Type: application/json" \
   > audio_query.json
 ```
@@ -57,7 +57,7 @@ curl -s -X POST "http://127.0.0.1:8000/audio_query?speaker=1&text=ララベル�
 ### 2. synthesis で音声合成
 
 ```shell
-curl -s -X POST "http://127.0.0.1:8000/synthesis?speaker=1" \
+curl -s -X POST "http://127.0.0.1:50513/synthesis?speaker=1" \
   -H "Content-Type: application/json" \
   -d @audio_query.json \
   > talk.wav
@@ -70,7 +70,7 @@ Laravel 版エンジンに向けてクライアントモードから接続する
 ```php
 // config/voicevox.php
 'client' => [
-    'url' => env('VOICEVOX_URL', 'http://127.0.0.1:8000'), // Laravel エンジンの URL
+    'url' => env('VOICEVOX_URL', 'http://127.0.0.1:50513'), // Laravel エンジンの URL
 ],
 ```
 
