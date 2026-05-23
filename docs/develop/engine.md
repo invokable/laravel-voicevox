@@ -49,6 +49,7 @@ vendor/bin/testbench voicevox:install
 ```
 
 `/speakers`から`/singer_info`、`/_resources/{hash}`のルート辺りは公式とほぼ同じ機能で再現できた。
+エンジンAPIから返すキャラ情報は12時間キャッシュ。滅多に更新しないので影響は少ない。キャッシュ強制削除は通常のLaravelと同じ`cache:clear`。
 
 engine_manifest.jsonはインストールなどの変換処理は挟まず公式を参考にLaravel用に作ればいいはず。
 `voicevox_engine/engine_manifest.json`
