@@ -1,83 +1,31 @@
 {
     "manifest_version": "0.13.1",
-    "name": "VOICEVOX ENGINE Laravel version",
+    "name": "VOICEVOX ENGINE Laravel",
     "brand_name": "Invokable",
     "uuid": "513b0774-3428-4a1d-9d4e-a7fd5f32d0a7",
-    "version": "999.999.999",
     "url": "https://github.com/invokable/laravel-voicevox",
     "command": "php artisan serve",
     "port": 50513,
     "icon": "resources/engine_manifest_assets/icon.png",
     "default_sampling_rate": 24000,
     "frame_rate": 93.75,
-    "terms_of_service": "resources/engine_manifest_assets/terms_of_service.md",
-    "update_infos": "resources/engine_manifest_assets/update_infos.json",
-    "dependency_licenses": "resources/engine_manifest_assets/dependency_licenses.json",
+    "terms_of_service": "## 許諾内容\n\n1. 商用・非商用問わず利用することができます\n2. アプリケーションに組み込んで再配布することができます\n3. 作成された音声を利用する際は、各音声ライブラリの規約に従ってください\n4. 作成された音声の利用を他者に許諾する際は、当該他者に対し本許諾内容の 3 及び 4 の遵守を義務付けてください\n\n## 禁止事項\n\n- 逆コンパイル・リバースエンジニアリング及びこれらの方法の公開すること\n- 製作者または第三者に不利益をもたらす行為\n- 公序良俗に反する行為\n\n## 免責事項\n\n本ソフトウェアにより生じた損害・不利益について、製作者は一切の責任を負いません。\n\n## その他\n\nご利用の際は VOICEVOX を利用したことがわかるクレジット表記が必要です。\n",
+    "update_infos": [],
+    "dependency_licenses": [],
+    "supported_vvlib_manifest_version": null,
     "supported_features": {
-        "adjust_mora_pitch": {
-            "type": "bool",
-            "value": true,
-            "name": "モーラごとの音高の調整"
-        },
-        "adjust_phoneme_length": {
-            "type": "bool",
-            "value": true,
-            "name": "音素ごとの長さの調整"
-        },
-        "adjust_speed_scale": {
-            "type": "bool",
-            "value": true,
-            "name": "全体の話速の調整"
-        },
-        "adjust_pitch_scale": {
-            "type": "bool",
-            "value": true,
-            "name": "全体の音高の調整"
-        },
-        "adjust_intonation_scale": {
-            "type": "bool",
-            "value": true,
-            "name": "全体の抑揚の調整"
-        },
-        "adjust_volume_scale": {
-            "type": "bool",
-            "value": true,
-            "name": "全体の音量の調整"
-        },
-        "adjust_pause_length": {
-            "type": "bool",
-            "value": true,
-            "name": "句読点などの無音時間の調整"
-        },
-        "interrogative_upspeak": {
-            "type": "bool",
-            "value": true,
-            "name": "疑問文の自動調整"
-        },
-        "synthesis_morphing": {
-            "type": "bool",
-            "value": false,
-            "name": "2種類のスタイルでモーフィングした音声を合成"
-        },
-        "sing": {
-            "type": "bool",
-            "value": true,
-            "name": "歌唱音声合成"
-        },
-        "manage_library": {
-            "type": "bool",
-            "value": false,
-            "name": "音声ライブラリのインストール・アンインストール"
-        },
-        "return_resource_url": {
-            "type": "bool",
-            "value": true,
-            "name": "キャラクター情報のリソースをURLで返送"
-        },
-        "apply_katakana_english": {
-            "type": "bool",
-            "value": false,
-            "name": "未知の英単語をカタカナ読みに変換"
-        }
+        "adjust_mora_pitch": true,
+        "adjust_phoneme_length": true,
+        "adjust_speed_scale": true,
+        "adjust_pitch_scale": true,
+        "adjust_intonation_scale": true,
+        "adjust_volume_scale": true,
+        "adjust_pause_length": true,
+        "interrogative_upspeak": true,
+        "synthesis_morphing": false,
+        "sing": true,
+        "manage_library": false,
+        "return_resource_url": true,
+        "apply_katakana_english": false
     }
 }
