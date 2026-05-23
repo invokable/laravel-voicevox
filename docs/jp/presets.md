@@ -159,13 +159,13 @@ Laravel VOICEVOX のエンジン API を起動している場合、HTTP 経由�
 #### 全プリセットの取得
 
 ```bash
-curl http://localhost:8000/presets
+curl http://localhost:50513/presets
 ```
 
 #### プリセットの追加
 
 ```bash
-curl -X POST http://localhost:8000/add_preset \
+curl -X POST http://localhost:50513/add_preset \
   -H "Content-Type: application/json" \
   -d '{
     "id": 0,
@@ -184,7 +184,7 @@ curl -X POST http://localhost:8000/add_preset \
 #### プリセットの更新
 
 ```bash
-curl -X POST http://localhost:8000/update_preset \
+curl -X POST http://localhost:50513/update_preset \
   -H "Content-Type: application/json" \
   -d '{
     "id": 1,
@@ -203,7 +203,7 @@ curl -X POST http://localhost:8000/update_preset \
 #### プリセットの削除
 
 ```bash
-curl -X POST http://localhost:8000/delete_preset \
+curl -X POST http://localhost:50513/delete_preset \
   -H "Content-Type: application/json" \
   -d '{"id": 1}'
 ```
@@ -211,7 +211,7 @@ curl -X POST http://localhost:8000/delete_preset \
 #### プリセットを使った音声クエリの生成
 
 ```bash
-curl -X POST "http://localhost:8000/audio_query_from_preset?text=こんにちは&preset_id=1"
+curl -X POST "http://localhost:50513/audio_query_from_preset?text=こんにちは&preset_id=1"
 ```
 
 ## 実用例
