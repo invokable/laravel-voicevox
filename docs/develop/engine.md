@@ -28,7 +28,7 @@ return [
 
 ### ローカルでもウェブサーバーではデフォルト無効
 
-php artisan serveやtestbench serveで使用するにはphp.iniでFFIを有効化する。
+php artisan serve --port=50513 や testbench serve --port=50513 で使用するには php.ini で FFI を有効化する。
 
 ```
 ffi.enable=true

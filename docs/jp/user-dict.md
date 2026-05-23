@@ -145,31 +145,31 @@ Laravel VOICEVOX のエンジン API を起動している場合、HTTP 経由�
 ### 全単語の取得
 
 ```bash
-curl http://localhost:8000/user_dict
+curl http://localhost:50513/user_dict
 ```
 
 ### 単語の追加
 
 ```bash
-curl -X POST "http://localhost:8000/user_dict_word?surface=Laravel&pronunciation=ララベル&accent_type=0"
+curl -X POST "http://localhost:50513/user_dict_word?surface=Laravel&pronunciation=ララベル&accent_type=0"
 ```
 
 ### 単語の更新
 
 ```bash
-curl -X PUT "http://localhost:8000/user_dict_word/{uuid}?surface=Laravel&pronunciation=ラレベル&accent_type=1"
+curl -X PUT "http://localhost:50513/user_dict_word/{uuid}?surface=Laravel&pronunciation=ラレベル&accent_type=1"
 ```
 
 ### 単語の削除
 
 ```bash
-curl -X DELETE "http://localhost:8000/user_dict_word/{uuid}"
+curl -X DELETE "http://localhost:50513/user_dict_word/{uuid}"
 ```
 
 ### 辞書のインポート
 
 ```bash
-curl -X POST "http://localhost:8000/import_user_dict?override=false" \
+curl -X POST "http://localhost:50513/import_user_dict?override=false" \
   -H "Content-Type: application/json" \
   -d @other_dict.json
 ```

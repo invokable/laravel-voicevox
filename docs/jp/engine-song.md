@@ -14,7 +14,7 @@ VOICEVOX_CORE_PATH=/path/to/voicevox_core/
 ## Laravel 版エンジンの起動
 
 ```shell
-php artisan serve
+php artisan serve --port=50513
 ```
 
 ## 歌声音声の生成
@@ -22,7 +22,7 @@ php artisan serve
 ### 1. sing_frame_audio_query の作成
 
 ```shell
-curl -s -X POST "http://127.0.0.1:8000/sing_frame_audio_query?speaker=6000" \
+curl -s -X POST "http://127.0.0.1:50513/sing_frame_audio_query?speaker=6000" \
   -H "Content-Type: application/json" \
   -d '{
     "notes": [
@@ -41,7 +41,7 @@ curl -s -X POST "http://127.0.0.1:8000/sing_frame_audio_query?speaker=6000" \
 ### 2. frame_synthesis で音声合成
 
 ```shell
-curl -s -X POST "http://127.0.0.1:8000/frame_synthesis?speaker=3001" \
+curl -s -X POST "http://127.0.0.1:50513/frame_synthesis?speaker=3001" \
   -H "Content-Type: application/json" \
   -d @frame_audio_query.json \
   > song.wav
@@ -56,7 +56,7 @@ Laravel 版エンジンに向けてクライアントモードの `Voicevox::son
 ```php
 // config/voicevox.php
 'client' => [
-    'url' => env('VOICEVOX_URL', 'http://127.0.0.1:8000'), // Laravel エンジンの URL
+    'url' => env('VOICEVOX_URL', 'http://127.0.0.1:50513'), // Laravel エンジンの URL
 ],
 ```
 
@@ -84,13 +84,13 @@ $response->storeAs('engine', 'song.wav');
 
 ```shell
 # F0 の更新（sing_frame_audio_query の結果 JSON が必要）
-curl -s -X POST "http://127.0.0.1:8000/sing_frame_f0?speaker=6000" \
+curl -s -X POST "http://127.0.0.1:50513/sing_frame_f0?speaker=6000" \
   -H "Content-Type: application/json" \
   -d '{"score": {...}, "frame_audio_query": {...}}' \
   > f0.json
 
 # ボリュームの更新（必ず F0 更新の後に実行）
-curl -s -X POST "http://127.0.0.1:8000/sing_frame_volume?speaker=6000" \
+curl -s -X POST "http://127.0.0.1:50513/sing_frame_volume?speaker=6000" \
   -H "Content-Type: application/json" \
   -d '{"score": {...}, "frame_audio_query": {...}}' \
   > volume.json
