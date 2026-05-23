@@ -19,5 +19,6 @@ testbench.yaml export-ignore
 .gitmodules export-ignore
 /voicevox_engine export-ignore
 /voicevox_resource export-ignore
+/docs export-ignore
 
 .github/workflows/*.lock.yml linguist-generated=true merge=ours
