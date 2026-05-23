@@ -155,7 +155,7 @@ class MetaStore
         if ($format === 'url') {
             $hash = $this->getResourceManager()->resourceStr($path, 'hash');
 
-            return route('voicevox.resources', $hash);
+            return route('voicevox.engine.resources', $hash);
         }
 
         return base64_encode(File::get($path));
