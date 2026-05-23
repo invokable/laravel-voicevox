@@ -6,7 +6,7 @@
     "url": "https://github.com/invokable/laravel-voicevox",
     "command": "php artisan serve",
     "port": 50513,
-    "icon": "resources/engine_manifest_assets/icon.png",
+    "icon": "",
     "default_sampling_rate": 24000,
     "frame_rate": 93.75,
     "terms_of_service": "## 許諾内容\n\n1. 商用・非商用問わず利用することができます\n2. アプリケーションに組み込んで再配布することができます\n3. 作成された音声を利用する際は、各音声ライブラリの規約に従ってください\n4. 作成された音声の利用を他者に許諾する際は、当該他者に対し本許諾内容の 3 及び 4 の遵守を義務付けてください\n\n## 禁止事項\n\n- 逆コンパイル・リバースエンジニアリング及びこれらの方法の公開すること\n- 製作者または第三者に不利益をもたらす行為\n- 公序良俗に反する行為\n\n## 免責事項\n\n本ソフトウェアにより生じた損害・不利益について、製作者は一切の責任を負いません。\n\n## その他\n\nご利用の際は VOICEVOX を利用したことがわかるクレジット表記が必要です。\n",
