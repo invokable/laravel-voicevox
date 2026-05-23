@@ -6,6 +6,8 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Revolution\Voicevox\Core\Exceptions\VoicevoxException;
+use Revolution\Voicevox\Core\VoicevoxCore;
 use Revolution\Voicevox\Song\Score;
 use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
@@ -18,6 +20,14 @@ class SingFrameAudioQueryController
     {
         $score = Score::make($request->json('notes'))->toArray();
         $speaker = $request->integer('speaker', 6000);
+
+        try {
+            app(VoicevoxCore::class)->scoreValidate(json_encode($score));
+        } catch (VoicevoxException $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], status: Response::HTTP_UNPROCESSABLE_ENTITY, options: JSON_UNESCAPED_UNICODE);
+        }
 
         try {
             $frame_audio_query = Synthesizer::createSingFrameAudioQuery(json_encode($score), $speaker);

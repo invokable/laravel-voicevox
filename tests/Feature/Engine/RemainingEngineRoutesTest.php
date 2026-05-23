@@ -55,6 +55,9 @@ test('engine synthesis_morphing returns audio', function () {
 });
 
 test('engine sing_frame_audio_query returns json', function () {
+    $this->mock(VoicevoxCore::class, function ($mock) {
+        $mock->allows('scoreValidate')->andReturn(null);
+    });
     Synthesizer::expects('createSingFrameAudioQuery')->andThrow(Exception::class);
     Voicevox::expects('baseUrl->singFrameAudioQuery')->andReturn(['f0' => [], 'volume' => []]);
 
