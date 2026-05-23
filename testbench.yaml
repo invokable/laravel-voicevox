@@ -6,6 +6,7 @@ providers:
 
 env:
   APP_ENV: local
+  CACHE_STORE: file
 
 migrations:
   - workbench/database/migrations
