@@ -1,6 +1,6 @@
 {
     "manifest_version": "0.13.1",
-    "name": "VOICEVOX ENGINE Laravel",
+    "name": "Laravel VOICEVOX Engine",
     "brand_name": "Invokable",
     "uuid": "513b0774-3428-4a1d-9d4e-a7fd5f32d0a7",
     "url": "https://github.com/invokable/laravel-voicevox",
