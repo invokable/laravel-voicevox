@@ -6,6 +6,7 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Revolution\Voicevox\Song\Score;
 use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,7 @@ class SingFrameF0Controller
     public function __invoke(Request $request): JsonResponse
     {
         $score = $request->array('score');
+        $score = Score::make($score['notes'] ?? [])->toArray();
         $speaker = $request->integer('speaker', 6000);
         $frameAudioQuery = $request->array('frame_audio_query');
 

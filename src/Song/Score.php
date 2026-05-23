@@ -18,7 +18,10 @@ class Score implements Arrayable, Jsonable
     public function __construct(
         public array $notes,
     ) {
-        //
+        // ConvertEmptyStringsToNullミドルウェアによってlyricがnullになることがあるのでここで対処
+        $this->notes = Collection::make($this->notes)
+            ->map(fn ($note) => Note::make(length: $note['length'] ?? 100, lyric: $note['lyric'] ?? '', key: $note['key'] ?? null, id: $note['id'] ?? null))
+            ->toArray();
     }
 
     public static function make(array $notes): self
