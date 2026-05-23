@@ -27,10 +27,10 @@ php artisan voicevox:install
 ## Laravel 版エンジンの起動
 
 ```shell
-php artisan serve
+php artisan serve --port=50513
 ```
 
-デフォルトでは `http://127.0.0.1:8000` で起動します。
+デフォルトでは `http://127.0.0.1:50513` で起動します。
 
 ### エンジン API の有効・無効
 
