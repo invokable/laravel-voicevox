@@ -6,6 +6,7 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Revolution\Voicevox\Engine\MetaStore;
 use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
@@ -20,7 +21,9 @@ class SingerInfoController
         $format = $request->string('resource_format', 'base64')->value();
 
         try {
-            $info = MetaStore::make(json_decode(Synthesizer::metas(), true))->singer($uuid, $format);
+            $info = Cache::remember('engine.singer_info', now()->plus(hours: 12), function () use ($uuid, $format) {
+                return MetaStore::make(json_decode(Synthesizer::metas(), true))->singer($uuid, $format);
+            });
 
             return response()->json(
                 $info,
@@ -40,7 +43,7 @@ class SingerInfoController
                 'error' => __(config('voicevox.engine.fallback_error')),
             ],
                 status: Response::HTTP_NOT_IMPLEMENTED,
-                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+                options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
             );
         }
     }

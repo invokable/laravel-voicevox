@@ -6,6 +6,7 @@ namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Revolution\Voicevox\Engine\MetaStore;
 use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
@@ -17,10 +18,12 @@ class SpeakersController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $singers = MetaStore::make(json_decode(Synthesizer::metas(), true))->speakers();
+            $speakers = Cache::remember('engine.speakers', now()->plus(hours: 12), function () {
+                return MetaStore::make(json_decode(Synthesizer::metas(), true))->speakers();
+            });
 
             return response()->json(
-                $singers,
+                $speakers,
                 options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
             );
         } catch (Throwable) {
