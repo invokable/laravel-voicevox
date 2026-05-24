@@ -20,7 +20,7 @@ HTTP経由で公式エンジンに接続するクライアントモードと、V
 | Laravel style    | ✅         | Laravelスタイルでvoicevox-core-phpを扱う。                                                                                   |
 | Laravel AI SDK統合 | ✅         | Laravel AI SDKのAudioから使う。クライアント版とネイティブ版、両方で対応しています。                                                                 |
 | VOICEVOX Engine  | ⚠️        | PHP版コアを利用したLaravel版エンジンAPI。技術的に移植不可能な機能は公式エンジンにフォールバックします。                                                          |
-| VOICEVOX Editor  | ❌         |                                                                                                                     |
+| VOICEVOX Editor  | ⚠️        | macOS用のソング特化アプリを開発しましたがアプリストアで公開・配布する予定はありません。いつかGitHubでコードが公開されたらXcodeでビルドして使用できます。                                |
 
 ## Requirements
 
