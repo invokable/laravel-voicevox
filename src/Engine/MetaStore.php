@@ -187,7 +187,7 @@ class MetaStore
 
             if (File::exists($metasFile)) {
                 $data = json_decode(File::get($metasFile), associative: true);
-                $this->supportedFeatures[$uuid] = $data['supported_features'] ?? self::DEFAULT_SUPPORTED_FEATURES;
+                $this->supportedFeatures[$uuid] = filled($data['supported_features']) ? $data['supported_features'] : self::DEFAULT_SUPPORTED_FEATURES;
             }
         }
     }
