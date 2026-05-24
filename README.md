@@ -6,8 +6,6 @@
 [![Code Coverage](https://qlty.sh/badges/cc6e0ee3-e221-4c06-90be-4fd87b79310e/coverage.svg)](https://qlty.sh/gh/invokable/projects/laravel-voicevox)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/invokable/laravel-voicevox)
 
-Work In Progress.
-
 ## Overview
 
 This package brings [VOICEVOX](https://github.com/VOICEVOX), a Japanese TTS / singing synthesis ecosystem, to Laravel.
