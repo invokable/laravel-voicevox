@@ -56,6 +56,12 @@ engine_manifest.jsonはインストールなどの変換処理は挟まず公式
 
 VVPPファイルとして配布するなら`engine_manifest.json`はプロジェクト直下だけど配布はしないだろうから仮で`resources/engine_manifest.json`に配置。
 
+### 公式VOICEVOXアプリ（製品版）でLaravelエンジンAPIは使いにくい
+
+公式アプリのマルチエンジン対応はエンジンのフォルダを指定してengine_manifest.jsonを読んでアプリがエンジンを起動しているので`php artisan serve`で起動するLaravel版はそのままでは使えない。
+
+使えるとしたら[VOICEVOXエディター](https://github.com/VOICEVOX/voicevox/) で別のエンジンAPIサーバーを立ててる場合の使い方。エンジンを起動せずに`.env`のhostに接続するなら使えるはず。
+
 ### ユーザー辞書
 
 公式エンジンは`resources/default.csv`にデフォルト辞書。
@@ -95,7 +101,7 @@ AudioQuery内に`kana`が含まれてるのでコアを使う強引な方法で�
 
 ### ライブラリダウンロード・インストール機能
 
-これはOSごとに違うユーザー領域にダウンロードする機能。Laravel版では関係ないのでフォールバックのみ。
+これはOSごとに違うユーザー領域にダウンロードする機能。Laravel版では関係ないのでフォールバックのみ。公式アプリに同梱してるエンジンも非対応。
 
 公式エンジンの`get_save_dir()`を使ってる機能はほとんど無視になるはず。ユーザー辞書やプリセットのように軽いjsonならstorageを使用。
 
