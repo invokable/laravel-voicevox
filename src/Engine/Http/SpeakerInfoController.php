@@ -21,7 +21,7 @@ class SpeakerInfoController
         $format = $request->string('resource_format', 'base64')->value();
 
         try {
-            $info = Cache::remember('engine.speaker_info', now()->plus(hours: 12), function () use ($uuid, $format) {
+            $info = Cache::remember('engine.speaker_info.'.$uuid, now()->plus(hours: 12), function () use ($uuid, $format) {
                 return MetaStore::make(json_decode(Synthesizer::metas(), true))->speaker($uuid, $format);
             });
 
