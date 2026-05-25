@@ -11,14 +11,15 @@
 Laravelから音声合成エンジンVOICEVOXを扱うためのパッケージです。  
 HTTP経由で公式エンジンに接続するクライアントモードと、VOICEVOX Core for PHPを組み合わせてPHP FFIから直接合成するネイティブモードを同じLaravelスタイルで扱えます。
 
-| Feature          | Supported | Description                                                                                                         |
-|------------------|-----------|---------------------------------------------------------------------------------------------------------------------|
-| VOICEVOX Client  | ✅         | 公式のVOICEVOXエンジンAPIにアクセスするクライアント。FFIなしでも動きます。                                                                        | 
-| VOICEVOX Core    | ✅         | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) VOICEVOX COREの動的ライブラリをFFIでラップしPHPネイティブのように使えます。 |
-| Laravel style    | ✅         | Laravelスタイルでvoicevox-core-phpを扱う。                                                                                   |
-| Laravel AI SDK統合 | ✅         | Laravel AI SDKのAudioから使う。クライアント版とネイティブ版、両方で対応しています。                                                                 |
-| VOICEVOX Engine  | ⚠️        | PHP版コアを利用したLaravel版エンジンAPI。技術的に移植不可能な機能は公式エンジンにフォールバックします。                                                          |
-| VOICEVOX Editor  | ⚠️        | macOS用のソング特化アプリを開発しましたがアプリストアで公開・配布する予定はありません。いつかGitHubでコードが公開されたらXcodeでビルドして使用できます。                                |
+| Feature                           | Supported | Description                                                                                                         |
+|-----------------------------------|-----------|---------------------------------------------------------------------------------------------------------------------|
+| VOICEVOX Client                   | ✅         | 公式のVOICEVOXエンジンAPIにアクセスするクライアント。FFIなしでも動きます。                                                                        | 
+| VOICEVOX Core                     | ✅         | [voicevox-core-php](https://github.com/invokable/voicevox-core-php) VOICEVOX COREの動的ライブラリをFFIでラップしPHPネイティブのように使えます。 |
+| Laravel style                     | ✅         | Laravelスタイルでvoicevox-core-phpを扱う。                                                                                   |
+| Laravel AI SDK統合                  | ✅         | Laravel AI SDKのAudioから使う。クライアント版とネイティブ版、両方で対応しています。                                                                 |
+| VOICEVOX Engine                   | ⚠️        | PHP版コアを利用したLaravel版エンジンAPI。技術的に移植不可能な機能は公式エンジンにフォールバックします。                                                          |
+| VOICEVOX Engine / OpenAI互換TTS API | ✅         | `/v1/audio/speech` voiceはAI SDKと同様にスタイルIDの他に「ずんだもん」などのエイリアスに対応しています。                                                |
+| VOICEVOX Editor                   | ⚠️        | macOS用のソング特化アプリを開発しましたがアプリストアで公開・配布する予定はありません。いつかGitHubでコードが公開されたらXcodeでビルドして使用できます。                                |
 
 ## Requirements
 
