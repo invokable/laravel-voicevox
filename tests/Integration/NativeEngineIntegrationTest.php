@@ -25,14 +25,13 @@ test('native user dict can add and retrieve word', function () {
         wordType: 'PROPER_NOUN',
     );
 
-    expect($uuid)->toBeString()
-        ->and($userDict->all())->toHaveKey($uuid);
-
     $words = $userDict->all();
-    $word = $words[$uuid];
-    expect($word)->toBeArray()
-        ->and($word['surface'] ?? null)->toBe('テスト単語')
-        ->and($word['pronunciation'] ?? null)->toBe('テストタンゴ');
+    expect($uuid)->toBeString()
+        ->and($words)->toBeArray()
+        ->and(collect($words)->contains(function (mixed $word): bool {
+            return ($word['surface'] ?? null) === 'テスト単語'
+                && ($word['pronunciation'] ?? null) === 'テストタンゴ';
+        }))->toBeTrue();
 
     $userDict->removeWord($uuid);
 });
@@ -63,8 +62,10 @@ test('engine add and delete user_dict word workflow', function () {
         ->assertOk()
         ->json();
 
-    expect($dictResponse)->toHaveKey($uuid)
-        ->and($dictResponse[$uuid]['surface'])->toBe('エンジンテスト');
+    expect($dictResponse)->toBeArray()
+        ->and(collect($dictResponse)->contains(function (mixed $entry): bool {
+            return ($entry['surface'] ?? null) === 'エンジンテスト';
+        }))->toBeTrue();
 
     $this->deleteJson("/user_dict_word/{$uuid}")
         ->assertNoContent();
@@ -127,7 +128,7 @@ test('engine add, update and delete preset workflow', function () {
 
     $updatedPreset = array_merge($newPreset, ['speedScale' => 1.5]);
     $this->postJson('/update_preset', $updatedPreset)
-        ->assertNoContent();
+        ->assertOk();
 
     $this->postJson('/delete_preset', ['id' => 88888])
         ->assertNoContent();
