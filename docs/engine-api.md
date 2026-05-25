@@ -16,6 +16,7 @@
 | `POST /audio_query`               | ⚠️                 | ✅              | Laravelではenable_katakana_englishには非対応                                         |
 | `POST /accent_phrases`            | ⚠️                 | ✅              | `is_kana`のtrue/false両対応。enable_katakana_englishには非対応。                         |
 | `POST /synthesis`                 | ✅                  | ✅              | コアで可能                                                                         |
+| `POST /v1/audio/speech`           | ✅                  | ✅              | OpenAI互換TTS。`voice`はスタイルID・AI SDKエイリアス・OpenAIボイス名に対応。`speed`は`speedScale`へ適用。 |
 | `POST /mora_data`                 | ✅                  | ✅              | コアで可能                                                                         |
 | `POST /mora_length`               | ✅                  | ✅              | コアで可能                                                                         |
 | `POST /mora_pitch`                | ✅                  | ✅              | コアで可能                                                                         |

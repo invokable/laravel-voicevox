@@ -12,9 +12,9 @@ trait ResolvesVoiceId
      * Named aliases are provided for convenience; any other value is cast to int
      * and used as a raw style ID.
      */
-    protected function resolveVoiceId(string $voice): int
+    protected function resolveVoiceId(int|string $voice): int
     {
-        return match ($voice) {
+        return match (strtolower((string) $voice)) {
             // ずんだもん
             'ずんだもん', 'ずんだもん/あまあま' => 1,
             'ずんだもん/ノーマル' => 3,
@@ -43,6 +43,21 @@ trait ResolvesVoiceId
             // 汎用エイリアス
             'default-female' => 10,
             'default-male' => 12,
+
+            // OpenAI compatible voice names (temporary mapping)
+            'alloy' => 3,
+            'ash' => 12,
+            'ballad' => 16,
+            'coral' => 8,
+            'echo' => 11,
+            'fable' => 13,
+            'onyx' => 12,
+            'nova' => 10,
+            'sage' => 14,
+            'shimmer' => 1,
+            'verse' => 9,
+            'marin' => 2,
+            'cedar' => 11,
 
             default => (int) $voice,
         };

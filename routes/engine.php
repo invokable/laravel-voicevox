@@ -27,6 +27,7 @@ use Revolution\Voicevox\Engine\Http\MoraLengthController;
 use Revolution\Voicevox\Engine\Http\MoraPitchController;
 use Revolution\Voicevox\Engine\Http\MorphableTargetsController;
 use Revolution\Voicevox\Engine\Http\MultiSynthesisController;
+use Revolution\Voicevox\Engine\Http\OpenAiSpeechController;
 use Revolution\Voicevox\Engine\Http\PresetsController;
 use Revolution\Voicevox\Engine\Http\ResourcesController;
 use Revolution\Voicevox\Engine\Http\SettingController;
@@ -76,6 +77,7 @@ Route::name('voicevox.engine.')->group(function () {
     Route::post('/accent_phrases', AccentPhrasesController::class)->name('accent_phrases');
 
     Route::post('/synthesis', SynthesisController::class)->name('synthesis');
+    Route::post('/v1/audio/speech', OpenAiSpeechController::class)->name('openai.audio.speech');
     Route::post('/multi_synthesis', MultiSynthesisController::class)->name('multi_synthesis');
     Route::post('/mora_data', MoraDataController::class)->name('mora_data');
     Route::post('/mora_length', MoraLengthController::class)->name('mora_length');

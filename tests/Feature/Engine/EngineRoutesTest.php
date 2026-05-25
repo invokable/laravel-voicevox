@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\File;
+use Mockery\MockInterface;
+use Revolution\Voicevox\Client\VoicevoxClient;
 use Revolution\Voicevox\Engine\Http\ResourcesController;
 use Revolution\Voicevox\Enums\Engine;
 use Revolution\Voicevox\Synthesizer;
@@ -26,6 +28,59 @@ test('engine synthesis endpoint returns wav', function () {
 
     $response->assertOk()
         ->assertHeader('Content-Type', 'audio/wav');
+});
+
+test('engine OpenAI speech endpoint returns wav using OpenAI voice name', function () {
+    Synthesizer::expects('createAudioQuery')
+        ->with('Hello from OpenAI compatible TTS', 3)
+        ->andReturn(json_encode(['speedScale' => 1.0, 'accent_phrases' => []]));
+
+    Synthesizer::expects('synthesis')
+        ->withArgs(function (string $audioQuery, int $speaker, bool $enableInterrogativeUpspeak): bool {
+            return data_get(json_decode($audioQuery, true), 'speedScale') === 1.5
+                && $speaker === 3
+                && $enableInterrogativeUpspeak;
+        })
+        ->andReturn('wav_binary_data');
+
+    $response = $this->postJson('/v1/audio/speech', [
+        'model' => 'tts-1',
+        'input' => 'Hello from OpenAI compatible TTS',
+        'voice' => 'alloy',
+        'speed' => 1.5,
+    ]);
+
+    $response->assertOk()
+        ->assertHeader('Content-Type', 'audio/wav')
+        ->assertContent('wav_binary_data');
+});
+
+test('engine OpenAI speech endpoint falls back to client and applies speed', function () {
+    Synthesizer::expects('createAudioQuery')->andThrow(Exception::class);
+
+    $this->mock(VoicevoxClient::class, function (MockInterface $mock) {
+        $mock->expects('baseUrl')->andReturnSelf();
+        $mock->expects('audioQuery')
+            ->with('Fallback speech', 12)
+            ->andReturn(['speedScale' => 1.0, 'accent_phrases' => []]);
+        $mock->expects('synthesis')
+            ->withArgs(function (array $audioQuery, int $speaker): bool {
+                return data_get($audioQuery, 'speedScale') === 0.75
+                    && $speaker === 12;
+            })
+            ->andReturn('fallback_wav_binary_data');
+    });
+
+    $response = $this->postJson('/v1/audio/speech', [
+        'model' => 'tts-1',
+        'input' => 'Fallback speech',
+        'voice' => 'onyx',
+        'speed' => 0.75,
+    ]);
+
+    $response->assertOk()
+        ->assertHeader('Content-Type', 'audio/wav')
+        ->assertContent('fallback_wav_binary_data');
 });
 
 test('engine speakers endpoint returns array', function () {
