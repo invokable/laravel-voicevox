@@ -58,14 +58,14 @@ class SongAudioQuery
 
     public function updateF0(): self
     {
-        $this->frameAudioQuery['f0'] = Synthesizer::createSingFrameF0(json_encode($this->score), json_encode($this->frameAudioQuery), (int) $this->teacher);
+        $this->frameAudioQuery['f0'] = json_decode(Synthesizer::createSingFrameF0(json_encode($this->score), json_encode($this->frameAudioQuery), (int) $this->teacher), true);
 
         return $this;
     }
 
     public function updateVolume(): self
     {
-        $this->frameAudioQuery['volume'] = Synthesizer::createSingFrameVolume(json_encode($this->score), json_encode($this->frameAudioQuery), (int) $this->teacher);
+        $this->frameAudioQuery['volume'] = json_decode(Synthesizer::createSingFrameVolume(json_encode($this->score), json_encode($this->frameAudioQuery), (int) $this->teacher), true);
 
         return $this;
     }
