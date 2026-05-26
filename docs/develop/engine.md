@@ -76,7 +76,7 @@ workbench/routes/console.phpの`voicevox:native:dict-talk`
 
 ### プリセット機能
 
-公式エンジンでは`presets.yaml`ファイルを使って管理。おそらくDocker内にしかない。Dockerの公式エンジンとLaravelではプリセット設定を共有できない。
+公式エンジンでは`presets.yaml`ファイルを使って管理。ユーザーフォルダ領域に保存している。Laravel版とは共有しにくい。
 
 presets.jsonに保存する方法で独自実装。
 `src/Engine/NativePresetStore.php`
