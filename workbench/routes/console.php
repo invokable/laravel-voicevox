@@ -309,6 +309,7 @@ Artisan::command('voicevox:native:preset', function () {
     $preset = [
         'id' => 1,
         'name' => 'fast',
+        'speaker_uuid' => '388f246b-8c41-4ac1-8e2d-5d79f3ff56d9',
         'style_id' => 3,
         'speedScale' => 1.5,
         'pitchScale' => 0.0,
