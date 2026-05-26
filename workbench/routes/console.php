@@ -251,6 +251,7 @@ Artisan::command('voicevox:native:dict', function () {
         accentType: 1,
     );
 
+    // ネイティブでは"-"なしのUUID
     $this->info($dict);
 
     $all = dict()->all();
@@ -324,3 +325,41 @@ Artisan::command('voicevox:native:preset', function () {
     $all = preset()->all();
     dump($all);
 })->purpose('preset');
+
+// vendor/bin/testbench voicevox:client:dict
+Artisan::command('voicevox:client:dict', function () {
+    $dict = Voicevox::addWord(
+        surface: 'Laravel',
+        pronunciation: 'ララベル',
+        accentType: 1,
+    );
+
+    // クライアントではuser_dict.jsonと同じ"-"ありのUUID
+    $this->info($dict);
+
+    $all = Voicevox::userDict();
+    dump($all);
+})->purpose('dict client');
+
+// vendor/bin/testbench voicevox:client:preset
+Artisan::command('voicevox:client:preset', function () {
+    $preset = [
+        'id' => 1,
+        'name' => 'fast',
+        'speaker_uuid' => '388f246b-8c41-4ac1-8e2d-5d79f3ff56d9',
+        'style_id' => 1,
+        'speedScale' => 1.5,
+        'pitchScale' => 0.0,
+        'intonationScale' => 1.0,
+        'volumeScale' => 1.0,
+        'prePhonemeLength' => 0.1,
+        'postPhonemeLength' => 0.1,
+    ];
+    $id = Voicevox::addPreset($preset);
+
+    // idが重複している場合は自動的に増える
+    $this->info($id);
+
+    $all = Voicevox::presets();
+    dump($all);
+})->purpose('preset client');
