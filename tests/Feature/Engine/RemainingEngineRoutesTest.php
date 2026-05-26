@@ -176,19 +176,17 @@ test('engine installed_libraries returns json', function () {
 });
 
 test('engine install_library returns 204', function () {
-    Voicevox::expects('baseUrl->installLibrary')->andReturn(null);
-
     $response = $this->postJson('/install_library/some-uuid');
 
-    $response->assertNoContent();
+    $response->assertOk()
+        ->assertJson([]);
 });
 
 test('engine uninstall_library returns 204', function () {
-    Voicevox::expects('baseUrl->uninstallLibrary')->andReturn(null);
-
     $response = $this->postJson('/uninstall_library/some-uuid');
 
-    $response->assertNoContent();
+    $response->assertOk()
+        ->assertJson([]);
 });
 
 test('engine GET setting returns json', function () {

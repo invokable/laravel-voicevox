@@ -12,6 +12,6 @@ class DownloadableLibrariesController
     public function __invoke(Request $request): JsonResponse
     {
         // Library management is not supported in the native core.
-        return response()->json([], options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return response()->json();
     }
 }
