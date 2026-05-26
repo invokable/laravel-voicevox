@@ -16,11 +16,9 @@ test('engine cancellable_synthesis returns audio', function () {
 });
 
 test('engine multi_synthesis returns audio', function () {
-    $mock = Mockery::mock(VoicevoxResponse::class);
-    $mock->shouldReceive('content')->andReturn('audio-bytes');
-    Voicevox::expects('baseUrl->multiSynthesis')->andReturn($mock);
+    Synthesizer::expects('synthesis')->twice()->andReturn('audio-bytes');
 
-    $response = $this->postJson('/multi_synthesis?speaker=1', [['speedScale' => 1.0]]);
+    $response = $this->postJson('/multi_synthesis?speaker=1', [['speedScale' => 1.0], ['speedScale' => 1.0]]);
 
     $response->assertOk();
 });
@@ -151,16 +149,12 @@ test('engine supported_devices returns json', function () {
 });
 
 test('engine initialize_speaker returns 204', function () {
-    Voicevox::expects('baseUrl->initializeSpeaker')->andReturn(null);
-
     $response = $this->postJson('/initialize_speaker?speaker=1');
 
     $response->assertNoContent();
 });
 
 test('engine is_initialized_speaker returns bool', function () {
-    Voicevox::expects('baseUrl->isInitializedSpeaker')->andReturn(true);
-
     $response = $this->getJson('/is_initialized_speaker?speaker=1');
 
     $response->assertOk()
@@ -168,20 +162,17 @@ test('engine is_initialized_speaker returns bool', function () {
 });
 
 test('engine downloadable_libraries returns json', function () {
-    Voicevox::expects('baseUrl->downloadableLibraries')->andReturn([['uuid' => 'lib-1']]);
-
     $response = $this->getJson('/downloadable_libraries');
 
     $response->assertOk()
-        ->assertJsonFragment(['uuid' => 'lib-1']);
+        ->assertJson([]);
 });
 
 test('engine installed_libraries returns json', function () {
-    Voicevox::expects('baseUrl->installedLibraries')->andReturn([]);
-
     $response = $this->getJson('/installed_libraries');
 
-    $response->assertOk();
+    $response->assertOk()
+        ->assertJson([]);
 });
 
 test('engine install_library returns 204', function () {

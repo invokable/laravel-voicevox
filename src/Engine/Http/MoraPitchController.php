@@ -16,7 +16,7 @@ class MoraPitchController
     public function __invoke(Request $request): JsonResponse
     {
         $id = $request->integer('speaker');
-        $accentPhrases = $request->all();
+        $accentPhrases = $request->json()->all();
 
         try {
             return response()->json(
