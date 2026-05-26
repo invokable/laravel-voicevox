@@ -172,7 +172,7 @@ VOICEVOX_CORE_USER_DICT_PATH=/path/to/custom/user_dict.json
 - カスタムパスにユーザー辞書を保存
 - 複数プロジェクトで辞書を共有
 
-詳細: [ユーザー辞書](user-dict.md)
+詳細: [ユーザー辞書](native-user-dict.md)
 
 #### `core.presets`
 
@@ -199,7 +199,7 @@ VOICEVOX_CORE_PRESETS_PATH=/path/to/custom/presets.json
 - カスタムパスにプリセットを保存
 - 複数プロジェクトでプリセットを共有
 
-詳細: [プリセット](presets.md)
+詳細: [プリセット](native-presets.md)
 
 #### `core.vvms`
 

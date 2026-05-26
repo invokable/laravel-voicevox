@@ -94,14 +94,12 @@ $response->storeAs('song.wav');
 
 ## クイックスタート
 
+ここではクライアントモードのみ説明しています。
+
 ### 1. インストール
 
 ```bash
-# クライアントモードのみ（FFI 不要）
 composer require revolution/laravel-voicevox
-
-# クライアント + ネイティブモード（FFI 必要）
-composer require revolution/laravel-voicevox revolution/voicevox-core-php
 ```
 
 詳細: [インストールと設定](installation.md)
@@ -121,15 +119,6 @@ docker run --rm -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
 use Revolution\Voicevox\Voicevox;
 
 $response = Voicevox::talk('こんにちは、Laravel です。', id: 1)->generate(id: 1);
-$response->storeAs('output.wav');
-```
-
-#### ネイティブモード
-
-```php
-use function Revolution\Voicevox\talk;
-
-$response = talk('こんにちは、Laravel です。', id: 1)->generate(id: 1);
 $response->storeAs('output.wav');
 ```
 
@@ -183,25 +172,23 @@ $response->storeAs('song.wav');
 固有名詞や専門用語の読み方を登録できます。
 
 ```php
-use function Revolution\Voicevox\dict;
+use Revolution\Voicevox\Voicevox;
 
-$uuid = dict()->add(
+$uuid = Voicevox::addWord(
     surface: 'Laravel',
     pronunciation: 'ララベル',
     accent_type: 3,
 );
 ```
 
-詳細: [ユーザー辞書](user-dict.md)
-
 ### プリセット
 
 よく使う音声パラメータをプリセットとして保存できます。
 
 ```php
-use function Revolution\Voicevox\preset;
+use Revolution\Voicevox\Voicevox;
 
-$id = preset()->add([
+$id = Voicevox::addPreset([
     'id' => 0, // 0 を指定すると自動採番される
     'name' => 'ゆっくり丁寧',
     'speaker_uuid' => '7ffcb7ce-00ec-4bdc-82cd-45a8889e43ff',
@@ -215,30 +202,13 @@ $id = preset()->add([
 ]);
 ```
 
-詳細: [プリセット](presets.md)
-
-### Laravel AI SDK 連携
-
-Laravel AI SDK を使った統一インターフェースで音声合成できます。
-
-```php
-use Laravel\Ai\Audio;
-
-$audio = Audio::of('こんにちは、Laravel です。')
-    ->voice('ずんだもん')
-    ->generate();
-
-$audio->storeAs('output.wav');
-```
-
-詳細: [AI SDK 連携](ai-sdk.md)
-
 ## 次のステップ
 
 - [インストールと設定](installation.md) - 詳細なセットアップ手順
 - [クライアントモード - トーク](client-talk.md) - HTTP クライアントでの音声合成
+- [クライアントモード - ソング](client-song.md) - HTTP クライアントでの歌声合成
 - [ネイティブモード - トーク](native-talk.md) - FFI を使った高速音声合成
 - [エンジンAPIモード - トーク](engine-talk.md) - Laravel を VOICEVOX エンジンとして公開
 - [AI SDK 連携](ai-sdk.md) - Laravel AI SDK を使った統一インターフェース
-- [ユーザー辞書](user-dict.md) - 固有名詞の読み方登録
-- [プリセット](presets.md) - 音声パラメータの保存と再利用
+- [ユーザー辞書](native-user-dict.md) - 固有名詞の読み方登録
+- [プリセット](native-presets.md) - 音声パラメータの保存と再利用
