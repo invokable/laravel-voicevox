@@ -44,23 +44,40 @@ class MultiSynthesisController
      */
     private function synthesizeNative(array $audioQueries, int $id, bool $interrogativeUpspeak): Response
     {
-        $zip = new \ZipArchive;
         $tmpFile = tempnam(sys_get_temp_dir(), 'voicevox_multi_');
-        $zip->open($tmpFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-        foreach ($audioQueries as $i => $entry) {
-            $query = $entry['query'] ?? $entry;
-            $speaker = $entry['speaker'] ?? $id;
-
-            $audio = Synthesizer::synthesis(json_encode($query), $speaker, $interrogativeUpspeak);
-            $zip->addFromString(sprintf('%03d.wav', $i), $audio);
+        if ($tmpFile === false) {
+            throw new \RuntimeException('Failed to create temporary file.');
         }
 
-        $zip->close();
+        try {
+            $zip = new \ZipArchive;
 
-        $content = file_get_contents($tmpFile);
-        unlink($tmpFile);
+            if ($zip->open($tmpFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+                throw new \RuntimeException('Failed to open zip archive.');
+            }
 
-        return response($content, 200, ['Content-Type' => 'application/zip']);
+            foreach ($audioQueries as $i => $entry) {
+                $query = $entry['query'] ?? $entry;
+                $speaker = $entry['speaker'] ?? $id;
+
+                $audio = Synthesizer::synthesis(json_encode($query), $speaker, $interrogativeUpspeak);
+                $zip->addFromString(sprintf('%03d.wav', $i), $audio);
+            }
+
+            $zip->close();
+
+            $content = file_get_contents($tmpFile);
+
+            if ($content === false) {
+                throw new \RuntimeException('Failed to read temporary file.');
+            }
+
+            return response($content, 200, ['Content-Type' => 'application/zip']);
+        } finally {
+            if (file_exists($tmpFile)) {
+                unlink($tmpFile);
+            }
+        }
     }
 }
