@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Revolution\Voicevox\Engine\Http;
 
 use Illuminate\Http\Request;
+use Revolution\Voicevox\Synthesizer;
 use Revolution\Voicevox\Voicevox;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -18,10 +19,16 @@ class MultiSynthesisController
         $interrogativeUpspeak = $request->boolean('enable_interrogative_upspeak', false);
 
         try {
+            return $this->synthesizeNative($audioQueries, $id, $interrogativeUpspeak);
+        } catch (Throwable) {
+            // Fall back to Voicevox client if native core is unavailable
+        }
+
+        try {
             $response = Voicevox::baseUrl(config('voicevox.engine.fallback_url'))
                 ->multiSynthesis($audioQueries, $id, $interrogativeUpspeak);
 
-            return response($response->content(), 200, ['Content-Type' => 'audio/wav']);
+            return response($response->content(), 200, ['Content-Type' => 'application/zip']);
         } catch (Throwable) {
             return response()->json([
                 'error' => __(config('voicevox.engine.fallback_error')),
@@ -30,5 +37,30 @@ class MultiSynthesisController
                 options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
             );
         }
+    }
+
+    /**
+     * @throws Throwable
+     */
+    private function synthesizeNative(array $audioQueries, int $id, bool $interrogativeUpspeak): Response
+    {
+        $zip = new \ZipArchive;
+        $tmpFile = tempnam(sys_get_temp_dir(), 'voicevox_multi_');
+        $zip->open($tmpFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+        foreach ($audioQueries as $i => $entry) {
+            $query = $entry['query'] ?? $entry;
+            $speaker = $entry['speaker'] ?? $id;
+
+            $audio = Synthesizer::synthesis(json_encode($query), $speaker, $interrogativeUpspeak);
+            $zip->addFromString(sprintf('%03d.wav', $i), $audio);
+        }
+
+        $zip->close();
+
+        $content = file_get_contents($tmpFile);
+        unlink($tmpFile);
+
+        return response($content, 200, ['Content-Type' => 'application/zip']);
     }
 }

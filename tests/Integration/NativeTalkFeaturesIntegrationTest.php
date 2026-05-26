@@ -72,15 +72,15 @@ test('engine mora_data endpoint processes accent phrases', function () {
 });
 
 test('engine validate_kana endpoint accepts valid kana text', function () {
-    $response = $this->postJson('/validate_kana', ['text' => 'コンニチワ'])
+    $response = $this->postJson('/validate_kana', ['text' => "コンニ'チワ"])
         ->assertOk();
 
-    expect($response->json())->toBeArray();
+    expect($response->json())->toBeTrue();
 });
 
 test('engine validate_kana endpoint rejects invalid text', function () {
     $response = $this->postJson('/validate_kana', ['text' => 'こんにちは123'])
-        ->assertStatus(422);
+        ->assertStatus(400);
 });
 
 test('engine update_user_dict_word workflow', function () {
