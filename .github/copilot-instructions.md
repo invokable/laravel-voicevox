@@ -13,6 +13,7 @@ GitHub Agentic Workflowsを使って少しずつ実装を進める。
 - [VOICEVOXエディター](https://github.com/VOICEVOX/voicevox)：GUIアプリケーション。~~このプロジェクトでは関係ない~~ Laravel版エンジンAPIを公式アプリから使うなら必要。Electron、TypeScript、Vue。
 - [VOICEVOXエンジン](https://github.com/VOICEVOX/voicevox_engine)：Webサーバーとして提供されるテキスト音声合成 API。Python、FastAPI、OpenJTalk。
 - [VOICEVOXコア](https://github.com/VOICEVOX/voicevox_core)：音声合成の動的ライブラリ。Rust、onnxruntime。C APIの動的ライブラリ（.so/.dll/.dylib）がある。
+- VOICEVOXアプリ（製品版）：上記はOSS版。製品版はエディターにエンジンも同梱して単体アプリとして配布している。
 
 VOICEVOXエンジンのAPIを呼び出すサードパーティ製のクライアントパッケージ。
 https://github.com/voicevox-client
