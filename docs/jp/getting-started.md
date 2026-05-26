@@ -210,5 +210,5 @@ $id = Voicevox::addPreset([
 - [ネイティブモード - トーク](native-talk.md) - FFI を使った高速音声合成
 - [エンジンAPIモード - トーク](engine-talk.md) - Laravel を VOICEVOX エンジンとして公開
 - [AI SDK 連携](ai-sdk.md) - Laravel AI SDK を使った統一インターフェース
-- [ユーザー辞書](native-user-dict.md) - 固有名詞の読み方登録
-- [プリセット](native-presets.md) - 音声パラメータの保存と再利用
+- [ネイティブモード - ユーザー辞書](native-user-dict.md) - 固有名詞の読み方登録
+- [ネイティブモード - プリセット](native-presets.md) - 音声パラメータの保存と再利用
