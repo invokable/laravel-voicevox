@@ -31,7 +31,10 @@ test('engine sing_frame_f0 endpoint adjusts f0 for frame audio query', function 
         ->toHaveKey('phonemes');
 
     // Apply sing_frame_f0
-    $response = $this->postJson('/sing_frame_f0?speaker=6000', $frameAudioQuery)
+    $response = $this->postJson('/sing_frame_f0?speaker=6000', [
+        'score' => $score,
+        'frame_audio_query' => $frameAudioQuery,
+    ])
         ->assertOk()
         ->json();
 
@@ -56,7 +59,10 @@ test('engine sing_frame_volume endpoint adjusts volume for frame audio query', f
         ->toHaveKey('volume');
 
     // Apply sing_frame_volume
-    $response = $this->postJson('/sing_frame_volume?speaker=6000', $frameAudioQuery)
+    $response = $this->postJson('/sing_frame_volume?speaker=6000', [
+        'score' => $score,
+        'frame_audio_query' => $frameAudioQuery,
+    ])
         ->assertOk()
         ->json();
 
@@ -107,14 +113,20 @@ test('complete sing workflow with f0 and volume adjustment', function () {
         ->toHaveKey('volume');
 
     // Step 2: Adjust f0
-    $adjustedF0 = $this->postJson('/sing_frame_f0?speaker=6000', $frameAudioQuery)
+    $adjustedF0 = $this->postJson('/sing_frame_f0?speaker=6000', [
+        'score' => $score,
+        'frame_audio_query' => $frameAudioQuery,
+    ])
         ->assertOk()
         ->json();
 
     expect($adjustedF0['f0'])->toBeArray()->not->toBeEmpty();
 
     // Step 3: Adjust volume
-    $adjustedVolume = $this->postJson('/sing_frame_volume?speaker=6000', $adjustedF0)
+    $adjustedVolume = $this->postJson('/sing_frame_volume?speaker=6000', [
+        'score' => $score,
+        'frame_audio_query' => $adjustedF0,
+    ])
         ->assertOk()
         ->json();
 

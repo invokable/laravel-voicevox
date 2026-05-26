@@ -16,18 +16,10 @@ class SingFrameF0Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
+        $score = $request->array('score');
+        $score = Score::make($score['notes'] ?? [])->toArray();
         $speaker = $request->integer('speaker', 6000);
-
-        // Support both nested format {score: ..., frame_audio_query: ...}
-        // and flat format (frame_audio_query as root body)
-        if ($request->has('frame_audio_query')) {
-            $score = $request->array('score');
-            $score = Score::make($score['notes'] ?? [])->toArray();
-            $frameAudioQuery = $request->array('frame_audio_query');
-        } else {
-            $score = Score::make([])->toArray();
-            $frameAudioQuery = $request->json()->all();
-        }
+        $frameAudioQuery = $request->array('frame_audio_query');
 
         try {
             return response()->json(
