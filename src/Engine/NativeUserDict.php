@@ -47,7 +47,7 @@ class NativeUserDict
     /**
      * Add a word and return its UUID.
      */
-    public function addWord(
+    public function add(
         string $surface,
         string $pronunciation,
         int $accentType,
@@ -61,20 +61,10 @@ class NativeUserDict
         return $uuid;
     }
 
-    public function add(
-        string $surface,
-        string $pronunciation,
-        int $accentType,
-        ?string $wordType = null,
-        ?int $priority = null,
-    ): string {
-        return $this->addWord($surface, $pronunciation, $accentType, $wordType, $priority);
-    }
-
     /**
      * Update an existing word by UUID.
      */
-    public function updateWord(
+    public function update(
         string $wordUuid,
         string $surface,
         string $pronunciation,
@@ -87,29 +77,13 @@ class NativeUserDict
         $this->save();
     }
 
-    public function update(
-        string $wordUuid,
-        string $surface,
-        string $pronunciation,
-        int $accentType,
-        ?string $wordType = null,
-        ?int $priority = null,
-    ): void {
-        $this->updateWord($wordUuid, $surface, $pronunciation, $accentType, $wordType, $priority);
-    }
-
     /**
      * Remove a word by UUID.
      */
-    public function removeWord(string $wordUuid): void
+    public function delete(string $wordUuid): void
     {
         $this->dict->removeWord($wordUuid);
         $this->save();
-    }
-
-    public function delete(string $wordUuid): void
-    {
-        $this->removeWord($wordUuid);
     }
 
     /**
