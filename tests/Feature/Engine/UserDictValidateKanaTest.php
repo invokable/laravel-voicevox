@@ -19,7 +19,7 @@ test('engine user_dict endpoint returns dict', function () {
 
 test('engine user_dict_word POST endpoint returns uuid', function () {
     $this->mock(NativeUserDict::class, function ($mock) {
-        $mock->allows('addWord')->andReturn('new-uuid');
+        $mock->allows('add')->andReturn('new-uuid');
     });
 
     $response = $this->postJson('/user_dict_word?surface=テスト&pronunciation=テスト&accent_type=0');
@@ -30,7 +30,7 @@ test('engine user_dict_word POST endpoint returns uuid', function () {
 
 test('engine user_dict_word PUT endpoint returns 204', function () {
     $this->mock(NativeUserDict::class, function ($mock) {
-        $mock->allows('updateWord')->andReturn(null);
+        $mock->allows('update')->andReturn(null);
     });
 
     $response = $this->putJson('/user_dict_word/some-uuid?surface=テスト&pronunciation=テスト&accent_type=0');
@@ -40,7 +40,7 @@ test('engine user_dict_word PUT endpoint returns 204', function () {
 
 test('engine user_dict_word DELETE endpoint returns 204', function () {
     $this->mock(NativeUserDict::class, function ($mock) {
-        $mock->allows('removeWord')->andReturn(null);
+        $mock->allows('delete')->andReturn(null);
     });
 
     $response = $this->deleteJson('/user_dict_word/some-uuid');

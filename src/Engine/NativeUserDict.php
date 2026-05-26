@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Revolution\Voicevox\Engine;
 
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Revolution\Voicevox\Core\Enums\UserDictWordType;
 use Revolution\Voicevox\Core\UserDict;
 
@@ -73,7 +75,7 @@ class NativeUserDict
         ?int $priority = null,
     ): void {
         $type = $this->parseWordType($wordType);
-        $this->dict->updateWord($wordUuid, $surface, $pronunciation, $accentType, $type, $priority ?? 5);
+        $this->dict->updateWord($this->normalizeUuid($wordUuid), $surface, $pronunciation, $accentType, $type, $priority ?? 5);
         $this->save();
     }
 
@@ -82,7 +84,7 @@ class NativeUserDict
      */
     public function delete(string $wordUuid): void
     {
-        $this->dict->removeWord($wordUuid);
+        $this->dict->removeWord($this->normalizeUuid($wordUuid));
         $this->save();
     }
 
@@ -134,5 +136,16 @@ class NativeUserDict
             'SUFFIX' => UserDictWordType::Suffix,
             default => UserDictWordType::CommonNoun,
         };
+    }
+
+    private function normalizeUuid(string $wordUuid): string
+    {
+        $uuid = Str::replace('-', '', Str::lower($wordUuid));
+
+        if (strlen($uuid) !== 32 || ! ctype_xdigit($uuid)) {
+            throw new InvalidArgumentException('Invalid user dictionary word UUID.');
+        }
+
+        return $uuid;
     }
 }

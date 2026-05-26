@@ -18,7 +18,7 @@ beforeEach(function () {
 
 test('native user dict can add and retrieve word', function () {
     $userDict = dict();
-    $uuid = $userDict->addWord(
+    $uuid = $userDict->add(
         surface: 'テスト単語',
         pronunciation: 'テストタンゴ',
         accentType: 1,
@@ -33,7 +33,7 @@ test('native user dict can add and retrieve word', function () {
                 && ($word['pronunciation'] ?? null) === 'テストタンゴ';
         }))->toBeTrue();
 
-    $userDict->removeWord($uuid);
+    $userDict->delete($uuid);
 });
 
 test('engine user_dict endpoint returns dictionary', function () {

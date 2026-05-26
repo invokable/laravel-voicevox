@@ -207,6 +207,8 @@ $id = Voicevox::addPreset([
 - [インストールと設定](installation.md) - 詳細なセットアップ手順
 - [クライアントモード - トーク](client-talk.md) - HTTP クライアントでの音声合成
 - [クライアントモード - ソング](client-song.md) - HTTP クライアントでの歌声合成
+- [クライアントモード - ユーザー辞書](client-user-dict.md) - 公式エンジン側への読み方登録
+- [クライアントモード - プリセット](client-presets.md) - 公式エンジン側の音声パラメータ保存
 - [ネイティブモード - トーク](native-talk.md) - FFI を使った高速音声合成
 - [エンジンAPIモード - トーク](engine-talk.md) - Laravel を VOICEVOX エンジンとして公開
 - [AI SDK 連携](ai-sdk.md) - Laravel AI SDK を使った統一インターフェース
