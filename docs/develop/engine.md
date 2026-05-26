@@ -76,7 +76,7 @@ workbench/routes/console.phpの`voicevox:native:dict-talk`
 
 ### プリセット機能
 
-公式エンジンでは`presets.yaml`ファイルを使って管理。ユーザーフォルダに保存している。Laravel版とは共有しにくい。macOSなら`~/Library/Application Support/voicevox-engine/presets.yaml`
+公式エンジンでは`presets.yaml`ファイルを使って管理。Dockerで起動した公式エンジンはおそらくDocker内に保存している。ややこしいことにVOICEVOXアプリ（製品版）に同梱されている公式エンジンはユーザーフォルダに保存している。macOSなら`~/Library/Application Support/voicevox-engine/presets.yaml`。Laravel版とは共有しにくい。
 
 presets.jsonに保存する方法で独自実装。
 `src/Engine/NativePresetStore.php`
