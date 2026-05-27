@@ -528,6 +528,112 @@
         }
       }
     },
+    "/v1/audio/speech": {
+      "post": {
+        "tags": [
+          "OpenAI Compatible"
+        ],
+        "summary": "Create speech with an OpenAI-compatible API",
+        "description": "Create speech from an OpenAI Audio Speech API-compatible request and return WAV audio. `voice` accepts a VOICEVOX style ID, an AI SDK voice alias, or an OpenAI voice name. `speed` is applied to VOICEVOX `speedScale`. `model`, `instructions`, `response_format`, and `stream_format` are accepted for compatibility, but the Laravel implementation currently always returns WAV audio.\n\n**Laravel Implementation Status**: ✅ Fully supported by Core (fallback implemented)",
+        "operationId": "openai_audio_speech",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "input",
+                  "voice"
+                ],
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "title": "Model",
+                    "description": "OpenAI-compatible model name. Accepted for compatibility in the Laravel implementation."
+                  },
+                  "input": {
+                    "type": "string",
+                    "maxLength": 4096,
+                    "title": "Input",
+                    "description": "Text to synthesize"
+                  },
+                  "voice": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "title": "Voice Id"
+                          }
+                        }
+                      }
+                    ],
+                    "title": "Voice",
+                    "description": "VOICEVOX style ID, AI SDK voice alias, or OpenAI voice name"
+                  },
+                  "instructions": {
+                    "type": "string",
+                    "maxLength": 4096,
+                    "title": "Instructions",
+                    "description": "OpenAI-compatible parameter. Currently unused by the Laravel implementation."
+                  },
+                  "response_format": {
+                    "type": "string",
+                    "title": "Response Format",
+                    "description": "OpenAI-compatible parameter. The Laravel implementation currently always returns WAV audio."
+                  },
+                  "speed": {
+                    "type": "number",
+                    "maximum": 4,
+                    "minimum": 0.25,
+                    "default": 1,
+                    "title": "Speed",
+                    "description": "Speech speed applied to VOICEVOX speedScale"
+                  },
+                  "stream_format": {
+                    "type": "string",
+                    "title": "Stream Format",
+                    "description": "OpenAI-compatible parameter. Currently unused by the Laravel implementation."
+                  }
+                },
+                "title": "OpenAiSpeechRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "audio/wav": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/cancellable_synthesis": {
       "post": {
         "tags": [

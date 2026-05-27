@@ -528,6 +528,112 @@
                 "description": "\n\n**Laravel実装状況**: ✅ コアで完全対応（フォールバック実装済み）"
             }
         },
+        "/v1/audio/speech": {
+            "post": {
+                "tags": [
+                    "OpenAI互換"
+                ],
+                "summary": "OpenAI互換の音声合成を行う",
+                "description": "OpenAI Audio Speech API互換のリクエストで音声合成を行い、WAV音声を返します。`voice`にはVOICEVOXのスタイルID、AI SDKの音声エイリアス、OpenAIのボイス名を指定できます。`speed`はVOICEVOXの`speedScale`に適用されます。`model`、`instructions`、`response_format`、`stream_format`は互換性のため受け付けますが、Laravel版では現在WAV出力固定です。\n\n**Laravel実装状況**: ✅ コアで完全対応（フォールバック実装済み）",
+                "operationId": "openai_audio_speech",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "input",
+                                    "voice"
+                                ],
+                                "properties": {
+                                    "model": {
+                                        "type": "string",
+                                        "title": "Model",
+                                        "description": "OpenAI互換のモデル名。Laravel版では互換性のため受け付けます。"
+                                    },
+                                    "input": {
+                                        "type": "string",
+                                        "maxLength": 4096,
+                                        "title": "Input",
+                                        "description": "音声合成するテキスト"
+                                    },
+                                    "voice": {
+                                        "anyOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "title": "Voice Id"
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "title": "Voice",
+                                        "description": "VOICEVOXのスタイルID、AI SDKの音声エイリアス、またはOpenAIのボイス名"
+                                    },
+                                    "instructions": {
+                                        "type": "string",
+                                        "maxLength": 4096,
+                                        "title": "Instructions",
+                                        "description": "OpenAI互換パラメータ。Laravel版では現在使用しません。"
+                                    },
+                                    "response_format": {
+                                        "type": "string",
+                                        "title": "Response Format",
+                                        "description": "OpenAI互換パラメータ。Laravel版では現在WAV出力固定です。"
+                                    },
+                                    "speed": {
+                                        "type": "number",
+                                        "maximum": 4,
+                                        "minimum": 0.25,
+                                        "default": 1,
+                                        "title": "Speed",
+                                        "description": "VOICEVOXのspeedScaleに適用する読み上げ速度"
+                                    },
+                                    "stream_format": {
+                                        "type": "string",
+                                        "title": "Stream Format",
+                                        "description": "OpenAI互換パラメータ。Laravel版では現在使用しません。"
+                                    }
+                                },
+                                "title": "OpenAiSpeechRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "audio/wav": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/cancellable_synthesis": {
             "post": {
                 "tags": [
