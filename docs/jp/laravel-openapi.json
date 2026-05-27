@@ -783,7 +783,7 @@
                         }
                     }
                 },
-                "description": "\n\n**Laravel実装状況**: ❌ コアに相当機能なし（フォールバックのみ）"
+                "description": "\n\n**Laravel実装状況**: ✅ コアで対応（フォールバックあり）"
             }
         },
         "/sing_frame_audio_query": {
@@ -1152,7 +1152,7 @@
                     "その他"
                 ],
                 "summary": "Initialize Speaker",
-                "description": "指定されたスタイルを初期化します。\n\n実行しなくても他のAPIは使用できますが、初回実行時に時間がかかることがあります。\n\n**Laravel実装状況**: ❌ コアはvvmロードで初期化済み（フォールバックのみ）",
+                "description": "指定されたスタイルを初期化します。\n\n実行しなくても他のAPIは使用できますが、初回実行時に時間がかかることがあります。\n\n**Laravel実装状況**: ❌ コアはvvmロードで初期化済み（フォールバックもなし）",
                 "operationId": "initialize_speaker",
                 "parameters": [
                     {
@@ -1209,7 +1209,7 @@
                     "その他"
                 ],
                 "summary": "Is Initialized Speaker",
-                "description": "指定されたスタイルが初期化されているかどうかを返します。\n\n**Laravel実装状況**: ❌ コアはvvmロードで初期化済み（フォールバックのみ）",
+                "description": "指定されたスタイルが初期化されているかどうかを返します。\n\n**Laravel実装状況**: ❌ コアはvvmロードで初期化済み（フォールバックもなし）",
                 "operationId": "is_initialized_speaker",
                 "parameters": [
                     {
@@ -1842,7 +1842,7 @@
                     "音声ライブラリ管理"
                 ],
                 "summary": "Downloadable Libraries",
-                "description": "ダウンロード可能な音声ライブラリの情報を返します。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックのみ、対応不要）",
+                "description": "ダウンロード可能な音声ライブラリの情報を返します。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックもなし）",
                 "operationId": "downloadable_libraries",
                 "responses": {
                     "200": {
@@ -1868,7 +1868,7 @@
                     "音声ライブラリ管理"
                 ],
                 "summary": "Installed Libraries",
-                "description": "インストールした音声ライブラリの情報を返します。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックのみ、対応不要）",
+                "description": "インストールした音声ライブラリの情報を返します。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックもなし）",
                 "operationId": "installed_libraries",
                 "responses": {
                     "200": {
@@ -1894,7 +1894,7 @@
                     "音声ライブラリ管理"
                 ],
                 "summary": "Install Library",
-                "description": "音声ライブラリをインストールします。\n\n音声ライブラリのZIPファイルをリクエストボディとして送信してください。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックのみ、対応不要）",
+                "description": "音声ライブラリをインストールします。\n\n音声ライブラリのZIPファイルをリクエストボディとして送信してください。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックもなし）",
                 "operationId": "install_library",
                 "parameters": [
                     {
@@ -1932,7 +1932,7 @@
                     "音声ライブラリ管理"
                 ],
                 "summary": "Uninstall Library",
-                "description": "音声ライブラリをアンインストールします。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックのみ、対応不要）",
+                "description": "音声ライブラリをアンインストールします。\n\n**Laravel実装状況**: ❌ エンジン固有の機能（フォールバックもなし）",
                 "operationId": "uninstall_library",
                 "parameters": [
                     {

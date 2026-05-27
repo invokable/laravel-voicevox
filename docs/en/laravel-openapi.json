@@ -713,7 +713,7 @@
           "Speech Synthesis"
         ],
         "summary": "Synthesize multiple speeches at once",
-        "description": "\n\n**Laravel Implementation Status**: ❌ No equivalent feature in Core (fallback only)",
+        "description": "\n\n**Laravel Implementation Status**: ✅ Fully supported by Core (fallback implemented)",
         "operationId": "multi_synthesis",
         "parameters": [
           {
@@ -1152,7 +1152,7 @@
           "Other"
         ],
         "summary": "Initialize Speaker",
-        "description": "Initialize specified style.\n\nOther APIs can be used without execution, but first execution may take time.\n\n**Laravel Implementation Status**: ❌ Core is pre-initialized via vvm loading (fallback only)",
+        "description": "Initialize specified style.\n\nOther APIs can be used without execution, but first execution may take time.\n\n**Laravel Implementation Status**: ❌ Core is pre-initialized via vvm loading (no fallback)",
         "operationId": "initialize_speaker",
         "parameters": [
           {
@@ -1209,7 +1209,7 @@
           "Other"
         ],
         "summary": "Is Initialized Speaker",
-        "description": "Check if specified style is initialized.\n\n**Laravel Implementation Status**: ❌ Core is pre-initialized via vvm loading (fallback only)",
+        "description": "Check if specified style is initialized.\n\n**Laravel Implementation Status**: ❌ Core is pre-initialized via vvm loading (no fallback)",
         "operationId": "is_initialized_speaker",
         "parameters": [
           {
@@ -1842,7 +1842,7 @@
           "Voice Library Management"
         ],
         "summary": "Downloadable Libraries",
-        "description": "Return downloadable voice library information.\n\n**Laravel Implementation Status**: ❌ Engine-specific feature (fallback only, not required)",
+        "description": "Return downloadable voice library information.\n\n**Laravel Implementation Status**: ❌ Engine-specific feature (no fallback)",
         "operationId": "downloadable_libraries",
         "responses": {
           "200": {
@@ -1868,7 +1868,7 @@
           "Voice Library Management"
         ],
         "summary": "Installed Libraries",
-        "description": "Return installed voice library information.\n\n**Laravel Implementation Status**: ❌ Engine-specific feature (fallback only, not required)",
+        "description": "Return installed voice library information.\n\n**Laravel Implementation Status**: ❌ Engine-specific feature (no fallback)",
         "operationId": "installed_libraries",
         "responses": {
           "200": {
@@ -1894,7 +1894,7 @@
           "Voice Library Management"
         ],
         "summary": "Install Library",
-        "description": "Install voice library.\n\nSend voice library ZIP file as request body.\n\n**Laravel Implementation Status**: ❌ Engine-specific feature (fallback only, not required)",
+        "description": "Install voice library.\n\nSend voice library ZIP file as request body.\n\n**Laravel Implementation Status**: ❌ Engine-specific feature (no fallback)",
         "operationId": "install_library",
         "parameters": [
           {
@@ -1932,7 +1932,7 @@
           "Voice Library Management"
         ],
         "summary": "Uninstall Library",
-        "description": "Uninstall voice library.\n\n**Laravel Implementation Status**: ❌ Engine-specific feature (fallback only, not required)",
+        "description": "Uninstall voice library.\n\n**Laravel Implementation Status**: ❌ Engine-specific feature (no fallback)",
         "operationId": "uninstall_library",
         "parameters": [
           {
