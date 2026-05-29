@@ -12,7 +12,7 @@ use Throwable;
 
 class AddUserDictWordController
 {
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, NativeUserDict $dict): JsonResponse
     {
         $surface = $request->string('surface')->value();
         $pronunciation = $request->string('pronunciation')->value();
@@ -21,7 +21,7 @@ class AddUserDictWordController
         $priority = $request->has('priority') ? $request->integer('priority') : null;
 
         try {
-            $uuid = app(NativeUserDict::class)->add($surface, $pronunciation, $accentType, $wordType, $priority);
+            $uuid = $dict->add($surface, $pronunciation, $accentType, $wordType, $priority);
 
             return response()->json(
                 $uuid,

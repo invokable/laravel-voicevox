@@ -12,11 +12,11 @@ use Throwable;
 
 class UserDictController
 {
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, NativeUserDict $dict): JsonResponse
     {
         try {
             return response()->json(
-                app(NativeUserDict::class)->toArray(),
+                $dict->toArray(),
                 options: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
             );
         } catch (Throwable) {

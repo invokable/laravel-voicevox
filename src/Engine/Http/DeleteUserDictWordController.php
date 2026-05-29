@@ -12,10 +12,10 @@ use Throwable;
 
 class DeleteUserDictWordController
 {
-    public function __invoke(Request $request, string $word_uuid): JsonResponse
+    public function __invoke(Request $request, NativeUserDict $dict, string $word_uuid): JsonResponse
     {
         try {
-            app(NativeUserDict::class)->delete($word_uuid);
+            $dict->delete($word_uuid);
 
             return response()->json(null, Response::HTTP_NO_CONTENT);
         } catch (Throwable) {

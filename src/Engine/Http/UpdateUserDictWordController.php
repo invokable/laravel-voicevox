@@ -12,7 +12,7 @@ use Throwable;
 
 class UpdateUserDictWordController
 {
-    public function __invoke(Request $request, string $word_uuid): JsonResponse
+    public function __invoke(Request $request, NativeUserDict $dict, string $word_uuid): JsonResponse
     {
         $surface = $request->string('surface')->value();
         $pronunciation = $request->string('pronunciation')->value();
@@ -21,7 +21,7 @@ class UpdateUserDictWordController
         $priority = $request->has('priority') ? $request->integer('priority') : null;
 
         try {
-            app(NativeUserDict::class)->update($word_uuid, $surface, $pronunciation, $accentType, $wordType, $priority);
+            $dict->update($word_uuid, $surface, $pronunciation, $accentType, $wordType, $priority);
 
             return response()->json(null, Response::HTTP_NO_CONTENT);
         } catch (Throwable) {
