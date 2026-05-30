@@ -6,6 +6,7 @@ namespace Revolution\Voicevox\Client\Concerns;
 
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
+use Revolution\Voicevox\VoicevoxResponse;
 
 trait HasTalk
 {
@@ -68,6 +69,29 @@ trait HasTalk
             ->throw();
 
         return $response->body();
+    }
+
+    /**
+     * Synthesize multiple audio queries in batch.
+     *
+     * @param  array<array>  $audioQueries
+     * @return VoicevoxResponse zip file containing the synthesized audio files
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function multiSynthesis(array $audioQueries, int|string $id, bool $interrogativeUpspeak = false): VoicevoxResponse
+    {
+        $body = $this->http()->withQueryParameters(array_filter([
+            'speaker' => $id,
+            'enable_interrogative_upspeak' => $interrogativeUpspeak,
+            'core_version' => config('voicevox.client.core_version'),
+        ], fn ($v) => ! is_null($v)))
+            ->post('multi_synthesis', $audioQueries)
+            ->throw()
+            ->body();
+
+        return new VoicevoxResponse($body);
     }
 
     /**
