@@ -8,6 +8,10 @@ use Illuminate\Contracts\Support\Arrayable;
 
 readonly class Note implements Arrayable
 {
+    private const float FRAME_RATE = 93.75;
+
+    private const int TPQN = 480;
+
     /**
      * 音符または休符。
      *
@@ -38,7 +42,7 @@ readonly class Note implements Arrayable
      */
     public static function len(int $ticks, int $bpm = 125): int
     {
-        return (int) round((($ticks / 480) * (60 / $bpm)) * 93.75);
+        return (int) round((($ticks / self::TPQN) * (60 / $bpm)) * self::FRAME_RATE);
     }
 
     public function toArray(): array
