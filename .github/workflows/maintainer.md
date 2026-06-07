@@ -9,7 +9,7 @@ on:
 
 engine:
     id: copilot
-    model: auto
+    model: haiku
 
 steps:
     -   name: Set up PHP
