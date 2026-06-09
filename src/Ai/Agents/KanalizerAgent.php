@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Revolution\Voicevox\Ai\Agents;
 
 use Illuminate\Contracts\JsonSchema\JsonSchema;
-use Laravel\Ai\Attributes\TopP;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\HasStructuredOutput;
 use Laravel\Ai\Promptable;
 use Stringable;
 
-#[TopP(0.1)]
 class KanalizerAgent implements Agent, HasStructuredOutput
 {
     use Promptable;
