@@ -21,7 +21,7 @@ test('presets returns array', function () {
 
 test('add preset returns id', function () {
     Http::fake([
-        'http://127.0.0.1:50021/add_preset' => Http::response(2),
+        'http://127.0.0.1:50021/add_preset' => Http::response('2'),
     ]);
 
     $id = Voicevox::addPreset(['id' => 0, 'name' => 'new']);
@@ -31,7 +31,7 @@ test('add preset returns id', function () {
 
 test('update preset returns id', function () {
     Http::fake([
-        'http://127.0.0.1:50021/update_preset' => Http::response(1),
+        'http://127.0.0.1:50021/update_preset' => Http::response('1'),
     ]);
 
     $id = Voicevox::updatePreset(['id' => 1, 'name' => 'updated']);
