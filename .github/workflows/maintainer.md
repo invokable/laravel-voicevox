@@ -9,7 +9,7 @@ on:
 
 engine:
     id: copilot
-    model: claude-haiku-4.5
+    model: claude-sonnet-5
 
 steps:
     -   name: Set up PHP
