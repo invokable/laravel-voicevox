@@ -7,10 +7,9 @@ on:
 #      - cron: daily around 4:00 utc+9
     workflow_dispatch:
 
+model: claude-sonnet-5
 engine:
     id: copilot
-    model: claude-sonnet-5
-
 steps:
     -   name: Set up PHP
         uses: shivammathur/setup-php@2.37.2
