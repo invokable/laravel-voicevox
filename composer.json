@@ -11,7 +11,7 @@
     "require": {
         "php": "^8.3",
         "illuminate/support": "^12.0||^13.0",
-        "laravel/ai": "^0.7",
+        "laravel/ai": "*",
         "ext-zip": "*"
     },
     "require-dev": {
@@ -21,7 +21,7 @@
         "pestphp/pest-plugin-laravel": "^5.0",
         "revolution/laravel-boost-copilot-cli": "^2.0",
         "laravel/pao": "^1.0",
-        "revolution/voicevox-core": "^0.1.0"
+        "revolution/voicevox-core": "^0.17.0"
     },
     "suggest": {
         "ext-ffi": "Required for core library."
