@@ -36,7 +36,7 @@ class VoicevoxServiceProvider extends ServiceProvider
         $this->app->scoped(Synthesizer::class, function () {
             $voicevoxCoreDir = rtrim(config('voicevox.core.path', ''), '/').'/';
 
-            $onnxruntimeFilename = $voicevoxCoreDir.'onnxruntime/lib/'.Onnxruntime::libVersionedFilename();
+            $onnxruntimeFilename = $voicevoxCoreDir.'onnxruntime/lib/'.Onnxruntime::libRecommendedVersionedFilename();
             $dictDir = $voicevoxCoreDir.trim(config('voicevox.core.dict', 'dict/open_jtalk_dic_utf_8-1.11'), '/').'/';
             $modelDir = $voicevoxCoreDir.trim(config('voicevox.core.models', 'models/vvms'), '/').'/';
 
