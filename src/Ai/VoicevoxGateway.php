@@ -37,7 +37,7 @@ class VoicevoxGateway implements AudioGateway
 
         return new AudioResponse(
             audio: $response->toBase64(),
-            usage: new Usage(),
+            usage: new Usage,
             meta: new Meta($provider->name(), $voice),
             mimeType: 'audio/wav',
         );
