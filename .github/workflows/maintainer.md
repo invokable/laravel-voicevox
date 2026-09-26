@@ -7,15 +7,17 @@ on:
 #      - cron: daily around 4:00 utc+9
     workflow_dispatch:
 
-model: claude-sonnet-5
+model: gpt-6-luna
+
 engine:
     id: copilot
+
 steps:
     -   name: Set up PHP
         uses: shivammathur/setup-php@2.37.2
         with:
             php-version: 8.5
-            extensions: mbstring, dom
+            extensions: mbstring, xml, phar, dom, tokenizer
             coverage: xdebug
     -   name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
@@ -26,6 +28,8 @@ permissions:
     issues: read
     discussions: read
     actions: read
+    copilot-requests: none
+
 strict: true
 timeout-minutes: 45
 network:
