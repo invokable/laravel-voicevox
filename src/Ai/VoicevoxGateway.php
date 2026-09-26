@@ -8,6 +8,7 @@ use Laravel\Ai\Contracts\Gateway\AudioGateway;
 use Laravel\Ai\Contracts\Providers\AudioProvider;
 use Laravel\Ai\Responses\AudioResponse;
 use Laravel\Ai\Responses\Data\Meta;
+use Laravel\Ai\Responses\Data\Usage;
 use Revolution\Voicevox\Ai\Concerns\ResolvesVoiceId;
 use Revolution\Voicevox\Talk\Talk;
 
@@ -28,15 +29,17 @@ class VoicevoxGateway implements AudioGateway
         string $voice,
         ?string $instructions = null,
         int $timeout = 30,
+        array $providerOptions = [],
     ): AudioResponse {
         $id = $this->resolveVoiceId($voice);
 
         $response = Talk::make()->talk($text, $id)->generate($id);
 
         return new AudioResponse(
-            $response->toBase64(),
-            new Meta($provider->name(), $voice),
-            'audio/wav',
+            audio: $response->toBase64(),
+            usage: new Usage(),
+            meta: new Meta($provider->name(), $voice),
+            mimeType: 'audio/wav',
         );
     }
 }
