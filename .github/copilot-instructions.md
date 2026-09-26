@@ -26,7 +26,7 @@ https://github.com/voicevox-client
 
 - **Language**: PHP 8.3+
 - **Framework**: Laravel 12.x+
-- **Testing**: Pest PHP 4.x
+- **Testing**: Pest PHP
 - **Code Quality**: Laravel Pint (PSR-12)
 - [voicevox-core-php](https://github.com/invokable/voicevox-core-php)
 
