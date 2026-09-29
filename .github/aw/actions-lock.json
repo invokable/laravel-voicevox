@@ -25,10 +25,10 @@
       "version": "v7.0.1",
       "sha": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
     },
-    "github/gh-aw-actions/setup@v0.89.22": {
+    "github/gh-aw-actions/setup@v0.90.0": {
       "repo": "github/gh-aw-actions/setup",
-      "version": "v0.89.22",
-      "sha": "2fbab69bfca02bebd76cd0fc43f2d12acfed994f"
+      "version": "v0.90.0",
+      "sha": "a65c3ae1e11016c37f426bb3847a6f5e1a7d58df"
     },
     "shivammathur/setup-php@2.37.2": {
       "repo": "shivammathur/setup-php",
