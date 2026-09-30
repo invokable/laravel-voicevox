@@ -7,7 +7,7 @@ on:
 #      - cron: daily around 4:00 utc+9
     workflow_dispatch:
 
-model: claude-sonnet-5.5
+model: gpt-6-luna
 
 engine:
     id: copilot
