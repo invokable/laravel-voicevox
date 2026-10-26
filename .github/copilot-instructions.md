@@ -35,7 +35,8 @@ https://github.com/voicevox-client
 - `composer run test` - Run pest tests.
 - `composer run lint` - Run pint code formatter.
 
-Agentic Workflows環境でも`setup-php`でPHPはインストールされてるはずだけど動かなくても後で通常のGitHub Actionsでtestとlintが実行される。
+PHP拡張やメモリが足りない時は`-d extension=`で拡張を追加したり`-d memory_limit=512M`でメモリを増やして実行。
+Agentic Workflows環境で動かなくても後で通常のGitHub Actionsでtestとlintが実行される。
 
 動的ライブラリ込みのテストはGitHub Actions専用に`test:integration`と`.github/workflows/integration-tests.yml`を用意する。voicevox-core-phpと同じ。
 
@@ -89,4 +90,7 @@ Agentic Workflows向けの次に行う作業の方向性をここで指示しま
 - [x] EngineInstallCommand.php を [Laravel Prompts](https://laravel.com/docs/13.x/prompts) を使うコードに変更。GitHubからのダウンロードはzipで400MB以上なので`confirm()`で確認を入れる。ダウンロード中はspinもしくはtaskで表示。
 - [x] AI SDKへのソング機能実装は不要。
 - [x] README.mdはAWからは変更が制限されているので更新は不要。
-- 現在のAgentic Workflowsは手動実行のみ
+- [x] 現在のAgentic Workflowsは手動実行のみ
+- [ ] https://github.com/VOICEVOX/voicevox_engine/releases/tag/0.26.0 voicevox_engine v0.26.0の変更点を調べIssueでタスク管理しながらLaravel版に移植する。
+  - [v0.26.0のopenapi.json](https://github.com/VOICEVOX/voicevox/blob/70805c670a2bea8eb135f5e7fdc34d6ac5dccc23/openapi.json) はdocs/jp/laravel-openapi.jsonに反映。
+  - 難しい機能は実装せずDiscussionで報告のみ行う。

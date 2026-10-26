@@ -2,7 +2,8 @@
 name: VOICEVOX メンテナー
 description: VOICEVOXパッケージのメンテナンスと機能追加を自律的に行い、作業記録をDiscussion #1に記録する。
 on:
-#    schedule: 
+    schedule: 
+      - cron: daily
 #      - cron: daily around 17:00 utc+9
 #      - cron: daily around 4:00 utc+9
     workflow_dispatch:
@@ -14,7 +15,7 @@ engine:
 
 steps:
     -   name: Set up PHP
-        uses: shivammathur/setup-php@2.37.2
+        uses: shivammathur/setup-php@2.40.0
         with:
             php-version: 8.5
             extensions: mbstring, xml, phar, dom, tokenizer
@@ -51,6 +52,9 @@ safe-outputs:
         draft: true
         if-no-changes: warn
         signed-commits: false
+    create-issue:
+        labels: [ copilot ]
+        max: 5
     add-comment:
         discussions: true
         max: 1
@@ -65,9 +69,10 @@ safe-outputs:
 
 1. `.github/copilot-instructions.md` から管理者の最新指示を確認する。
 2. Discussion #1 から過去の作業記録を読み込む。
-3. 管理者指示の未完了タスクを優先して実装を進める。未完了タスクがなければ `.github/openapi.json` を参考に次の実装候補を自律的に判断する。
-4. 変更があればドラフトPRを作成する。
-5. Discussion #1 に作業ログコメントを追加する（最終ステップ）。
+3. ラベルが`copilot`のオープンなIssueで未完了タスクを調べる。
+4. 管理者指示の未完了タスクを優先して実装を進める。
+5. 変更があればドラフトPRを作成する。このセッションで終わらないタスクは新しいIssueを作り次回に回す。
+6. Discussion #1 に作業ログコメントを追加する（最終ステップ）。
 
 ## 参照先
 
@@ -104,19 +109,23 @@ safe-outputs:
   - 次に計画していた内容
   - 未解決の制約や判断事項
 
-### 3. 次の実装ターゲットを決定
+### 3. Issueで未完了タスクを調べる
 
-- 管理者指示の未完了タスクがあればそれを実行。
+- ラベルが`copilot`のオープンなIssueで未完了タスクを調べる
+
+### 4. 次の実装ターゲットを決定
+
+- 管理者指示やIssueに未完了タスクがあればそれを実行。
 - なければ現在のソース実装と `.github/openapi.json` を比較し、未実装のエンドポイントがあれば次の小さな実装スライスを選択する。VOICEVOXエンジンREADMEを参考に、実用的なエンドポイントを優先する。
 - **OpenAPI の実装が完了している場合**: `tests/` 以下を調査し、テストカバレッジが不十分なクラス・メソッドを特定する。既存テストのパターンに沿って Pest テストを追加する。
 
-### 4. 実装
+### 5. 実装
 
 - ソース・設定・テスト・workbenchを必要に応じて更新する。
 - Laravel開発者のエルゴノミクスに合ったメソッド名を使用する。
 - **ドキュメント作成タスクの場合**: `docs/jp/` ディレクトリに日本語マークダウンファイルを作成する。
 
-### 5. 品質チェック（努力目標）
+### 6. 品質チェック（努力目標）
 
 以下のコマンドを実行する：
 
@@ -125,9 +134,7 @@ composer run lint
 composer run test
 ```
 
-> **注意**: AWF環境では `composer run lint` や `composer run test` が実行できない場合がある。これはAWF環境の既知の制約によるもので、**失敗してもPRは必ず作成すること**。通常のGitHub Actions（`tests.yml`、`lint.yml`）が品質チェックを担う。実行できない場合はその旨をPR本文とDiscussionコメントに記載する。
-
-### 6. PR の作成（変更がある場合）
+### 7. PR の作成（変更がある場合）
 
 - `create-pull-request` セーフアウトプットを使用する。
 - PRの本文には以下を含める：
@@ -136,7 +143,7 @@ composer run test
   - lint/testの結果（実行できた場合）またはスキップ理由
   - OpenAPIの残り候補
 
-### 7. Discussion #1 に作業ログを追加（最終ステップ）
+### 8. Discussion #1 に作業ログを追加（最終ステップ）
 
 - `add-comment` セーフアウトプットで `invokable/laravel-voicevox` の **Discussion #1** にコメントを追加する。
 - Discussion #1 が将来の実行に向けた継続メモリとして機能するよう、このコメントを最後に必ず投稿する。
