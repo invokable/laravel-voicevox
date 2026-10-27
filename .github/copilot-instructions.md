@@ -93,6 +93,6 @@ Agentic Workflows向けの次に行う作業の方向性をここで指示しま
 - [x] 現在のAgentic Workflowsは手動実行のみ
 - [ ] https://github.com/VOICEVOX/voicevox_engine/releases/tag/0.26.0 voicevox_engine v0.26.0の変更点を調べIssueでタスク管理しながらLaravel版に移植する。
   - .github/openapi.jsonは[v0.26.0のopenapi.json](https://github.com/VOICEVOX/voicevox/blob/70805c670a2bea8eb135f5e7fdc34d6ac5dccc23/openapi.json) で更新済み。
-  - docs/jp/laravel-openapi.json と docs/en/laravel-openapi.json は0.25のまま。
+  - docs/jp/laravel-openapi.json と docs/en/laravel-openapi.json は0.25のまま。0.26に合わせて更新する。
   - 0.26.1は影響ないので0.26.0のみ対応。
   - 難しい機能は実装せずDiscussionで報告のみ行う。
