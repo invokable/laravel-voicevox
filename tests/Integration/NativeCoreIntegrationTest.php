@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\File;
 use Revolution\Voicevox\Synthesizer;
 
+use function Revolution\Voicevox\kana;
+use function Revolution\Voicevox\preset;
 use function Revolution\Voicevox\talk;
 
 beforeEach(function () {
@@ -28,6 +30,41 @@ test('native talk helper generates wav audio', function () {
 
     expect($content)->toStartWith('RIFF')
         ->and(strlen($content))->toBeGreaterThan(44);
+});
+
+test('native kana helper generates wav audio', function () {
+    $response = kana('コンニチワ', id: 1)->generate(id: 1);
+    $content = $response->content();
+
+    expect($content)->toStartWith('RIFF')
+        ->and(strlen($content))->toBeGreaterThan(44);
+});
+
+test('native talk helper applies preset scales before generating audio', function () {
+    $presetStore = preset();
+    $presetId = $presetStore->add([
+        'id' => 99991,
+        'name' => '統合テスト用プリセット',
+        'speaker_uuid' => '7ffcb7ce-00ec-4bdc-82cd-45a8889e43ff',
+        'style_id' => 1,
+        'speedScale' => 1.4,
+        'pitchScale' => 0.1,
+        'intonationScale' => 1.2,
+        'volumeScale' => 1.0,
+        'prePhonemeLength' => 0.1,
+        'postPhonemeLength' => 0.1,
+    ]);
+
+    try {
+        $query = talk('プリセット統合テスト', id: 1, preset: $presetId);
+        $content = $query->generate(id: 1)->content();
+
+        expect($query->audioQuery['speedScale'])->toBe(1.4)
+            ->and($content)->toStartWith('RIFF')
+            ->and(strlen($content))->toBeGreaterThan(44);
+    } finally {
+        preset()->delete($presetId);
+    }
 });
 
 test('engine audio_query and synthesis work with native core', function () {
