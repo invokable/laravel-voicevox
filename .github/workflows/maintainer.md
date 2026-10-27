@@ -134,6 +134,8 @@ composer run lint
 composer run test
 ```
 
+PHP拡張やメモリが足りない時は`-d extension=`で拡張を追加したり`-d memory_limit=512M`でメモリを増やして実行。
+
 ### 7. PR の作成（変更がある場合）
 
 - `create-pull-request` セーフアウトプットを使用する。
