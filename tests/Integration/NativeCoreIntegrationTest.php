@@ -33,7 +33,7 @@ test('native talk helper generates wav audio', function () {
 });
 
 test('native kana helper generates wav audio', function () {
-    $response = kana('コンニチワ', id: 1)->generate(id: 1);
+    $response = kana('コ\'ンニチワ', id: 1)->generate(id: 1);
     $content = $response->content();
 
     expect($content)->toStartWith('RIFF')
