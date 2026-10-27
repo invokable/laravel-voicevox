@@ -15,9 +15,9 @@ use Revolution\Voicevox\Talk\TalkAudioQuery;
 /**
  * テキスト音声合成。
  */
-function talk(string $text, int|string $id = 1): TalkAudioQuery
+function talk(string $text, int|string $id = 1, ?int $preset = null): TalkAudioQuery
 {
-    return app(Talk::class)->talk($text, $id);
+    return app(Talk::class)->talk($text, $id, $preset);
 }
 
 /**
