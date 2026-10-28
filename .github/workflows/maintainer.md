@@ -8,10 +8,15 @@ on:
 #      - cron: daily around 4:00 utc+9
     workflow_dispatch:
 
-model: gpt-6-luna
-
 engine:
     id: copilot
+    copilot-sdk: true
+    model-routing:
+        goal: cost
+        mode: auto
+        allowed-models:
+            - gpt-6-luna
+            - claude-haiku-5.5
 
 steps:
     -   name: Set up PHP
