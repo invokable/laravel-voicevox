@@ -16,7 +16,9 @@ engine:
         mode: auto
         allowed-models:
             - gpt-6-luna
+            - gpt-6.1-sol
             - claude-haiku-5.5
+            - claude-sonnet-5.5
 
 steps:
     -   name: Set up PHP
