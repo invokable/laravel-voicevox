@@ -14,6 +14,10 @@ beforeEach(function () {
     $coreLibPath = $corePath.'/c_api/lib/libvoicevox_core.so';
 
     if ($corePath === '' || ! File::exists($coreLibPath)) {
+        $coreLibPath = $corePath.'/c_api/lib/libvoicevox_core.dylib';
+    }
+
+    if ($corePath === '' || ! File::exists($coreLibPath)) {
         $this->markTestSkipped('VOICEVOX core runtime is not configured.');
     }
 });

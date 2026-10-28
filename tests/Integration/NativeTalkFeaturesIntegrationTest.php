@@ -9,12 +9,19 @@ beforeEach(function () {
     $coreLibPath = $corePath.'/c_api/lib/libvoicevox_core.so';
 
     if ($corePath === '' || ! File::exists($coreLibPath)) {
+        $coreLibPath = $corePath.'/c_api/lib/libvoicevox_core.dylib';
+    }
+
+    if ($corePath === '' || ! File::exists($coreLibPath)) {
         $this->markTestSkipped('VOICEVOX core runtime is not configured.');
     }
 });
 
 test('engine accent_phrases endpoint generates accent phrases from text', function () {
-    $response = $this->postJson('/accent_phrases?text=こんにちは&speaker=1')
+    $response = $this->postJson('/accent_phrases', [
+        'text' => 'こんにちは',
+        'speaker' => 1,
+    ])
         ->assertOk()
         ->json();
 
@@ -25,7 +32,10 @@ test('engine accent_phrases endpoint generates accent phrases from text', functi
 
 test('engine mora_pitch endpoint adjusts pitch for accent phrases', function () {
     // First get accent phrases
-    $accentPhrases = $this->postJson('/accent_phrases?text=テスト&speaker=1')
+    $accentPhrases = $this->postJson('/accent_phrases', [
+        'text' => 'テスト',
+        'speaker' => 1,
+    ])
         ->assertOk()
         ->json();
 
@@ -41,7 +51,10 @@ test('engine mora_pitch endpoint adjusts pitch for accent phrases', function () 
 });
 
 test('engine mora_length endpoint adjusts length for accent phrases', function () {
-    $accentPhrases = $this->postJson('/accent_phrases?text=こんにちは&speaker=1')
+    $accentPhrases = $this->postJson('/accent_phrases', [
+        'text' => 'こんにちは',
+        'speaker' => 1,
+    ])
         ->assertOk()
         ->json();
 
@@ -56,7 +69,10 @@ test('engine mora_length endpoint adjusts length for accent phrases', function (
 });
 
 test('engine mora_data endpoint processes accent phrases', function () {
-    $accentPhrases = $this->postJson('/accent_phrases?text=よろしく&speaker=1')
+    $accentPhrases = $this->postJson('/accent_phrases', [
+        'text' => 'よろしく',
+        'speaker' => 1,
+    ])
         ->assertOk()
         ->json();
 
@@ -140,7 +156,10 @@ test('engine audio_query_from_preset generates query using preset', function () 
 
     expect($presetId)->toBe(77777);
 
-    $audioQuery = $this->postJson("/audio_query_from_preset?text=プリセットテスト&preset_id={$presetId}")
+    $audioQuery = $this->postJson("/audio_query_from_preset", [
+        'text' => 'プリセットテスト',
+        'preset_id' => $presetId,
+    ])
         ->assertOk()
         ->json();
 

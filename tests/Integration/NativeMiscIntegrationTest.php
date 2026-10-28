@@ -9,16 +9,26 @@ beforeEach(function () {
     $coreLibPath = $corePath.'/c_api/lib/libvoicevox_core.so';
 
     if ($corePath === '' || ! File::exists($coreLibPath)) {
+        $coreLibPath = $corePath.'/c_api/lib/libvoicevox_core.dylib';
+    }
+
+    if ($corePath === '' || ! File::exists($coreLibPath)) {
         $this->markTestSkipped('VOICEVOX core runtime is not configured.');
     }
 });
 
 test('engine multi_synthesis generates multiple audio files', function () {
-    $audioQuery1 = $this->postJson('/audio_query?text=最初の文&speaker=1')
+    $audioQuery1 = $this->postJson('/audio_query', [
+        'text' => '最初の文',
+        'speaker' => 1,
+    ])
         ->assertOk()
         ->json();
 
-    $audioQuery2 = $this->postJson('/audio_query?text=二番目の文&speaker=1')
+    $audioQuery2 = $this->postJson('/audio_query', [
+        'text' => '二番目の文',
+        'speaker' => 1,
+    ])
         ->assertOk()
         ->json();
 
@@ -62,7 +72,10 @@ test('engine morphable_targets fallback for unsupported feature', function () {
 });
 
 test('engine synthesis_morphing fallback for unsupported feature', function () {
-    $audioQuery = $this->postJson('/audio_query?text=モーフィング&speaker=1')
+    $audioQuery = $this->postJson('/audio_query', [
+        'text' => 'モーフィング',
+        'speaker' => 1,
+    ])
         ->assertOk()
         ->json();
 

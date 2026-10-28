@@ -15,6 +15,10 @@ beforeEach(function () {
     $coreLibPath = $corePath.'/c_api/lib/libvoicevox_core.so';
 
     if ($corePath === '' || ! File::exists($coreLibPath)) {
+        $coreLibPath = $corePath.'/c_api/lib/libvoicevox_core.dylib';
+    }
+
+    if ($corePath === '' || ! File::exists($coreLibPath)) {
         $this->markTestSkipped('VOICEVOX core runtime is not configured.');
     }
 });
@@ -69,7 +73,10 @@ test('native talk helper applies preset scales before generating audio', functio
 });
 
 test('engine audio_query and synthesis work with native core', function () {
-    $audioQuery = $this->postJson('/audio_query?text=統合テストなのだ&speaker=1')
+    $audioQuery = $this->postJson('/audio_query', [
+        'text' => '統合テストなのだ',
+        'speaker' => 1,
+    ])
         ->assertOk()
         ->json();
 
