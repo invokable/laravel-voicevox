@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\File;
+use Revolution\Voicevox\Core\VoicevoxCore;
 use Revolution\Voicevox\Synthesizer;
 
 use function Revolution\Voicevox\kana;
@@ -79,4 +80,27 @@ test('engine audio_query and synthesis work with native core', function () {
         ->assertHeader('Content-Type', 'audio/wav');
 
     expect($response->getContent())->toStartWith('RIFF');
+});
+
+test('native audio feature renders frame ranges as pcm chunks', function () {
+    $audioQuery = Synthesizer::createAudioQuery('ストリーミング音声合成の統合テスト', 1);
+    $audioFeature = Synthesizer::createAudioFeature($audioQuery, 1);
+    $frameRate = (new VoicevoxCore)->getFrameRate();
+    $chunkFrames = (int) round(0.3 * $frameRate, 0, PHP_ROUND_HALF_EVEN);
+    $totalFrames = $audioFeature->length();
+    $chunks = [];
+
+    for ($start = 0; $start < $totalFrames; $start += $chunkFrames) {
+        $end = min($start + $chunkFrames, $totalFrames);
+        $chunks[] = $audioFeature->slice($start, $end)->render();
+    }
+
+    expect($frameRate)->toBe(93.75);
+    expect($totalFrames)->toBeGreaterThan($chunkFrames);
+    expect(count($chunks))->toBeGreaterThan(1);
+
+    foreach ($chunks as $chunk) {
+        expect($chunk)->not->toBeEmpty();
+        expect(strlen($chunk) % 2)->toBe(0);
+    }
 });
