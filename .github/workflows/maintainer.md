@@ -57,6 +57,7 @@ safe-outputs:
         max: 5
     add-comment:
         discussions: true
+        target: 1
         max: 1
         target-repo: invokable/laravel-voicevox
 ---
