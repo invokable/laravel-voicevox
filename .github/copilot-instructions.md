@@ -67,6 +67,8 @@ Agentic Workflows環境で動かなくても後で通常のGitHub Actionsでtest
 - voicevox_resource: resourcesのサブモジュール。公式エンジンでは[process_voicevox_resource.bash](../voicevox_engine/tools/process_voicevox_resource.bash) などで使用している。必要なファイルだけLaravel側にコピー。`/speaker_info'`や`/singer_info`で必要。
 - resources: voicevox_resourceもしくはGitHubからダウンロードしたキャラ情報。500MB以上のサイズなので別途インストール。`engine_manifest.json`はjsonファイルのまま読まれる場合とエンジンAPI経由で使われる場合で少し違いがある。
 
+サブモジュールは`git submodule update --remote --merge`で更新。
+
 ## ドキュメント
 
 クライアントもネイティブもエンジンも機能が揃ってきたのでドキュメントを整備。
