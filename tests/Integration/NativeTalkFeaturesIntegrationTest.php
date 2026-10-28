@@ -156,7 +156,7 @@ test('engine audio_query_from_preset generates query using preset', function () 
 
     expect($presetId)->toBe(77777);
 
-    $audioQuery = $this->postJson("/audio_query_from_preset", [
+    $audioQuery = $this->postJson('/audio_query_from_preset', [
         'text' => 'プリセットテスト',
         'preset_id' => $presetId,
     ])
