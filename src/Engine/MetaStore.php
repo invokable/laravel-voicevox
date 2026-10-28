@@ -11,7 +11,7 @@ use RuntimeException;
 
 class MetaStore
 {
-    protected const array TALK_STYLE_TYPES = ['talk'];
+    protected const array TALK_STYLE_TYPES = ['talk', 'streaming_talk'];
 
     protected const array SING_STYLE_TYPES = ['singing_teacher', 'frame_decode', 'sing'];
 
