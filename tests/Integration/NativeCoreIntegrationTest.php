@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\File;
 use Revolution\Voicevox\Core\VoicevoxCore;
 use Revolution\Voicevox\Synthesizer;
+use Revolution\Voicevox\Talk\TalkAudioQuery;
 
 use function Revolution\Voicevox\kana;
 use function Revolution\Voicevox\preset;
@@ -110,4 +111,42 @@ test('native audio feature renders frame ranges as pcm chunks', function () {
         expect($chunk)->not->toBeEmpty();
         expect(strlen($chunk) % 2)->toBe(0);
     }
+});
+
+test('native talk audio query streams a wav with the declared length', function () {
+    $audioQuery = json_decode(Synthesizer::createAudioQuery('ストリーミング音声合成の統合テスト', 1), true);
+
+    $stream = (new TalkAudioQuery($audioQuery))->stream(id: 1);
+    $content = $stream->content();
+
+    expect($content)->toStartWith('RIFF')
+        ->and(strlen($content))->toBe($stream->contentLength())
+        ->and(strlen($content) % 2)->toBe(0);
+});
+
+test('native talk audio query stream honors start offset', function () {
+    $audioQuery = json_decode(Synthesizer::createAudioQuery('ストリーミング音声合成の統合テスト', 1), true);
+
+    $whole = (new TalkAudioQuery($audioQuery))->stream(id: 1);
+    $offset = (new TalkAudioQuery($audioQuery))->stream(id: 1, startOffset: 0.3);
+
+    expect($offset->contentLength())->toBeLessThan($whole->contentLength())
+        ->and(strlen($offset->content()))->toBe($offset->contentLength());
+});
+
+test('engine streaming_synthesis endpoint returns wav audio', function () {
+    $audioQuery = json_decode(Synthesizer::createAudioQuery('ストリーミング音声合成の統合テスト', 1), true);
+
+    $response = $this->postJson('/streaming_synthesis?speaker=1&segment_length=0.5', $audioQuery)
+        ->assertOk()
+        ->assertHeader('Content-Type', 'audio/wav');
+
+    expect($response->streamedContent())->toStartWith('RIFF');
+});
+
+test('engine streaming_synthesis endpoint rejects start_offset beyond the audio', function () {
+    $audioQuery = json_decode(Synthesizer::createAudioQuery('あ', 1), true);
+
+    $this->postJson('/streaming_synthesis?speaker=1&start_offset=1000', $audioQuery)
+        ->assertStatus(400);
 });

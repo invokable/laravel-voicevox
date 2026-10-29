@@ -38,6 +38,7 @@ use Revolution\Voicevox\Engine\Http\SingFrameF0Controller;
 use Revolution\Voicevox\Engine\Http\SingFrameVolumeController;
 use Revolution\Voicevox\Engine\Http\SpeakerInfoController;
 use Revolution\Voicevox\Engine\Http\SpeakersController;
+use Revolution\Voicevox\Engine\Http\StreamingSynthesisController;
 use Revolution\Voicevox\Engine\Http\SupportedDevicesController;
 use Revolution\Voicevox\Engine\Http\SynthesisController;
 use Revolution\Voicevox\Engine\Http\SynthesisMorphingController;
@@ -77,6 +78,7 @@ Route::name('voicevox.engine.')->group(function () {
     Route::post('/accent_phrases', AccentPhrasesController::class)->name('accent_phrases');
 
     Route::post('/synthesis', SynthesisController::class)->name('synthesis');
+    Route::post('/streaming_synthesis', StreamingSynthesisController::class)->name('streaming_synthesis');
     Route::post('/v1/audio/speech', OpenAiSpeechController::class)->name('openai.audio.speech');
     Route::post('/multi_synthesis', MultiSynthesisController::class)->name('multi_synthesis');
     Route::post('/mora_data', MoraDataController::class)->name('mora_data');

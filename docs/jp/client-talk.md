@@ -99,6 +99,16 @@ $path = $response->storeAs('client', 'talk.wav');
 $path = $response->storeAs('client', 'talk.wav', disk: 's3');
 ```
 
+## ストリーミング音声合成
+
+VOICEVOX エンジン 0.26.0 以降の `/streaming_synthesis` は `streamingSynthesis()` で呼び出せます。`streaming_talk` タイプのスタイルのみ対応しています。
+
+```php
+$audioQuery = Voicevox::audioQuery('ララベルが好きなのだ', id: 1);
+
+$wav = Voicevox::streamingSynthesis($audioQuery, id: 1, startOffset: 0.0, segmentLength: 0.3);
+```
+
 ## メソッドチェーン全体の流れ
 
 ```

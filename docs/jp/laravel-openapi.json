@@ -626,7 +626,7 @@
             }
           }
         },
-        "description": "\n\n**Laravel実装状況**: ❌ Laravel版では未実装（エンジンルート・フォールバックとも未対応）"
+        "description": "\n\n**Laravel実装状況**: ✅ コアで対応（フォールバック実装済み）。`AudioFeature`をセグメントごとにレンダリングしてWAVをストリーミング出力します。`streaming_talk`スタイルのみ対応で、非対応のスタイルや失敗時は公式エンジンにフォールバックします。`start_offset`が音声の長さ以上の場合は400を返します。"
       }
     },
     "/v1/audio/speech": {

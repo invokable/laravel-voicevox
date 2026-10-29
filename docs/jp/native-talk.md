@@ -84,6 +84,24 @@ $result = AquesTalkAgent::make()->prompt('Laravelが好きです');
 $response = kana($result->text, id: 1)->generate(id: 1);
 ```
 
+## ストリーミング音声合成
+
+VOICEVOX エンジン 0.26.0 の `/streaming_synthesis` と同じ仕様で、`stream()` は WAV を先頭から順に出力できる `TalkStream` を返します。`streaming_talk` タイプのスタイル（VVM v2 形式）のみ対応しています。
+
+```php
+use function Revolution\Voicevox\talk;
+
+$stream = talk('ララベルが好きなのだ', id: 1)->stream(id: 1, startOffset: 0.0, segmentLength: 0.3);
+
+// コントローラーから StreamedResponse として返す（Content-Length 付き）
+return $stream;
+
+// まとめて WAV を取得することもできる
+$wav = $stream->content();
+```
+
+`startOffset` が音声の長さ以上の場合は `InvalidArgumentException` をスローします。
+
 ## クライアントモードとの違い
 
 | 項目 | クライアントモード | ネイティブモード |

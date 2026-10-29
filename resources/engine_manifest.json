@@ -26,6 +26,7 @@
         "sing": true,
         "manage_library": false,
         "return_resource_url": true,
-        "apply_katakana_english": false
+        "apply_katakana_english": false,
+        "streaming_synthesis": true
     }
 }
