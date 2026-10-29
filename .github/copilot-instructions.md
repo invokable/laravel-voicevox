@@ -93,7 +93,7 @@ Agentic Workflows向けの次に行う作業の方向性をここで指示しま
 - [x] AI SDKへのソング機能実装は不要。
 - [x] README.mdはAWからは変更が制限されているので更新は不要。
 - [x] 現在のAgentic Workflowsは手動実行のみ
-- [ ] https://github.com/VOICEVOX/voicevox_engine/releases/tag/0.26.0 voicevox_engine v0.26.0の変更点を調べIssueでタスク管理しながらLaravel版に移植する。
+- [x] https://github.com/VOICEVOX/voicevox_engine/releases/tag/0.26.0 voicevox_engine v0.26.0の変更点を調べIssueでタスク管理しながらLaravel版に移植する。
   - [x] .github/openapi.jsonは[v0.26.0のopenapi.json](https://github.com/VOICEVOX/voicevox/blob/70805c670a2bea8eb135f5e7fdc34d6ac5dccc23/openapi.json) で更新済み。
   - [x] voicevox_engine, voicevox_resource のサブモジュールは最新に更新済み。
   - [x] docs/jp/laravel-openapi.json と docs/en/laravel-openapi.json は0.25のまま。0.26に合わせて更新する。
