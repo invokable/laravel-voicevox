@@ -72,6 +72,37 @@ trait HasTalk
     }
 
     /**
+     * Streaming talk synthesis from an AudioQuery. Requires a `streaming_talk` style.
+     *
+     * @param  float  $startOffset  Start position of the audio in seconds.
+     * @param  float  $segmentLength  Length of audio synthesized at a time in seconds.
+     *
+     * @throws RequestException
+     * @throws ConnectionException
+     */
+    public function streamingSynthesis(
+        array $audioQuery,
+        int|string $id = 1,
+        float $startOffset = 0.0,
+        float $segmentLength = 0.3,
+        bool $enableInterrogativeUpspeak = true,
+    ): string {
+        $response = $this->http()
+            ->accept('audio/wav')
+            ->withQueryParameters(array_filter([
+                'speaker' => $id,
+                'start_offset' => $startOffset,
+                'segment_length' => $segmentLength,
+                'enable_interrogative_upspeak' => $enableInterrogativeUpspeak,
+                'core_version' => config('voicevox.client.core_version'),
+            ], fn ($v) => ! is_null($v)))
+            ->post('streaming_synthesis', $audioQuery)
+            ->throw();
+
+        return $response->body();
+    }
+
+    /**
      * Synthesize multiple audio queries in batch.
      *
      * @param  array<array>  $audioQueries

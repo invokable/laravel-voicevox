@@ -534,7 +534,7 @@
           "Speech Synthesis"
         ],
         "summary": "Perform streaming speech synthesis",
-        "description": "**Laravel Implementation Status**: ❌ Not implemented (no Laravel route or fallback).",
+        "description": "**Laravel Implementation Status**: ✅ Supported by Core (fallback implemented). Renders the `AudioFeature` segment by segment and streams the WAV. Only `streaming_talk` styles are supported natively; unsupported styles or failures fall back to the official engine. Returns 400 if `start_offset` is not less than the audio length.",
         "operationId": "streaming_synthesis",
         "parameters": [
           {

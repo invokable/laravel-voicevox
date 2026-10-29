@@ -99,6 +99,7 @@ $response->storeAs('engine', 'talk.wav');
 | `POST /audio_query` | ✅ | ✅ | `enable_katakana_english` 非対応 |
 | `POST /accent_phrases` | ✅ | ✅ | `enable_katakana_english` 非対応 |
 | `POST /synthesis` | ✅ | ✅ | |
+| `POST /streaming_synthesis` | ✅ | ✅ | `streaming_talk` スタイルのみ |
 | `POST /mora_data` | ✅ | ✅ | |
 | `POST /mora_length` | ✅ | ✅ | |
 | `POST /mora_pitch` | ✅ | ✅ | |
