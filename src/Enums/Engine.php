@@ -6,5 +6,5 @@ namespace Revolution\Voicevox\Enums;
 
 enum Engine: string
 {
-    case Version = '0.25.2';
+    case Version = '0.26.0';
 }
