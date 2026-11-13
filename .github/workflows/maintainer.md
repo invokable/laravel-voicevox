@@ -11,14 +11,7 @@ on:
 engine:
     id: copilot
     copilot-sdk: true
-    model-routing:
-        goal: cost
-        mode: auto
-        allowed-models:
-            - gpt-6-luna
-            - gpt-6.1-sol
-            - claude-haiku-5.5
-            - claude-sonnet-5.5
+    model: router/economy
 
 steps:
     -   name: Set up PHP
